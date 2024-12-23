@@ -9,43 +9,44 @@ export default function Services() {
       </div>
 
       {/* service container  */}
-      <div className="flex items-center justify-center m-2 gap-10 flex-wrap text-sm w-fit h-fit">
-        <div className="w-20 h-20 border-2 rounded-lg flex items-center justify-center flex-col ">
+      <div className="flex items-center justify-center m-2 gap-20 md:gap-10 flex-wrap text-sm w-fit h-fit">
+        <div className="md:w-20 md:h-20 h-14 w-14 border-2 rounded-lg flex items-center justify-center flex-col ">
           {/* <img src="" alt="" /> */} img
-          <div className="">service name</div>
-        </div>
-        <div className="w-20 h-20 border-2 rounded-lg flex items-center justify-center flex-col ">
+          <div className="mt-6">service name</div>
+       </div>
+        <div className="md:w-20 md:h-20 h-14 w-14 border-2 rounded-lg flex items-center justify-center flex-col ">
           {/* <img src="" alt="" /> */} img
-          <div className="">service name</div>
-        </div>
-        <div className="w-20 h-20 border-2 rounded-lg flex items-center justify-center flex-col ">
+          <div className="mt-6">service name</div>
+       </div>
+        <div className="md:w-20 md:h-20 h-14 w-14 border-2 rounded-lg flex items-center justify-center flex-col ">
           {/* <img src="" alt="" /> */} img
-          <div className="">service name</div>
-        </div>
-        <div className="w-20 h-20 border-2 rounded-lg flex items-center justify-center flex-col ">
+          <div className="mt-6">service name</div>
+       </div>
+        <div className="md:w-20 md:h-20 h-14 w-14 border-2 rounded-lg flex items-center justify-center flex-col ">
           {/* <img src="" alt="" /> */} img
-          <div className="">service name</div>
-        </div>
-        <div className="w-20 h-20 border-2 rounded-lg flex items-center justify-center flex-col ">
+          <div className="mt-6">service name</div>
+       </div>
+        <div className="md:w-20 md:h-20 h-14 w-14 border-2 rounded-lg flex items-center justify-center flex-col ">
           {/* <img src="" alt="" /> */} img
-          <div className="">service name</div>
-        </div>
-        <div className="w-20 h-20 border-2 rounded-lg flex items-center justify-center flex-col ">
+          <div className="mt-6">service name</div>
+       </div>
+        <div className="md:w-20 md:h-20 h-14 w-14 border-2 rounded-lg flex items-center justify-center flex-col ">
           {/* <img src="" alt="" /> */} img
-          <div className="">service name</div>
-        </div>
-        <div className="w-20 h-20 border-2 rounded-lg flex items-center justify-center flex-col ">
+          <div className="mt-6">service name</div>
+       </div>
+        <div className="md:w-20 md:h-20 h-14 w-14 border-2 rounded-lg flex items-center justify-center flex-col ">
           {/* <img src="" alt="" /> */} img
-          <div className="">service name</div>
-        </div>
-        <div className="w-20 h-20 border-2 rounded-lg flex items-center justify-center flex-col ">
+          <div className="mt-6">service name</div>
+       </div>
+        <div className="md:w-20 md:h-20 h-14 w-14 border-2 rounded-lg flex items-center justify-center flex-col ">
           {/* <img src="" alt="" /> */} img
-          <div className="">service name</div>
-        </div>
-        <div className="w-20 h-20 border-2 rounded-lg flex items-center justify-center flex-col ">
+          <div className="mt-6">service name</div>
+       </div>
+        <div className="md:w-20 md:h-20 h-14 w-14 border-2 rounded-lg flex items-center justify-center flex-col ">
           {/* <img src="" alt="" /> */} img
-          <div className="">service name</div>
-        </div>
+          <div className="mt-6">service name</div>
+       </div>
+        
       
       </div>
     </div>

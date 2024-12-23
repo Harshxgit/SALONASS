@@ -7,7 +7,7 @@ export default function Home() {
   return (
     <>
       <div className=" text-7xl grid grid-rows-3 md:grid-cols-3 grid-flow-col gap-2 h-screen ">
-        <div className=" md:row-span-3 border-2 max-w-[400px]    ">
+        <div className=" md:row-span-3 border-2 w-fit md:max-w-[400px]    ">
           <Services />
         </div>
         <div className=" md:col-span-2  border-2 ">1</div>

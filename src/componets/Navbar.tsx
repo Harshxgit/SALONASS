@@ -3,7 +3,7 @@ import Toggle from "./Toggle";
 
 export default function Navbar() {
   return (
-    <div className="navbar bg-transparent glass sticky top-0 pr-5">
+    <div className="navbar bg-transparent glass sticky top-0 z-50  pr-5">
       <div className="flex-1">
         <a className="btn btn-ghost text-xl">daisyUI</a>
       </div>
