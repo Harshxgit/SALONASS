@@ -2,7 +2,7 @@ import React from "react";
 
 export default function Services() {
   return (
-    <div className="m-4 top-32  sticky border-2">
+    <div className="m-2 top-36  sticky border-2">
       <div className="text-3xl relative mt-2">
         <h1>Select a Service</h1>
         {/* <div className=" absolute top-2 right-4 text-white h-2 w-80"/> */}
