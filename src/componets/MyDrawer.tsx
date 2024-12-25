@@ -1,19 +1,16 @@
 "use client";
-
 import { Drawer } from "vaul";
-
-export default function MyDrawer() {
+export default function MyDrawer({ children }: any) {
+  console.log(children);
   return (
     <div className="flex justify-center mt-24">
       <Drawer.Root shouldScaleBackground>
         <Drawer.Trigger asChild>
-          <button className="inline-flex h-12 w-fit mx-auto animate-background-shine items-center justify-center rounded-md  border-2 dark:border-[#656fe2] border-[#c0c6fc] dark:bg-[linear-gradient(110deg,#1e2a78,45%,#3749be,55%,#1e2a78)] bg-[linear-gradient(110deg,#3d5af1,45%,#5471ff,55%,#3d5af1)] bg-[length:200%_100%] dark:hover:border-white px-6 font-medium text-white dark:text-white transition-colors focus:outline-none focus:ring-2 dark:focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-gray-50">
-            Open Drawer
-          </button>
+          <button className="">{children}</button>
         </Drawer.Trigger>
         <Drawer.Portal>
           <Drawer.Overlay className="fixed inset-0 bg-black/40" />
-          <Drawer.Content className="flex backdrop-blur-sm bg-slate-500/50 flex-col w-1/2 m-auto rounded-t-[10px] h-full mt-24 max-h-[75%] fixed bottom-0 left-0 right-0">
+          <Drawer.Content className="flex backdrop-blur-sm bg-slate-500/50 flex-col md:w-1/2 md:m-auto rounded-t-[10px] h-full mt-24 max-h-[75%] fixed bottom-0 left-0 right-0">
             <div className="p-4  rounded-t-[10px] flex-1">
               <div className="mx-auto w-12 h-1.5 flex-shrink-0 rounded-full bg-gray-300 mb-8" />
               <div className="max-w-md mx-auto">

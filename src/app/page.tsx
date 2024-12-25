@@ -1,4 +1,5 @@
-"use client"
+"use client";
+import MyDrawer from "@/componets/MyDrawer";
 import ServiceCard from "@/componets/ServiceCard";
 import Services from "@/componets/Services";
 import Image from "next/image";
@@ -13,18 +14,15 @@ export default function Home() {
         <div className=" md:col-span-2  border-2 ">1</div>
         <div className="border-l-orange-950 grid md:grid-flow-col md:grid-cols-2 md:row-span-2 md:col-span-2  gap-4">
           <div className="h-[calc(110vh-100px)] border-2    overflow-y-scroll scrollbar-hide">
-          <style jsx global>{`
-          .scrollbar-hide::-webkit-scrollbar {
-            display: none;
-          }
-          .scrollbar-hide {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-          }
-        `}</style>
-          
-            {" "}
-            <ServiceCard />
+            <style jsx global>{`
+              .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+              }
+              .scrollbar-hide {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+              }
+            `}</style>{" "}
             <ServiceCard />
             <ServiceCard />
             <ServiceCard />

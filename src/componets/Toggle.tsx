@@ -2,9 +2,7 @@
 import React, { use, useState, useEffect } from "react";
 
 export default function Toggle() {
-  const [theme, setTheme] = useState<string>(
-    localStorage.getItem("theme") || "valentine"
-  );
+  const [theme, setTheme] = useState<string>("valentine");
 
   const toggeltheme = (e: any) => {
     if (e.target.checked) {
