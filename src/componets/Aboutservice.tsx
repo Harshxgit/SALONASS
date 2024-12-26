@@ -147,7 +147,7 @@ export default function Aboutservice() {
         },
       ];
   return (
-    <div>
+    <div className='h-screen'>
         <Timeline data={data} />
     </div>
   )
