@@ -1,4 +1,5 @@
 "use client";
+import Aboutservice from "@/componets/Aboutservice";
 import MyDrawer from "@/componets/MyDrawer";
 import ServiceCard from "@/componets/ServiceCard";
 import Services from "@/componets/Services";
@@ -29,7 +30,9 @@ export default function Home() {
             <ServiceCard /> 
             
           </div>
-          <div className="border-2 ">2</div>
+          <div className="border-2 h-fit ">
+            <Aboutservice/>
+          </div>
         </div>
       </div>
     </>
