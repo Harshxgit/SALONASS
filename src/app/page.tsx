@@ -23,10 +23,11 @@ export default function Home() {
                 scrollbar-width: none;
               }
             `}</style>{" "}
+           <ServiceCard />
             <ServiceCard />
             <ServiceCard />
-            <ServiceCard />
-            <ServiceCard />
+            <ServiceCard /> 
+            
           </div>
           <div className="border-2 ">2</div>
         </div>
