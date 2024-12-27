@@ -1,4 +1,4 @@
-import MyDrawer from '@/componets/MyDrawer'
+import MyDrawer from '@/components/MyDrawer'
 import React from 'react'
 
 export default function page() {

@@ -1,8 +1,8 @@
 "use client";
-import Aboutservice from "@/componets/Aboutservice";
-import MyDrawer from "@/componets/MyDrawer";
-import ServiceCard from "@/componets/ServiceCard";
-import Services from "@/componets/Services";
+import Aboutservice from "@/components/Aboutservice";
+import MyDrawer from "@/components/MyDrawer";
+import ServiceCard from "@/components/ServiceCard";
+import Services from "@/components/Services";
 import Image from "next/image";
 
 export default function Home() {
@@ -33,7 +33,7 @@ export default function Home() {
             <ServiceCard /> 
             
           </div>
-          <div className="border-2 h-[calc(110vh-100px)]  scrollbar-hide overflow-y-scroll overflow-x-hidden ">
+          <div className="border-2  md:h-[calc(110vh-100px)]  scrollbar-hide overflow-y-scroll overflow-x-hidden ">
             <Aboutservice/>
           </div>
         </div>
