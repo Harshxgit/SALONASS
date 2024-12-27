@@ -1,65 +1,139 @@
-'use client'
+"use client";
 
-import React, { useState } from 'react'
-import Image from 'next/image'
-import { Button } from '../../components/Button'
-import { Input } from '../../components/Input'
-import { RadioGroup, RadioGroupItem } from '../../components/RadioGroup'
+import React, { useState } from "react";
+import Image from "next/image";
+import { Button } from "../../components/Button";
+import { Input } from "../../components/Input";
+import { RadioGroup, RadioGroupItem } from "../../components/RadioGroup";
+import { create } from "zustand";
 
 export default function ShoppingCart() {
-  const [serviceType, setServiceType] = useState('home')
-  const [couponCode, setCouponCode] = useState('')
+  type Item = {
+    id: number;
+    name: string;
+    price: number;
+    image: string;
+    quantity: number;
+  };
+
+  type Servicecart = {
+    items: Item[];
+    additem: (item: Item) => void;
+    increaseqty: (id: number) => void;
+    decreaseqty: (id: number) => void;
+    removeService: (id: number) => void;
+  };
+
+  const servicecart = create<Servicecart>((set) => ({
+    items: [],
+    additem: (item: Item) => {
+      set((state: { items: Item[] }) => ({
+        items: [...state.items, item],
+      }));
+    },
+    increaseqty: (id: number) => {
+      set((state: { items: Item[] }) => ({
+        items: state.items.map((item) => {
+          if (item.id === id) {
+            return { ...item, quantity: item.quantity + 1 };
+          }
+          return item;
+        }),
+      }));
+    },
+    decreaseqty: (id: number) => {
+      set((state: { items: Item[] }) => ({
+        items: state.items.map((item) => {
+          if (item.id === id) {
+            return { ...item, quantity: item.quantity - 1 };
+          }
+          return item;
+        }),
+      }));
+    },
+    removeService: (id: number) => {
+      set((state: { items: Item[] }) => ({
+        items: state.items.filter((item) => item.id !== id),
+      }));
+    },
+  }));
+
+  const [serviceType, setServiceType] = useState("home");
+  const [couponCode, setCouponCode] = useState("");
 
   // Mock data for added services
   const [addedServices, setAddedServices] = useState([
-    { id: 1, name: 'Haircut', price: 50, image: '/placeholder.svg?height=80&width=80' },
-    { id: 2, name: 'Manicure', price: 75, image: '/placeholder.svg?height=80&width=80' },
-    { id: 3, name: 'Facial', price: 100, image: '/placeholder.svg?height=80&width=80' },
-  ])
+    {
+      id: 1,
+      name: "Haircut",
+      price: 50,
+      image: "/placeholder.svg?height=80&width=80",
+    },
+    {
+      id: 2,
+      name: "Manicure",
+      price: 75,
+      image: "/placeholder.svg?height=80&width=80",
+    },
+    {
+      id: 3,
+      name: "Facial",
+      price: 100,
+      image: "/placeholder.svg?height=80&width=80",
+    },
+  ]);
 
-  const subtotal = addedServices.reduce((sum, service) => sum + service.price, 0)
-  const tax = subtotal * 0.1 // Assuming 10% tax
-  const total = subtotal + tax
+  const subtotal = addedServices.reduce(
+    (sum, service) => sum + service.price,
+    0
+  );
+  const tax = subtotal * 0.1; // Assuming 10% tax
+  const total = subtotal + tax;
 
   const addService = () => {
     const newService = {
       id: addedServices.length + 1,
       name: `New Service ${addedServices.length + 1}`,
       price: 50,
-      image: '/placeholder.svg?height=80&width=80'
-    }
-    setAddedServices([...addedServices, newService])
-  }
+      image: "/placeholder.svg?height=80&width=80",
+    };
+    setAddedServices([...addedServices, newService]);
+  };
 
   const removeService = (id: number) => {
-    setAddedServices(addedServices.filter(service => service.id !== id))
-  }
+    setAddedServices(addedServices.filter((service) => service.id !== id));
+  };
 
   return (
     <div className="container mx-auto p-4">
       <div className="grid md:grid-cols-2 gap-8">
         {/* Left Side */}
-        <div className="space-y-6">
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h2 className="text-xl font-bold mb-4">Delivery Address</h2>
-            <Input placeholder="Enter your address" />
-          </div>
+        <div>
+          <div className="sticky top-20 space-y-6">
+            <div className="bg-white p-6 rounded-lg shadow">
+              <h2 className="text-xl font-bold mb-4">Delivery Address</h2>
+              <Input placeholder="Enter your address" />
+            </div>
 
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h2 className="text-xl font-bold mb-4">Select a Slot</h2>
-            <RadioGroup value={serviceType} onChange={setServiceType}>
-              <RadioGroupItem value="morning" label="Morning (9AM - 12PM)" />
-              <RadioGroupItem value="afternoon" label="Afternoon (1PM - 5PM)" />
-              <RadioGroupItem value="evening" label="Evening (6PM - 9PM)" />
-            </RadioGroup>
-          </div>
+            <div className="bg-white p-6 rounded-lg shadow">
+              <h2 className="text-xl font-bold mb-4">Select a Slot</h2>
+              <RadioGroup value={serviceType} onChange={setServiceType}>
+                <RadioGroupItem value="morning" label="Morning (9AM - 12PM)" />
+                <RadioGroupItem
+                  value="afternoon"
+                  label="Afternoon (1PM - 5PM)"
+                />
+                <RadioGroupItem value="evening" label="Evening (6PM - 9PM)" />
+              </RadioGroup>
+            </div>
 
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h2 className="text-xl font-bold mb-4">Service Type</h2>
-            <RadioGroup value={serviceType} onChange={setServiceType}>
-              <RadioGroupItem value="home" label="Home Service" />
-              <RadioGroupItem value="appointment" label="Appointment" />
-            </RadioGroup>
+            <div className="bg-white p-6 rounded-lg shadow">
+              <h2 className="text-xl font-bold mb-4">Service Type</h2>
+              <RadioGroup value={serviceType} onChange={setServiceType}>
+                <RadioGroupItem value="home" label="Home Service" />
+                <RadioGroupItem value="appointment" label="Appointment" />
+              </RadioGroup>
+            </div>
           </div>
         </div>
 
@@ -74,7 +148,10 @@ export default function ShoppingCart() {
             </div>
             <ul className="space-y-4">
               {addedServices.map((service) => (
-                <li key={service.id} className="flex items-center justify-between">
+                <li
+                  key={service.id}
+                  className="flex items-center justify-between"
+                >
                   <div className="flex items-center space-x-4">
                     <Image
                       src={service.image}
@@ -86,9 +163,11 @@ export default function ShoppingCart() {
                     <span className="font-medium">{service.name}</span>
                   </div>
                   <div className="flex items-center space-x-4">
-                    <span className="font-bold">${service.price.toFixed(2)}</span>
-                    <Button 
-                      onClick={() => removeService(service.id)} 
+                    <span className="font-bold">
+                      ${service.price.toFixed(2)}
+                    </span>
+                    <Button
+                      onClick={() => removeService(service.id)}
                       variant="outline"
                     >
                       Remove
@@ -120,8 +199,8 @@ export default function ShoppingCart() {
           <div className="bg-white p-6 rounded-lg shadow">
             <h2 className="text-xl font-bold mb-4">Coupon</h2>
             <div className="flex space-x-2">
-              <Input 
-                placeholder="Enter coupon code" 
+              <Input
+                placeholder="Enter coupon code"
                 value={couponCode}
                 onChange={(e) => setCouponCode(e.target.value)}
               />
@@ -137,6 +216,5 @@ export default function ShoppingCart() {
         </div>
       </div>
     </div>
-  )
+  );
 }
-
