@@ -5,104 +5,20 @@ import Image from "next/image";
 import { Button } from "../../components/Button";
 import { Input } from "../../components/Input";
 import { RadioGroup, RadioGroupItem } from "../../components/RadioGroup";
-import { create } from "zustand";
+import useServicecart from "../store/ServiceCart";
+import { Minus, Plus } from "lucide-react";
 
 export default function ShoppingCart() {
-  type Item = {
-    id: number;
-    name: string;
-    price: number;
-    image: string;
-    quantity: number;
-  };
+  //zustand state management
 
-  type Servicecart = {
-    items: Item[];
-    additem: (item: Item) => void;
-    increaseqty: (id: number) => void;
-    decreaseqty: (id: number) => void;
-    removeService: (id: number) => void;
-  };
-
-  const servicecart = create<Servicecart>((set) => ({
-    items: [],
-    additem: (item: Item) => {
-      set((state: { items: Item[] }) => ({
-        items: [...state.items, item],
-      }));
-    },
-    increaseqty: (id: number) => {
-      set((state: { items: Item[] }) => ({
-        items: state.items.map((item) => {
-          if (item.id === id) {
-            return { ...item, quantity: item.quantity + 1 };
-          }
-          return item;
-        }),
-      }));
-    },
-    decreaseqty: (id: number) => {
-      set((state: { items: Item[] }) => ({
-        items: state.items.map((item) => {
-          if (item.id === id) {
-            return { ...item, quantity: item.quantity - 1 };
-          }
-          return item;
-        }),
-      }));
-    },
-    removeService: (id: number) => {
-      set((state: { items: Item[] }) => ({
-        items: state.items.filter((item) => item.id !== id),
-      }));
-    },
-  }));
+  const { items, additems, increaseqty, decreaseqty, removeService } =useServicecart();
 
   const [serviceType, setServiceType] = useState("home");
   const [couponCode, setCouponCode] = useState("");
-
-  // Mock data for added services
-  const [addedServices, setAddedServices] = useState([
-    {
-      id: 1,
-      name: "Haircut",
-      price: 50,
-      image: "/placeholder.svg?height=80&width=80",
-    },
-    {
-      id: 2,
-      name: "Manicure",
-      price: 75,
-      image: "/placeholder.svg?height=80&width=80",
-    },
-    {
-      id: 3,
-      name: "Facial",
-      price: 100,
-      image: "/placeholder.svg?height=80&width=80",
-    },
-  ]);
-
-  const subtotal = addedServices.reduce(
-    (sum, service) => sum + service.price,
-    0
-  );
+  const subtotal = useServicecart(state => state.items.reduce((sum,item)=>sum+(item.quantity *item.price),0))
+  // const subtotal = items.reduce((sum, service) => sum + service.price, 0);
   const tax = subtotal * 0.1; // Assuming 10% tax
   const total = subtotal + tax;
-
-  const addService = () => {
-    const newService = {
-      id: addedServices.length + 1,
-      name: `New Service ${addedServices.length + 1}`,
-      price: 50,
-      image: "/placeholder.svg?height=80&width=80",
-    };
-    setAddedServices([...addedServices, newService]);
-  };
-
-  const removeService = (id: number) => {
-    setAddedServices(addedServices.filter((service) => service.id !== id));
-  };
 
   return (
     <div className="container mx-auto p-4">
@@ -142,12 +58,10 @@ export default function ShoppingCart() {
           <div className="bg-white p-6 rounded-lg shadow">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold">Added Services</h2>
-              <Button onClick={addService} variant="outline">
-                Add Service
-              </Button>
+              <Button variant="outline">Add Service</Button>
             </div>
             <ul className="space-y-4">
-              {addedServices.map((service) => (
+              {items.map((service) => (
                 <li
                   key={service.id}
                   className="flex items-center justify-between"
@@ -163,15 +77,22 @@ export default function ShoppingCart() {
                     <span className="font-medium">{service.name}</span>
                   </div>
                   <div className="flex items-center space-x-4">
-                    <span className="font-bold">
-                      ${service.price.toFixed(2)}
-                    </span>
-                    <Button
-                      onClick={() => removeService(service.id)}
-                      variant="outline"
+                    <button
+                      onClick={() => increaseqty(service.id)}
+                      className="p-1 hover:bg-gray-100 rounded"
                     >
-                      Remove
-                    </Button>
+                      <Plus className="w-4 h-4" />
+                    </button>
+                    <span className="w-8 text-center">{service.quantity}</span>
+                    <button
+                      onClick={() => decreaseqty(service.id)}
+                      className="p-1 hover:bg-gray-100 rounded"
+                    >
+                      <Minus className="w-4 h-4" />
+                    </button>
+                    <span className="font-bold min-w-[80px] text-right">
+                      ${(service.price * service.quantity).toFixed(2)}
+                    </span>
                   </div>
                 </li>
               ))}

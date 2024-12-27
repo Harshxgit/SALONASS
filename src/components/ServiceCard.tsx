@@ -2,17 +2,14 @@
 import { Star } from "lucide-react";
 import MyDrawer from "./MyDrawer";
 import { create } from "zustand";
-
+import useServicecart from "../app/store/ServiceCart";
 //ServiceCard component
 export default function ServiceCard() {
-  const showData = create((set)=>{
-    data:{
-    }
-    setdata:(newdata:object) =>set({data:newdata})
-  })
+ 
+  const { additems } = useServicecart();
   return (
     <div className="w-full p-4 ">
-        <MyDrawer>
+      <MyDrawer>
         <div className="p-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2 mt-8 text-left">
@@ -43,13 +40,28 @@ export default function ServiceCard() {
                 className="rounded-lg object-cover w-full h-[150px]"
               />
               <div className="absolute -bottom-14 right-2 flex flex-col items-center">
-                <span className="w-16 h-8  text-sm border-2 rounded-md hover:bg-black" onClick={(e)=>e.stopPropagation()} >Add</span>
+                <span
+                  className="w-16 h-8  text-sm border-2 rounded-md hover:bg-black"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    additems({
+                      id: 1,
+                      name: "Bikini waxing",
+                      price: 949,
+                      image: "/placeholder.svg?height=150&width=150",
+                      quantity: 1,
+                    });
+                    console.log("clicked")
+                  }}
+                >
+                  Add
+                </span>
                 <p className="text-xs text-white mt-1">2 options</p>
               </div>
             </div>
           </div>
         </div>
       </MyDrawer>
-      </div>
+    </div>
   );
 }
