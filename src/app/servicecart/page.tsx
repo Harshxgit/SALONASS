@@ -85,7 +85,10 @@ export default function ShoppingCart() {
                     </button>
                     <span className="w-8 text-center">{service.quantity}</span>
                     <button
-                      onClick={() => decreaseqty(service.id)}
+                      onClick={() => {
+                        if(service.quantity ==1) return removeService(service.id)
+                        decreaseqty(service.id)
+                      }}
                       className="p-1 hover:bg-gray-100 rounded"
                     >
                       <Minus className="w-4 h-4" />

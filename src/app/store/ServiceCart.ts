@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { devtools } from "zustand/middleware";
+import { devtools ,persist } from "zustand/middleware";
 type Item = {
   id: number;
   name: string;
@@ -17,7 +17,7 @@ type Servicecart = {
 };
 
 const useServicecart = create<Servicecart>()(
-  devtools(
+  persist(
     (set) => ({
       items: [
         {
@@ -53,7 +53,7 @@ const useServicecart = create<Servicecart>()(
       decreaseqty: (id: number) => {
         set((state: { items: Item[] }) => ({
           items: state.items.map((item) => {
-            if (item.id === id && item.quantity > 0) {
+            if (item.id === id) {
               return { ...item, quantity: item.quantity - 1 };
             }
             return item;
@@ -66,7 +66,9 @@ const useServicecart = create<Servicecart>()(
         }));
       },
     }),
-    { name: "service store" }
+    { name: "service store",
+      // storage: sessionStorage
+     }
   )
 );
 

@@ -45,7 +45,7 @@ export default function ServiceCard() {
                   onClick={(e) => {
                     e.stopPropagation();
                     additems({
-                      id: 1,
+                      id: 4,
                       name: "Bikini waxing",
                       price: 949,
                       image: "/placeholder.svg?height=150&width=150",
