@@ -4,7 +4,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { sendOTP ,verifyOtp } from "@/app/actions/otp";
 
-import { findUser, setUser } from "@/app/actions/user/userDetails";
+import { findUser, setUser } from "@/app/actions/user";
 
 export  const authOptions: NextAuthOptions = {
   providers: [
@@ -82,15 +82,15 @@ export  const authOptions: NextAuthOptions = {
       if (user) {
         token._id = user.id?.toString(); // Convert ObjectId to string
         token.name = user.name;
-        token.number = user.number;
+        // token.number = user.number;
       }
       return token;
     },
     async session({ session, token }) {
       if (token) {
-        session.user._id = token._id;
-        session.user.name = token.name;
-        session.user.number = token.number;
+        // session.user._id = token._id;
+        // session.user.name = token.name;
+        // session.user.number = token.number;
       }
       return session;
     }
