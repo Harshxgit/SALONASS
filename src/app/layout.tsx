@@ -1,10 +1,13 @@
-"use client"
+"use client";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Authmodal from "@/components/Authmodal";
 import { useState } from "react";
+import { useSession } from "next-auth/react";
+import { Providers } from "./provider";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -25,16 +28,17 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [isModalOpen, setIsModalOpen] = useState(true)
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <Navbar/>
-        {children}
-        <Authmodal isOpen={isModalOpen} onClose={()=>setIsModalOpen(false)} />
-      </body>
+      <Providers>
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        >
+          <Navbar />
+          {children}
+          <Authmodal />
+        </body>
+      </Providers>
     </html>
   );
 }
