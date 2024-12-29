@@ -61,9 +61,9 @@ model BookedService{
 
 model Services {
   id    Int      @id @default(autoincrement())
-  name  String  @unique
+  servicename  String  @unique
   price Int
-  imge  String[]
+  img  String[]
 }
 
 model Pckages {
