@@ -1,12 +1,17 @@
-
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
-import { sendOTP ,verifyOtp } from "@/app/actions/otp";
+import { sendOTP, verifyOtp } from "@/app/actions/otp";
 
-import { findUser, setUser } from "@/app/actions/user";
+import {
+  findUser,
+  setUser,
+  findStaff,
+  checkAdmin,
+  setAdmin,
+} from "@/app/actions/user";
 
-export  const authOptions: NextAuthOptions = {
+export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       id: "credentials",
@@ -20,56 +25,114 @@ export  const authOptions: NextAuthOptions = {
         token: { label: "token", type: "hidden" },
         firstname: { label: "Firstname", type: "text" },
         lastname: { label: "Lastname", type: "text" },
+        type: { label: "type", type: "hidden" },
+        isAdmin: { label: "isAdmin", type: "hidden" },
       },
       async authorize(credentials: any): Promise<any> {
         if (!credentials) throw new Error("No credentials");
 
-        const { number, otp, password, step, mode, firstname, lastname } =
-          credentials;
+        const {
+          number,
+          otp,
+          password,
+          step,
+          mode,
+          firstname,
+          lastname,
+          type,
+          isAdmin,
+        } = credentials;
 
         try {
+          //sign-in method , which have included admin or staff sign-in methods
           if (mode === "login") {
-            //sign in verify with otp
-            const user = await findUser(number);
-            if (!user) throw new Error("user not found");
-            if (step === "otp") {
-              const isVerified = await verifyOtp(number, otp);
-              if (isVerified) return user;
-              else throw new Error("please enter otp correctly ");
-            }
+            //if user try to signing-in
+            if (type === "user") {
+              //sign in verify with otp
+              const user = await findUser(number);
+              if (!user) throw new Error("user not found");
 
-            if (step === "password") {
-             
-              const iscorrectpassword = await bcrypt.compare(
-                password,
-                user.password
-              );
-              if (!iscorrectpassword)throw new Error("password not matched");
-              return user
+              //if try to sign-in with otp
+              if (step === "otp") {
+                const isVerified = await verifyOtp(number, otp);
+                if (!isVerified) throw new Error("please enter otp correctly ");
+                return user;
+              }
+              //if try to sign-in with password
+              if (step === "password") {
+                if (!user.password) throw new Error("User password is null");
+                const iscorrectpassword = await bcrypt.compare(
+                  password,
+                  user.password
+                );
+                if (!iscorrectpassword) throw new Error("password not matched");
+
+                return user;
+              }
+            } else if (type === "admin") {
+              //sign in verify with otp
+              const staff = await findStaff(number);
+              if (!staff) throw new Error("user not found");
+
+              //if try to sign-in with otp
+              if (step === "otp") {
+                const isVerified = await verifyOtp(number, otp);
+                if (isVerified) throw new Error("password not matched");
+                return staff;
+              }
+              //if try to sign-in with password
+              if (step === "password") {
+                if (!staff.password) throw new Error("User password is null");
+                const iscorrectpassword = await bcrypt.compare(
+                  password,
+                  staff.password
+                );
+                if (!iscorrectpassword) throw new Error("password not matched");
+
+                return staff;
+              }
             }
-          }
-          else if (mode === "signup") {
-            //first check if user existed
-          
-            const user = await findUser(number);
-            
-            if (user) {
-              return user;
-            } else{
-           
-              const createUser = await setUser(
+          } else if (mode === "signup") {
+            //user signup method
+            if (type === "user") {
+              //first check if user existed
+
+              const user = await findUser(number);
+
+              if (user) {
+                return user;
+              } else {
+                const createUser = await setUser(
+                  firstname,
+                  lastname,
+                  number,
+                  password
+                );
+                if (createUser) {
+                  const newuser = await findUser(number);
+                  return newuser;
+                }
+              }
+              throw new Error("user not signed-Up");
+            }
+            //admin signup method
+            else if (type === "admin") {
+              //sign-up for admin
+
+              const admin = await checkAdmin();
+              if (admin) return { error: "admin already exist" };
+              const createAdmin = await setAdmin(
                 firstname,
                 lastname,
                 number,
-                password
+                password,
+                isAdmin
               );
-              if (createUser) {
-                const newuser = await findUser(number);
-                return newuser;
+              if (createAdmin) {
+                const newadmin = await findStaff(number);
+                return newadmin;
               }
-             
             }
-            throw new Error("user not signed-Up");
           }
         } catch (err: any) {
           throw new Error(err);
@@ -93,7 +156,7 @@ export  const authOptions: NextAuthOptions = {
         // session.user.number = token.number;
       }
       return session;
-    }
+    },
   },
   session: {
     strategy: "jwt",
