@@ -1,10 +1,11 @@
+"use client";
 import { redirect } from "next/navigation";
+import { useRouter } from "next/router";
 
-
-import Header from "@/containers/header";
-import Sidebar from "@/containers/sidebar";
+import Header from "@/Containers/header";
+import Sidebar from "@/Containers/sidebar";
 import Container from "@/components/ui/container";
-
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 export default async function RootLayout({
   children,
@@ -13,14 +14,13 @@ export default async function RootLayout({
 }) {
   // Check if the user is authenticated by calling the isAuth function.
 
-
   // If the user is not authenticated (no session), redirect them to the login page.
-  if (!session) {
-    return redirect("/login");
-  }
+  // if (!session) {
+  //   return redirect("/login");
+  // }
 
   return (
-
+    <QueryClientProvider client={new QueryClient()}>
       <div className="flex h-dvh overflow-hidden">
         <Sidebar />
 
@@ -32,6 +32,6 @@ export default async function RootLayout({
           </main>
         </div>
       </div>
-
+    </QueryClientProvider>
   );
 }

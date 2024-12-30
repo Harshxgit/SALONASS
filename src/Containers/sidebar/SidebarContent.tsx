@@ -3,7 +3,7 @@ import { usePathname } from "next/navigation";
 import { LogOut } from "lucide-react";
 import { BsFillHandbagFill } from "react-icons/bs";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/util";
 import { Button, buttonVariants } from "@/components/ui/button";
 import Typography from "@/components/ui/typography";
 import { navItems } from "@/constants/navItems";

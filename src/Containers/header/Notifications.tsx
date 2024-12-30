@@ -1,3 +1,4 @@
+"use client "
 import { Bell } from "lucide-react";
 
 import {
@@ -7,7 +8,7 @@ import {
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import NotificationsBadge from "@/Containers/header/NotificationsBadge";
+import NotificationsBadge from "@/Containers/header/NotificationsBadge"
 import NotificationContent from "@/Containers/header/NotificationContent";
 
 export default function Notifications() {

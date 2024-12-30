@@ -2,9 +2,9 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { Button } from "../../components/Button";
+import { Button } from "../../../components/Button";
 import { Input } from "../../components/Input";
-import { RadioGroup, RadioGroupItem } from "../../components/RadioGroup";
+import { RadioGroup, RadioGroupItem } from "../../../components/RadioGroup";
 import useServicecart from "../store/ServiceCart";
 import { Minus, Plus } from "lucide-react";
 

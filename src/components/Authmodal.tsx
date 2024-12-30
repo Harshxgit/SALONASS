@@ -12,7 +12,7 @@ export default function Authmodal() {
   const [isSignUp, setIsSignUp] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 //   const [isModalOpen, setIsModalOpen] = useState(true);
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -26,19 +26,19 @@ export default function Authmodal() {
   });
   const [isClosing, setIsClosing] = useState(false);
 
-  useEffect(() => {
+  // useEffect(() => {
 
-    if (session) {
-      document.body.style.overflow = "hidden";
-      setIsOpen(true)
-    } else {
-      document.body.style.overflow = "unset";
-      setIsOpen(false)
-    }
-    return () => {
-      document.body.style.overflow = "unset";
-    };
-  }, [isOpen]);
+  //   if (session) {
+  //     document.body.style.overflow = "hidden";
+  //     setIsOpen(true)
+  //   } else {
+  //     document.body.style.overflow = "unset";
+  //     setIsOpen(false)
+  //   }
+  //   return () => {
+  //     document.body.style.overflow = "unset";
+  //   };
+  // }, [isOpen]);
 
   const handleClose = () => {
     setIsClosing(true);
