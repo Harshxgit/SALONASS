@@ -3,8 +3,8 @@
 import { useQuery } from "@tanstack/react-query";
 
 import Typography from "@/components/ui/typography";
-import NotificationItem from "./NotificationItem";
-import NotificationItemSkeleton from "./NotificationItemSkeleton";
+import NotificationItem from "@/Containers/header/NotificationItem";
+import NotificationItemSkeleton from "@/Containers/header/NotificationItemSkeleton";
 import { fetchNotifications } from "@/data/notifications";
 
 export default function NotificationContent() {

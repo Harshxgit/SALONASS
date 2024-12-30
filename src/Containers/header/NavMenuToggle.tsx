@@ -5,7 +5,7 @@ import { Menu } from "lucide-react";
 import { useAppContext } from "@/context/App";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import SidebarContent from "@/containers/sidebar/SidebarContent";
+import SidebarContent from "@/Containers/sidebar/SidebarContent";
 import useGetWindowWidth from "@/hooks/useGetWindowWidth";
 
 export default function NavMenuToggle() {

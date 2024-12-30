@@ -2,7 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/util";
 import Typography from "@/components/ui/typography";
 import { fetchNotifications } from "@/data/notifications";
 

@@ -2,10 +2,10 @@
 
 import Container from "@/components/ui/container";
 import { Skeleton } from "@/components/ui/skeleton";
-import ThemeToggle from "@/containers/header/ThemeToggle";
-import NavMenuToggle from "@/containers/header/NavMenuToggle";
-import Notifications from "@/containers/header/Notifications";
-import Profile from "@/containers/header/Profile";
+import ThemeToggle from "@/Containers/header/ThemeToggle"
+import NavMenuToggle from "@/Containers/header/NavMenuToggle";
+import Notifications from "@/Containers/header/Notifications";
+import Profile from "@/Containers/header/Profile";
 import useGetMountStatus from "@/hooks/useGetMountStatus";
 
 export default function Header() {
