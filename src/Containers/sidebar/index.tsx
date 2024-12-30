@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 
-import SidebarContent from "@/containers/sidebar/SidebarContent";
+import SidebarContent from "@/Containers/sidebar/SidebarContent"
 import useGetWindowWidth from "@/hooks/useGetWindowWidth";
 import { useAppContext } from "@/context/App";
 
