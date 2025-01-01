@@ -7,6 +7,7 @@ import NavMenuToggle from "@/Containers/header/NavMenuToggle";
 import Notifications from "@/Containers/header/Notifications";
 import Profile from "@/Containers/header/Profile";
 import useGetMountStatus from "@/hooks/useGetMountStatus";
+import Toggle from "@/components/Toggle";
 
 
 
@@ -24,11 +25,9 @@ export default function Header() {
           )}
 
           <div className="flex items-center gap-x-2 ml-auto">
-            {mounted ? (
-              <ThemeToggle />
-            ) : (
-              <Skeleton className="size-10 rounded-full" />
-            )}
+           
+             <Toggle/>
+           
 
             <Notifications />
             <Profile />

@@ -2,7 +2,7 @@
 import { Star } from "lucide-react";
 import MyDrawer from "./MyDrawer";
 import { create } from "zustand";
-import useServicecart from "../app/(main)/store/ServiceCart";
+import useServicecart from "../app/store/ServiceCart";
 //ServiceCard component
 export default function ServiceCard() {
  

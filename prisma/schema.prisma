@@ -18,7 +18,7 @@ model User {
   booking   Booking[]
 }
 
-model Admin {
+model Staff {
   id        Int       @id @default(autoincrement())
   name      String
   password String?
@@ -26,6 +26,11 @@ model Admin {
   createdAt DateTime  @default(now())
   updatedAt DateTime? @updatedAt
   isAdmin   Boolean   @default(false)  
+}
+
+model StaffAvailability{
+  id       Int       @id @default(autoincrement())
+  
 }
 
 model Address {

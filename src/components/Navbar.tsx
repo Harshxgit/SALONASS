@@ -1,7 +1,7 @@
 "use client"
 import React from "react";
 import Toggle from "./Toggle";
-import useServicecart from "@/app/(main)/store/ServiceCart";
+import useServicecart from "@/app/store/ServiceCart";
 
 export default function Navbar() {
   const {items} = useServicecart()

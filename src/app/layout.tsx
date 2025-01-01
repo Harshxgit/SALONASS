@@ -7,7 +7,7 @@ import Authmodal from "@/components/Authmodal";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { Providers } from "./provider";
-
+import { usePathname } from "next/navigation";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -28,13 +28,14 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+    const pathname = usePathname();
   return (
     <html lang="en">
       <Providers>
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          <Navbar />
+           {!pathname.includes('/admin') && <Navbar /> }
           {children}
           <Authmodal />
         </body>
