@@ -35,33 +35,37 @@ model Staff {
   createdAt DateTime  @default(now())
   updatedAt DateTime? @updatedAt
   isAdmin   Boolean   @default(false)
-
+  booking   Booking[]
   StaffAvailability StaffAvailability[]
 }
 
 model StaffAvailability {
-  id Int @id @default(autoincrement())
-  staffId Int
-  timeGap Int
-  day DayOfWeek
-  startTime DateTime
-  endTime DateTime
-  isAvailable Boolean @default(false)
-  updatedAt DateTime @updatedAt
-  cratedAt DateTime @default(now())
-  staff Staff @relation(fields: [staffId], references: [id])
+  id          Int       @id @default(autoincrement())
+  date        DateTime
+  staffId     Int
+  timeGap     Int?
+  day         DayOfWeek
+  startTime   DateTime
+  endTime     DateTime
+  isAvailable Boolean   @default(false)
+  updatedAt   DateTime  @updatedAt
+  cratedAt    DateTime  @default(now())
+  staff       Staff     @relation(fields: [staffId], references: [id])
 }
 
 model Booking {
   id             Int             @id @default(autoincrement())
   userId         Int
   user           User            @relation(fields: [userId], references: [id])
-  bookedServices BookedService[]
+  staffId        Int?
+  staff          Staff?           @relation(fields: [staffId], references: [id])
   bookingType    String
   price          Int
   address        String?
-  time           DateTime
   date           DateTime
+  starttime      DateTime
+  endtime        DateTime
+  bookedServices BookedService[]
 }
 
 model BookedService {
