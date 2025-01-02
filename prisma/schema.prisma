@@ -47,7 +47,7 @@ model StaffAvailability {
   day         DayOfWeek
   startTime   DateTime
   endTime     DateTime
-  isAvailable Boolean   @default(false)
+  isAvailable Boolean   @default(true)
   updatedAt   DateTime  @updatedAt
   cratedAt    DateTime  @default(now())
   staff       Staff     @relation(fields: [staffId], references: [id])
