@@ -6,9 +6,9 @@ interface StaffAvailability {
   datestr: Date;
 }
 interface generateslots extends StaffAvailability {
-  starttime: string;
-  endtime: string;
-  booking: { starttime: string; endtime: string }[];
+  starttime: Date;
+  endtime: Date;
+  booking: { starttime: Date; endtime: Date }[];
 }
 export async function getstafffavailablity({
   staffid,
@@ -26,6 +26,9 @@ export async function getstafffavailablity({
         },
         select: {
           isAvailable: true,
+          startTime:true,
+          endTime:true,
+          day:true  
         },
       },
       booking: {
@@ -43,37 +46,47 @@ export async function getstafffavailablity({
   if (!staff || !staff.StaffAvailability) {
     return [];
   }
-
+  const dayofweek = new Date(datestr.getDay()).toString().toUpperCase();
   const { StaffAvailability, booking } = staff;
-  const availability = StaffAvailability?.map((avail) => avail.isAvailable);
+  const availability = StaffAvailability?.find((avail) => avail.isAvailable === true && avail.day === dayofweek);
 
   if (!availability) {
     return [];
   }
   if (availability) {
+    const slots = await generateslots({ staffid, starttime: availability.startTime, endtime: availability.endTime, booking, duration, datestr });
+    return slots;
   }
 }
 
-function generateslots({
+//genrate slots
+async function generateslots({
   starttime,
   endtime,
   booking,
   duration,
   datestr,
 }: generateslots) {
+
   const slots = [];
 
   // i m letting timegap logic here
-  let currenttime = new Date(starttime);
-  let endtimeDate = new Date(endtime);
+  let currenttime = new Date(`{datestr}T${starttime}`);
+  let endtimeDate = new Date(`${datestr}T${endtime}`);
   while (currenttime < endtimeDate) {
+    currenttime.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
+
     const endslot = new Date(
       currenttime.getTime() + parseInt(duration) * 60000
     );
 
     const isSlotAvailable = !booking.some((book) => {
-      const bookstarttime = new Date(book.starttime);
-      const bookendtime = new Date(book.endtime);
+      const bookstarttime = book.starttime
+      const bookendtime = book.endtime;
 
       return (
         (currenttime >= bookstarttime && currenttime < bookendtime) ||
@@ -81,15 +94,12 @@ function generateslots({
         (currenttime < bookstarttime && endslot > bookendtime)
       );
     });
-   
-      slots.push(
-        currenttime.toLocaleTimeString("en-US", {
-          hour: "2-digit",
-          minute: "2-digit",
-          hour12: true,
-        }),
-        isSlotAvailable
-      );
-      currenttime.setMinutes(currenttime.getMinutes() + 15);
+
+    slots.push({
+      time:currenttime,
+      availabel: isSlotAvailable
+    });
+    currenttime.setMinutes(currenttime.getMinutes() + 15);
   }
+  return slots;
 }
