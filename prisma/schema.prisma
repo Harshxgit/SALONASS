@@ -66,6 +66,8 @@ model Booking {
   starttime      DateTime
   endtime        DateTime
   bookedService BookedService[]
+  status        bookingstatus
+  createdAt      DateTime        @default(now())
 }
 
 model BookedService {
@@ -87,6 +89,12 @@ model Pckages {
   name     String
   price    Int
   services Json[]
+}
+
+enum bookingstatus {
+  DONE
+  ACCEPTED
+  REJECTED
 }
 
 

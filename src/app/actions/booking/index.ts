@@ -1,4 +1,8 @@
 import { prisma } from "@/db";
+interface getBooking{
+  startdate?: Date;
+  enddate?: Date; 
+}
 interface Booking {
   userid: number;
   services: { name: string; price: number; quantity: number }[];
@@ -10,6 +14,11 @@ interface Booking {
   duration: number;
   staffid: number;
 }
+interface updatebookingstatus {
+  bookingid: number;
+  status: string;
+}
+//service booking function
 export default function addBooking({
   userid,
   price,
@@ -36,6 +45,7 @@ export default function addBooking({
           starttime: time,
           endtime: new Date(time.getTime() + duration * 60000), // Example end time 1 hour after start time
           staffId: staffid,
+          status : "ACCEPTED",
           bookedService: {
             create: [
               {
@@ -55,4 +65,39 @@ export default function addBooking({
   } catch (error) {
     return { error: "Booking failed" };
   }
+}
+
+export async function updatebookingstatus({
+ bookingid ,
+ status
+}: updatebookingstatus) {
+  const isbooking = await prisma.booking.update({
+    where: {
+      id: bookingid,
+    },
+    data: {
+      status: status as any,
+    },
+  });
+  if(!isbooking) return {error:"booking status not updated"}
+  return {success:true}
+}
+
+//get all booking
+export async function getallbooking({startdate, enddate}: getBooking) {
+
+  const startingdate = startdate ? startdate : new Date();
+  const endingdate = enddate ? enddate : startdate ? new Date(startdate.setHours(23, 59, 59, 999)) : undefined;
+
+  const isData = await prisma.booking.findMany({
+    where: {
+      date: {
+        gte: startingdate,
+        lte: endingdate,
+      },
+    },
+  });
+
+  if(!isData) return {error:"No booking found"}
+  return isData
 }

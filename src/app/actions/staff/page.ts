@@ -19,6 +19,7 @@ interface updatestaffavailability {
   endTime: Date;
   datestr: Date;
 }
+
 //staff availalbility function
 export async function getstafffavailablity({
   staffid,
@@ -162,3 +163,4 @@ export async function updatestaffavailability({
   }
   
 }
+
