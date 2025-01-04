@@ -65,8 +65,8 @@ model Booking {
   date           DateTime
   starttime      DateTime
   endtime        DateTime
-  bookedService BookedService[]
-  status        bookingstatus
+  bookedService  BookedService[]
+  status         bookingstatus
   createdAt      DateTime        @default(now())
 }
 
