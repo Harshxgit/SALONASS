@@ -65,7 +65,7 @@ model Booking {
   date           DateTime
   starttime      DateTime
   endtime        DateTime
-  bookedServices BookedService[]
+  bookedService BookedService[]
 }
 
 model BookedService {

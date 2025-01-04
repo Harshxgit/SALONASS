@@ -6,7 +6,9 @@ interface Booking {
   bookingtype: string;
   price: number;
   date: Date;
-  time: string;
+  time: Date;
+  duration: number;
+  staffid: number;
 }
 export default function addBooking({
   userid,
@@ -16,30 +18,35 @@ export default function addBooking({
   bookingtype,
   date,
   time,
+  duration,
+  staffid
 }: Booking) {
   try {
     const isbooking = prisma.$transaction(async (tx) => {
-      const booking = await tx.booking.create({
+      await tx.booking.create({
+        include: {
+          bookedService: true,
+        },
         data: {
           userId: userid,
           bookingType: bookingtype,
           address: address,
           price: price,
           date: date,
-          time: time,
-        },
-      });
-
-      const bookingid = booking.id;
-
-      tx.bookedService.create({
-        data: {
-          bookingId: bookingid,
-          services: services.map((service) => ({
-            name: service.name,
-            price: service.price,
-            quantity: service.quantity,
-          })),
+          starttime: time,
+          endtime: new Date(time.getTime() + duration * 60000), // Example end time 1 hour after start time
+          staffId: staffid,
+          bookedService: {
+            create: [
+              {
+                services: services.map((service) => ({
+                  name: service.name,
+                  price: service.price,
+                  quantity: service.quantity,
+                })),
+              },
+            ],
+          },
         },
       });
     });
