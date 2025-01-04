@@ -12,13 +12,13 @@ export async function findUser(number: string) {
   return user;
 }
 export async function findStaff(number: string) {
-  const user = await prisma.admin.findUnique({
+  const user = await prisma.staff.findUnique({
     where: { number: number },
   });
   return user;
 }
 export async function checkAdmin(){
-  const isAdminexist = await prisma.admin.findFirst({
+  const isAdminexist = await prisma.staff.findFirst({
     where: { isAdmin: true },
   });
   return !!isAdminexist
@@ -58,7 +58,7 @@ export async function setAdmin(
 ) {
   const hashpassword = await bcrypt.hash(password, 10);
   try {
-    const usercreate = await prisma.admin.create({
+    const usercreate = await prisma.staff.create({
       data: {
         name: firstname + lastname,
         number: number,

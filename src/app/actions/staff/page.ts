@@ -10,6 +10,13 @@ interface generateslots extends StaffAvailability {
   endtime: Date;
   booking: { starttime: Date; endtime: Date }[];
 }
+interface updatestaffavailability {
+  day: string;
+ isAvailable: boolean;
+ startTime: Date;
+ endTime: Date; 
+} 
+//staff availalbility function
 export async function getstafffavailablity({
   staffid,
   duration,
@@ -102,4 +109,14 @@ async function generateslots({
     currenttime.setMinutes(currenttime.getMinutes() + 15);
   }
   return slots;
+}
+
+//staff updateability function
+export async function updatestaffavailability({
+  day,
+  isAvailable,
+  startTime,
+  endTime,
+}:updatestaffavailability){
+  
 }
