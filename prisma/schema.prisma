@@ -42,14 +42,14 @@ model Staff {
 model StaffAvailability {
   id          Int       @id @default(autoincrement())
   date        DateTime
-  staffId     Int
   timeGap     Int?
-  day         DayOfWeek
+  day         String
   startTime   DateTime
   endTime     DateTime
   isAvailable Boolean   @default(true)
   updatedAt   DateTime  @updatedAt
   cratedAt    DateTime  @default(now())
+  staffId     Int
   staff       Staff     @relation(fields: [staffId], references: [id])
 }
 
@@ -89,12 +89,4 @@ model Pckages {
   services Json[]
 }
 
-enum DayOfWeek {
-  MONDAY
-  TUESDAY
-  WEDNESDAY
-  THURSDAY
-  FRIDAY
-  SATURDAY
-  SUNDAY
-}
+

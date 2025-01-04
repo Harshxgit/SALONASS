@@ -10,12 +10,15 @@ interface generateslots extends StaffAvailability {
   endtime: Date;
   booking: { starttime: Date; endtime: Date }[];
 }
+
 interface updatestaffavailability {
+  staffId: number;
   day: string;
- isAvailable: boolean;
- startTime: Date;
- endTime: Date; 
-} 
+  isAvailable: boolean;
+  startTime: Date;
+  endTime: Date;
+  datestr: Date;
+}
 //staff availalbility function
 export async function getstafffavailablity({
   staffid,
@@ -33,9 +36,9 @@ export async function getstafffavailablity({
         },
         select: {
           isAvailable: true,
-          startTime:true,
-          endTime:true,
-          day:true  
+          startTime: true,
+          endTime: true,
+          day: true,
         },
       },
       booking: {
@@ -55,13 +58,22 @@ export async function getstafffavailablity({
   }
   const dayofweek = new Date(datestr.getDay()).toString().toUpperCase();
   const { StaffAvailability, booking } = staff;
-  const availability = StaffAvailability?.find((avail) => avail.isAvailable === true && avail.day === dayofweek);
+  const availability = StaffAvailability?.find(
+    (avail) => avail.isAvailable === true && avail.day === dayofweek
+  );
 
   if (!availability) {
     return [];
   }
   if (availability) {
-    const slots = await generateslots({ staffid, starttime: availability.startTime, endtime: availability.endTime, booking, duration, datestr });
+    const slots = await generateslots({
+      staffid,
+      starttime: availability.startTime,
+      endtime: availability.endTime,
+      booking,
+      duration,
+      datestr,
+    });
     return slots;
   }
 }
@@ -74,7 +86,6 @@ async function generateslots({
   duration,
   datestr,
 }: generateslots) {
-
   const slots = [];
 
   // i m letting timegap logic here
@@ -92,7 +103,7 @@ async function generateslots({
     );
 
     const isSlotAvailable = !booking.some((book) => {
-      const bookstarttime = book.starttime
+      const bookstarttime = book.starttime;
       const bookendtime = book.endtime;
 
       return (
@@ -103,8 +114,8 @@ async function generateslots({
     });
 
     slots.push({
-      time:currenttime,
-      availabel: isSlotAvailable
+      time: currenttime,
+      availabel: isSlotAvailable,
     });
     currenttime.setMinutes(currenttime.getMinutes() + 15);
   }
@@ -113,10 +124,41 @@ async function generateslots({
 
 //staff updateability function
 export async function updatestaffavailability({
+  datestr,
+  staffId,
   day,
   isAvailable,
   startTime,
   endTime,
-}:updatestaffavailability){
+}: updatestaffavailability) {
+  const isexsit = await prisma.staffAvailability.findFirst({
+    where: {
+      staffId: staffId,
+
+      date: datestr,
+    },
+  });
+  if (isexsit) {
+    const isupdate = await prisma.staffAvailability.upsert({
+      where: {
+        id: isexsit.id,
+      },
+      update: {
+        isAvailable: isAvailable,
+        startTime: startTime,
+        endTime: endTime,
+      },
+      create: {
+        isAvailable: isAvailable,
+        startTime: startTime,
+        endTime: endTime,
+        day,
+        staffId,
+        date: datestr,
+      },
+    });
+    if(!isupdate) return {error:"staff availability not updated"}
+    return {success:true}
+  }
   
 }
