@@ -21,6 +21,7 @@ interface updatebookingstatus {
   bookingid: number;
   status: string;
 }
+
 //service booking function
 export default function addBooking({
   userid,
