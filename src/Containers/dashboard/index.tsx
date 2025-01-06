@@ -9,7 +9,6 @@ export default function Dashboard() {
     <>
       <section>
         <PageTitle>Dashboard Overview</PageTitle>
-
         <div className="space-y-8 mb-8">
           <SalesOverview />
           <StatusOverview />
