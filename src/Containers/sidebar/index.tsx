@@ -4,13 +4,12 @@ import { useState, useEffect } from "react";
 
 import SidebarContent from "@/Containers/sidebar/SidebarContent"
 import useGetWindowWidth from "@/hooks/useGetWindowWidth";
-import { useAppContext } from "@/context/App";
+import useSidebar from "@/context/App";
 
 export default function Sidebar() {
-  const { sidebarOpen } = useAppContext();
+  const sidebarOpen  = useSidebar(state=>state.sidebarOpen)
   const [isVisible, setIsVisible] = useState(sidebarOpen);
   const windowWidth = useGetWindowWidth();
-
   useEffect(() => {
     if (sidebarOpen && windowWidth && windowWidth >= 1024) {
       setIsVisible(true);

@@ -11,6 +11,7 @@ export async function getServices():Promise<Service[]> {
     const services = await prisma.services.findMany();
     return services;
 } 
+
 //create service
 export async function createService({ servicename, price, img }: Service) {
   const name = prisma.services.findUnique({

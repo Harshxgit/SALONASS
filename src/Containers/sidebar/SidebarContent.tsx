@@ -15,7 +15,7 @@ export default function SidebarContent() {
     <div className="pb-[5rem] h-full">
       <div className="py-6 px-2 flex flex-col overflow-y-auto h-full">
         <Link
-          href="/"
+          href="/admin"
           className={cn(
             buttonVariants({ variant: "ghost" }),
             "font-bold text-2xl px-6 gap-2 justify-start min-h-fit"

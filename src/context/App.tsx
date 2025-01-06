@@ -1,36 +1,14 @@
 "use client";
 
-import { createContext, useState, useContext } from "react";
+import { create } from "zustand";
 
-type IContext = {
-  sidebarOpen: boolean;
-  toggleSidebar: () => void;
-};
-
-const AppContext = createContext<IContext>({
-  sidebarOpen: true,
-  toggleSidebar: () => {},
-});
-
-export function AppContextProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-
-  const toggleSidebar = () => {
-    setSidebarOpen((prevState) => !prevState);
-  };
-
-  const value = {
-    sidebarOpen,
-    toggleSidebar,
-  };
-
-  return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
+//zustand store for sidebar
+interface useSidebar{
+  sidebarOpen :boolean
+  toggleSidebar : () => void
 }
-
-export function useAppContext() {
-  return useContext(AppContext);
-}
+const useSidebar = create<useSidebar>((set) => ({
+    sidebarOpen: true,
+    toggleSidebar: () => set((state) => ({ sidebarOpen: !state.sidebarOpen }))
+}));
+export default useSidebar
