@@ -25,7 +25,7 @@ export const navItems = [
   },
   {
     title: "Bookings",
-    url: "/admin/customers",
+    url: "/admin/bookings",
     icon: <LuUsers />,
   },
   {

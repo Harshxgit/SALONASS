@@ -14,7 +14,7 @@ export default function BookingsFilter() {
     } else {
       params.delete('status')
     }
-    router.push(`/bookings?${params.toString()}`)
+    router.push(`/admin/bookings?${params.toString()}`)
   }
 
   return (
