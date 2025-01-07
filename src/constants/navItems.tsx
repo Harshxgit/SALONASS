@@ -20,7 +20,7 @@ export const navItems = [
   },
   {
     title: "Packages",
-    url: "/admin/categories",
+    url: "/admin/packages",
     icon: <TbTag />,
   },
   {
