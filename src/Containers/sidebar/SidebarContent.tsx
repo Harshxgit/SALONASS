@@ -8,7 +8,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import Typography from "@/components/ui/typography";
 import { navItems } from "@/constants/navItems";
 
-export default function SidebarContent() {
+export default function SidebarContent({onclickclose}:any) {
   const pathname = usePathname();
 
   return (
@@ -36,6 +36,7 @@ export default function SidebarContent() {
                   pathname === navItem.url &&
                     "after:content-[''] after:absolute after:top-0 after:left-0 after:h-full after:w-1 after:bg-primary after:rounded-r-lg"
                 )}
+                onClick={onclickclose}
               >
                 {navItem.icon} {navItem.title}
               </Link>

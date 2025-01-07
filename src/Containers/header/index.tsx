@@ -21,11 +21,14 @@ export default function Header() {
             <Skeleton className="size-10 rounded-full" />
           )}
 
+
+          {/* left side  */}
           <div className="flex items-center gap-x-2 ml-auto">
             <Toggle />
             <Notifications />
             <Profile />
           </div>
+
         </div>
       </Container>
     </header>
