@@ -10,42 +10,42 @@ import { MdOutlineShoppingCart } from "react-icons/md";
 export const navItems = [
   {
     title: "Dashboard",
-    url: "/",
+    url: "/admin",
     icon: <MdOutlineDashboard />,
   },
   {
-    title: "Products",
-    url: "/products",
+    title: "Services",
+    url: "/admin/services",
     icon: <MdOutlineShoppingCart />,
   },
   {
-    title: "Categories",
-    url: "/categories",
+    title: "Packages",
+    url: "/admin/categories",
     icon: <TbTag />,
   },
   {
-    title: "Customers",
-    url: "/customers",
+    title: "Bookings",
+    url: "/admin/customers",
     icon: <LuUsers />,
   },
   {
     title: "Orders",
-    url: "/orders",
+    url: "/admin/orders",
     icon: <TbTruckDelivery />,
   },
-  {
-    title: "Coupons",
-    url: "/coupons",
-    icon: <RiCoupon2Line />,
-  },
+  // {
+  //   title: "Coupons",
+  //   url: "/coupons",
+  //   icon: <RiCoupon2Line />,
+  // },
   {
     title: "Staff",
-    url: "/staff",
+    url: "/admin/staff",
     icon: <TbBriefcase />,
   },
   {
     title: "Settings",
-    url: "/settings",
+    url: "/admin/settings",
     icon: <TbSettings />,
   },
 ];
