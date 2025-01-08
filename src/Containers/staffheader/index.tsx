@@ -9,7 +9,7 @@ import Profile from "@/Containers/header/Profile";
 import useGetMountStatus from "@/hooks/useGetMountStatus";
 import Toggle from "@/components/Toggle";
 
-export default function Header() {
+export default function Headerr() {
   const mounted = useGetMountStatus();
   return (
     <header className="sticky top-0 left-0 w-full bg-popover py-4 shadow-sm z-40">

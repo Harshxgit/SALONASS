@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from "react";
 
-import SidebarContent from "@/Containers/sidebar/SidebarContent"
+import SidebarContent from "@/Containers/staffsidebar/SidebarContent"
 import useGetWindowWidth from "@/hooks/useGetWindowWidth";
 import StaffuseSidebar from "@/context/App";
 
-export default function Sidebar() {
+export default function Sideebar() {
   const sidebarOpen  = StaffuseSidebar(state=>state.sidebarOpen)
   const [isVisible, setIsVisible] = useState(sidebarOpen);
   const windowWidth = useGetWindowWidth();
@@ -21,7 +21,7 @@ export default function Sidebar() {
   return (
     isVisible && (
       <aside className="hidden lg:block bg-popover h-dvh overflow-hidden flex-shrink-0 shadow-md relative z-40 w-sidebar">
-        <SidebarContent />
+       <SidebarContent/>
       </aside>
     )
   );

@@ -1,9 +1,9 @@
 "use client";
 
-
 import Container from "@/components/ui/container";
-import Header from "@/Containers/staffheader";
-import Sidebar from "@/Containers/staffsidebar";
+import Headerr from "@/Containers/staffheader";
+import Sideebar from "@/Containers/staffsidebar";
+
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 export default function RootLayout({
@@ -21,11 +21,10 @@ export default function RootLayout({
   return (
     <QueryClientProvider client={new QueryClient()}>
       <div className="flex h-dvh overflow-hidden">
-        <Sidebar/>
+        <Sideebar />
 
         <div className="w-full relative overflow-y-auto">
-         <Header/>
-
+          <Headerr />
           <main className="pt-6 pb-8">
             <Container>{children}</Container>
           </main>
