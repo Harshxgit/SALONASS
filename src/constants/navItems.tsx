@@ -28,11 +28,11 @@ export const navItems = [
     url: "/admin/bookings",
     icon: <LuUsers />,
   },
-  {
-    title: "Orders",
-    url: "/admin/orders",
-    icon: <TbTruckDelivery />,
-  },
+  // {
+  //   title: "Orders",
+  //   url: "/admin/orders",
+  //   icon: <TbTruckDelivery />,
+  // },
   // {
   //   title: "Coupons",
   //   url: "/coupons",
@@ -43,9 +43,27 @@ export const navItems = [
     url: "/admin/staff",
     icon: <TbBriefcase />,
   },
+  // {
+  //   title: "Settings",
+  //   url: "/admin/settings",
+  //   icon: <TbSettings />,
+  // },
+];
+
+export const SidenavItems = [
   {
-    title: "Settings",
-    url: "/admin/settings",
-    icon: <TbSettings />,
+    title: "Dashboard",
+    url: "/staff",
+    icon: <MdOutlineDashboard />,
   },
+  {
+    title: "Bookings",
+    url: "/staff/bookings",
+    icon: <LuUsers />,
+  },
+  {
+    title: "Availability",
+    url: "/staff/availability",
+    icon: <TbBriefcase />,
+  }
 ];

@@ -14,3 +14,17 @@ export type Staff = {
   createdAt: string;
   updatedAt: string;
 };
+
+
+export interface TimeSlot {
+  start: string;
+  end: string;
+}
+
+export interface StaffMember {
+  id: string;
+  name: string;
+  availability: {
+    [date: string]: TimeSlot[];
+  };
+}

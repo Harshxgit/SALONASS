@@ -11,4 +11,9 @@ const useSidebar = create<useSidebar>((set) => ({
     sidebarOpen: true,
     toggleSidebar: () => set((state) => ({ sidebarOpen: !state.sidebarOpen }))
 }));
+
+const StaffuseSidebar = create<useSidebar>((set) => ({
+    sidebarOpen: true,
+    toggleSidebar: () => set((state) => ({ sidebarOpen: !state.sidebarOpen }))
+}));
 export default useSidebar
