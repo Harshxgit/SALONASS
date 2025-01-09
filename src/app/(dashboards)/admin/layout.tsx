@@ -1,6 +1,4 @@
-
-"use client"
-
+"use client";
 
 import Header from "@/Containers/header";
 import Sidebar from "@/Containers/sidebar";
@@ -25,7 +23,7 @@ export default function RootLayout({
         <Sidebar />
 
         <div className="w-full relative overflow-y-auto">
-        <Header />
+          <Header />
 
           <main className="pt-6 pb-8">
             <Container>{children}</Container>

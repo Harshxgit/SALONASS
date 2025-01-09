@@ -35,7 +35,7 @@ export default function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-           {!pathname.includes('/admin') && <Navbar /> }
+           {!pathname.includes('/admin' ) && !pathname.includes('/staff')&& <Navbar /> }
           {children}
           <Authmodal />
         </body>
