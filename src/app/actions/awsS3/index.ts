@@ -60,7 +60,6 @@ export async function getSignedURL(
 
   //signedURL function return array of object , used Array.from
   const signedUrl: SignedUrlResult[] = await Promise.all(
-    
     //this function returning array of object .
     Array.from({ length: numberOfFiles }, async (__, index) => {
       //taking iterable  input
@@ -79,13 +78,15 @@ export async function getSignedURL(
     })
   );
   //taking all image string url and converting into an array
-  const imageurls :string[] = signedUrl.map((url) => url.uploadUrl).filter((url): url is string => url !== undefined)
+  const imageurls: string[] = signedUrl
+    .map((url) => url.uploadUrl)
+    .filter((url): url is string => url !== undefined);
   await prisma.services.update({
     where: {
       id: serviceid,
     },
     data: {
-      img: imageurls
+      img: imageurls,
     },
   });
 
