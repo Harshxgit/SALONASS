@@ -12,9 +12,9 @@ type ServiceType = 'Haircut' | 'Coloring' | 'Styling' | 'Treatment'
 
 interface ServiceFormData {
   name: string
-  price: string
+  price: number
   type: ServiceType
-  duration: string
+  duration: Date
   images: File[]
 }
 
@@ -22,9 +22,9 @@ export default function CreateServiceForm() {
     
   const [formData, setFormData] = useState<ServiceFormData>({
     name: '',
-    price: '',
-    type: 'HairCut',
-    duration: '',
+    price: 0,
+    type: 'Haircut',
+    duration: new Date(),
     images: []
   })
 
@@ -48,8 +48,21 @@ export default function CreateServiceForm() {
     
     // Here you would typically send the data to your backend
     // For this example, we'll just log it and show a success message
-    await createService(formData.name , )
+    const imageUrls = await Promise.all(formData.images.map(file => {
+      return new Promise<string>((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onload = () => resolve(reader.result as string)
+        reader.onerror = error => reject(error)
+        reader.readAsDataURL(file)
+      })
+    }))
 
+    await createService({
+      servicename: formData.name,
+      price: formData.price,
+      img: imageUrls,
+      duration: formData.duration
+    })
     // Simulating an API call
     await new Promise(resolve => setTimeout(resolve, 1000))
 
@@ -61,9 +74,9 @@ export default function CreateServiceForm() {
     // Reset form after submission
     setFormData({
       name: '',
-      price: '',
+      price: 0,
       type: 'Haircut',
-      duration: '',
+      duration: new Date(),
       images: []
     })
   }
@@ -120,9 +133,9 @@ export default function CreateServiceForm() {
             <Input
               id="duration"
               name="duration"
-              type="number"
+              type="date"
               min="0"
-              value={formData.duration}
+              value={formData.duration.toISOString().split('T')[0]}
               onChange={handleInputChange}
               required
             />
