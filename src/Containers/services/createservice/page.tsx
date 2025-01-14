@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { toast } from "@/components/ui/use-toast"
-
+import createService from "@/app/actions/service/servic"
 type ServiceType = 'Haircut' | 'Coloring' | 'Styling' | 'Treatment'
 
 interface ServiceFormData {
@@ -23,7 +23,7 @@ export default function CreateServiceForm() {
   const [formData, setFormData] = useState<ServiceFormData>({
     name: '',
     price: '',
-    type: 'Haircut',
+    type: 'HairCut',
     duration: '',
     images: []
   })
@@ -48,7 +48,7 @@ export default function CreateServiceForm() {
     
     // Here you would typically send the data to your backend
     // For this example, we'll just log it and show a success message
-    console.log('Submitting service:', formData)
+    await createService(formData.name , )
 
     // Simulating an API call
     await new Promise(resolve => setTimeout(resolve, 1000))

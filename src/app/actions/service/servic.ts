@@ -3,6 +3,7 @@ import { prisma } from "@/db";
 interface Service {
   servicename: string;
   price: number;
+  duration : Date
   img: string[];
 }
 
@@ -13,7 +14,7 @@ export async function getServices():Promise<Service[]> {
 } 
 
 //create service
-export async function createService({ servicename, price, img }: Service) {
+export default async function createService({ servicename, price, img ,duration}: Service) {
   const name = prisma.services.findUnique({
     where: { servicename:servicename },
   });
@@ -24,6 +25,7 @@ export async function createService({ servicename, price, img }: Service) {
         servicename:servicename,
         price:price,
         img:img,
+        duration : duration
       },
     });
 
