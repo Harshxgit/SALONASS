@@ -27,7 +27,7 @@ export default function CreateServiceForm() {
     duration: new Date(),
     images: []
   })
-
+  const [isLoading , setLoading] = useState(false)
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
@@ -45,12 +45,12 @@ export default function CreateServiceForm() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    
+    setLoading(true)
     // Here you would typically send the data to your backend
     // For this example, we'll just log it and show a success message
     const imageUrls = await Promise.all(formData.images.map(file => {
       return new Promise<string>((resolve, reject) => {
-        const reader = new FileReader()
+        const reader = new FileReader() //file reader api 
         reader.onload = () => resolve(reader.result as string)
         reader.onerror = error => reject(error)
         reader.readAsDataURL(file)
@@ -64,12 +64,13 @@ export default function CreateServiceForm() {
       duration: formData.duration
     })
     // Simulating an API call
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    // await new Promise(resolve => setTimeout(resolve, 1000))
 
     toast({
       title: "Service Created",
       description: `${formData.name} has been successfully added.`,
     })
+    
 
     // Reset form after submission
     setFormData({
@@ -79,6 +80,7 @@ export default function CreateServiceForm() {
       duration: new Date(),
       images: []
     })
+    setLoading(false)
   }
 
   return (
@@ -133,9 +135,9 @@ export default function CreateServiceForm() {
             <Input
               id="duration"
               name="duration"
-              type="date"
+              type="number"
               min="0"
-              value={formData.duration.toISOString().split('T')[0]}
+              // value={formData.duration}
               onChange={handleInputChange}
               required
             />
@@ -153,7 +155,7 @@ export default function CreateServiceForm() {
             />
           </div>
 
-          <Button type="submit" className="w-full">Create Service</Button>
+          <Button type="submit" className="w-full" disabled={isLoading}>Create Service</Button>
         </form>
       </CardContent>
     </Card>
