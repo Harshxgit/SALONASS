@@ -1,10 +1,11 @@
+import { services } from "@/constants/service";
 import { prisma } from "@/db";
 
 interface Service {
   servicename: string;
   price: number;
   duration : Date
-  img: string[];
+  img?: string[];
 }
 
 //get all services
@@ -20,7 +21,7 @@ export default async function createService({ servicename, price, img ,duration}
   });
   if (!name) return { error: "Service already exist" };
   try {
-    const serive = await prisma.services.create({
+    const service = await prisma.services.create({
       data: {
         servicename:servicename,
         price:price,
@@ -29,8 +30,8 @@ export default async function createService({ servicename, price, img ,duration}
       },
     });
 
-    if (!serive) return { error: "Service not created" };
-    return { success: true };
+    if (!service) return { error: "Service not created" };
+    return { success: true , serviceid : service.id };
   } catch (error) {
     return { error: "Service failed created" };
   }

@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { toast } from "@/components/ui/use-toast"
 import createService from "@/app/actions/service/servic"
+import { getSignedURL } from '@/app/actions/awsS3'
 type ServiceType = 'Haircut' | 'Coloring' | 'Styling' | 'Treatment'
 
 interface ServiceFormData {
@@ -48,21 +49,23 @@ export default function CreateServiceForm() {
     setLoading(true)
     // Here you would typically send the data to your backend
     // For this example, we'll just log it and show a success message
-    const imageUrls = await Promise.all(formData.images.map(file => {
-      return new Promise<string>((resolve, reject) => {
-        const reader = new FileReader() //file reader api 
-        reader.onload = () => resolve(reader.result as string)
-        reader.onerror = error => reject(error)
-        reader.readAsDataURL(file)
-      })
-    }))
 
-    await createService({
+    // const imageUrls = await Promise.all(formData.images.map(file => {
+    //   return new Promise<string>((resolve, reject) => {
+    //     const reader = new FileReader() //file reader api 
+    //     reader.onload = () => resolve(reader.result as string)
+    //     reader.onerror = error => reject(error)
+    //     reader.readAsDataURL(file)
+    //   })
+    // }))
+    const service =  await createService({
       servicename: formData.name,
       price: formData.price,
-      img: imageUrls,
       duration: formData.duration
     })
+
+    const url = getSignedURL(formData.images.length ||0  ,formData.type, service.serviceid || 0)
+
     // Simulating an API call
     // await new Promise(resolve => setTimeout(resolve, 1000))
 
