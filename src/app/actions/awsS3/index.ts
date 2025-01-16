@@ -32,7 +32,6 @@ const s3Client = new S3Client({
 });
 
 interface SignedUrlResult {
-  fileName?: string;
   uploadUrl?: string;
   failure?: string;
 }
@@ -42,46 +41,33 @@ export async function getSignedURL(
   numberOfFiles: number,
   fileType: string,
   serviceid: number
-): Promise<SignedUrlResult[]> {
+): Promise<SignedUrlResult> {
   //check user session
   const session = await getSession();
   if (!session) {
-    return [{ failure: "not authenticated" }];
+    return { failure: "not authenticated" };
   }
 
   //check file type
   if (!allowedFileTypes.includes(fileType)) {
-    return [{ failure: "File type not allowed" }];
+    return { failure: "File type not allowed" };
   }
 
   //function generate automatic file name
   const generateFileName = (bytes = 32) =>
     crypto.randomBytes(bytes).toString(`hex`);
 
-  //signedURL function return array of object , used Array.from
-  const signedUrl: SignedUrlResult[] = await Promise.all(
-    //this function returning array of object .
-    Array.from({ length: numberOfFiles }, async (__, index) => {
-      //taking iterable  input
-      const fileName = generateFileName();
-      const putObjectCommand = new PutObjectCommand({
-        Bucket: process.env.AWS_BUCKET_NAME!,
-        Key: fileName,
-      });
+  const fileName = generateFileName();
+  const putObjectCommand = new PutObjectCommand({
+    Bucket: process.env.AWS_BUCKET_NAME!,
+    Key: fileName,
+  });
 
-      const url = await getSignedUrl(
-        s3Client,
-        putObjectCommand,
-        { expiresIn: 60 } // 60 seconds
-      );
-      
-      return { fileName, uploadUrl: url };
-    })
+  const uploadUrl = await getSignedUrl(
+    s3Client,
+    putObjectCommand,
+    { expiresIn: 60 } // 60 seconds
   );
-  //taking all image string url and converting into an array
-  const imageurls: string[] = signedUrl
-    .map((url) => url.uploadUrl)
-    .filter((url): url is string => url !== undefined);
 
   //update DB
   await prisma.services.update({
@@ -89,9 +75,11 @@ export async function getSignedURL(
       id: serviceid,
     },
     data: {
-      img: imageurls,
+      img: {
+        push: uploadUrl,
+      },
     },
   });
 
-  return signedUrl;
+  return { uploadUrl };
 }

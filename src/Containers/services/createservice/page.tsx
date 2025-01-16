@@ -1,70 +1,92 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { toast } from "@/components/ui/use-toast"
-import createService from "@/app/actions/service/servic"
-import { getSignedURL } from '@/app/actions/awsS3'
-type ServiceType = 'Haircut' | 'Coloring' | 'Styling' | 'Treatment'
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { toast } from "@/components/ui/use-toast";
+import createService from "@/app/actions/service/servic";
+import { getSignedURL } from "@/app/actions/awsS3";
+type ServiceType = "Haircut" | "Coloring" | "Styling" | "Treatment";
 
 interface ServiceFormData {
-  name: string
-  price: number
-  type: ServiceType
-  duration: Date
-  images: File[]
+  name: string;
+  price: number;
+  type: ServiceType;
+  duration: Date;
+  images: File[];
 }
 
 export default function CreateServiceForm() {
-    
   const [formData, setFormData] = useState<ServiceFormData>({
-    name: '',
+    name: "",
     price: 0,
-    type: 'Haircut',
+    type: "Haircut",
     duration: new Date(),
-    images: []
-  })
-  const [isLoading , setLoading] = useState(false)
+    images: [],
+  });
+  const [isLoading, setLoading] = useState(false);
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
-    setFormData(prev => ({ ...prev, [name]: value }))
-  }
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleTypeChange = (value: ServiceType) => {
-    setFormData(prev => ({ ...prev, type: value }))
-  }
+    setFormData((prev) => ({ ...prev, type: value }));
+  };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      setFormData(prev => ({ ...prev, images: Array.from(e.target.files!) }))
+      setFormData((prev) => ({ ...prev, images: Array.from(e.target.files!) }));
     }
-  }
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setLoading(true)
+    e.preventDefault();
+    setLoading(true);
     // Here you would typically send the data to your backend
     // For this example, we'll just log it and show a success message
 
     // const imageUrls = await Promise.all(formData.images.map(file => {
     //   return new Promise<string>((resolve, reject) => {
-    //     const reader = new FileReader() //file reader api 
+    //     const reader = new FileReader() //file reader api
     //     reader.onload = () => resolve(reader.result as string)
     //     reader.onerror = error => reject(error)
     //     reader.readAsDataURL(file)
     //   })
     // }))
-    const service =  await createService({
+    const service = await createService({
       servicename: formData.name,
       price: formData.price,
-      duration: formData.duration
-    })
+      duration: formData.duration,
+    });
 
-    const url = getSignedURL(formData.images.length ||0  ,formData.type, service.serviceid || 0)
+    //i can generate generate urls by iterate for each image items
+    formData.images.forEach(async (item) => {
+      const { uploadUrl } = await getSignedURL(
+        formData.images.length || 0,
+        item.type,
+        service.serviceid || 0
+      );
+
+      if (uploadUrl) {
+        await fetch(uploadUrl, {
+          method: "PUT",
+          headers: {
+            "Content-Type": item.type,
+          },
+          body: item,
+        });
+      }
+    });
 
     // Simulating an API call
     // await new Promise(resolve => setTimeout(resolve, 1000))
@@ -72,19 +94,18 @@ export default function CreateServiceForm() {
     toast({
       title: "Service Created",
       description: `${formData.name} has been successfully added.`,
-    })
-    
+    });
 
     // Reset form after submission
     setFormData({
-      name: '',
+      name: "",
       price: 0,
-      type: 'Haircut',
+      type: "Haircut",
       duration: new Date(),
-      images: []
-    })
-    setLoading(false)
-  }
+      images: [],
+    });
+    setLoading(false);
+  };
 
   return (
     <Card className="w-full max-w-2xl mx-auto">
@@ -158,10 +179,11 @@ export default function CreateServiceForm() {
             />
           </div>
 
-          <Button type="submit" className="w-full" disabled={isLoading}>Create Service</Button>
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            Create Service
+          </Button>
         </form>
       </CardContent>
     </Card>
-  )
+  );
 }
-
