@@ -1,4 +1,4 @@
-import { prisma } from "@/db";
+import prisma from "@/db";
 interface getBooking {
   staffid?: number;
   userid : number;

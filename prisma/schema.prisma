@@ -81,7 +81,7 @@ model Services {
   id          Int      @id @default(autoincrement())
   servicename String   @unique
   price       Int
-  duration    DateTime
+  duration    Int
   img         String[]
 }
 

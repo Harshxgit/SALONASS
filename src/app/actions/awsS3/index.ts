@@ -3,7 +3,7 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { getSession } from "next-auth/react";
 import crypto from "crypto";
 import { promises } from "dns";
-import { prisma } from "@/db";
+import prisma from "@/db";
 import { services } from "@/constants/service";
 
 //all types

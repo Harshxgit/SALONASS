@@ -1,10 +1,10 @@
 "use server"
-import { prisma } from "@/db";
+import prisma from "@/db";
 
 interface Service {
   servicename: string;
   price: number;
-  duration : Date
+  duration : number
   img?: string[];
 }
 
@@ -21,6 +21,7 @@ export default async function createService({ servicename, price, img ,duration}
   });
   if (!name) return { error: "Service already exist" };
   try {
+    console.log("reaching here")
     const service = await prisma.services.create({
       data: {
         servicename:servicename,
@@ -29,11 +30,12 @@ export default async function createService({ servicename, price, img ,duration}
         duration : duration
       },
     });
+    console.log("reaching here2")
 
     if (!service) return { error: "Service not created" };
     return { success: true , serviceid : service.id };
   } catch (error) {
-    return { error: "Service failed created" };
+    return { error: "Service created failed" };
   }
 }
 //update service
