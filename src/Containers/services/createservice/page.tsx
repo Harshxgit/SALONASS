@@ -52,23 +52,14 @@ export default function CreateServiceForm() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    // Here you would typically send the data to your backend
-    // For this example, we'll just log it and show a success message
 
-    // const imageUrls = await Promise.all(formData.images.map(file => {
-    //   return new Promise<string>((resolve, reject) => {
-    //     const reader = new FileReader() //file reader api
-    //     reader.onload = () => resolve(reader.result as string)
-    //     reader.onerror = error => reject(error)
-    //     reader.readAsDataURL(file)
-    //   })
-    // }))
     const service = await createService({
       servicename: formData.name,
       price: formData.price,
       duration: formData.duration,
     });
-
+    console.log(service)
+    console.log("reached here");
     //i can generate generate urls by iterate for each image items
     formData.images.forEach(async (item) => {
       const { uploadUrl } = await getSignedURL(
@@ -87,7 +78,7 @@ export default function CreateServiceForm() {
         });
       }
     });
-
+    console.log("reached here2");
     // Simulating an API call
     // await new Promise(resolve => setTimeout(resolve, 1000))
 

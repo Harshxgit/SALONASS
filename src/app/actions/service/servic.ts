@@ -1,4 +1,4 @@
-import { services } from "@/constants/service";
+"use server"
 import { prisma } from "@/db";
 
 interface Service {
@@ -10,7 +10,7 @@ interface Service {
 
 //get all services
 export async function getServices():Promise<Service[]> {
-    const services = await prisma.services.findMany();
+    const services = await prisma.services.findMany({});
     return services;
 } 
 
