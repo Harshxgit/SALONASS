@@ -2,7 +2,6 @@ import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { getSession } from "next-auth/react";
 import crypto from "crypto";
-import { promises } from "dns";
 import prisma from "@/db";
 import { services } from "@/constants/service";
 
@@ -58,16 +57,20 @@ export async function getSignedURL(
     crypto.randomBytes(bytes).toString(`hex`);
 
   const fileName = generateFileName();
+  console.log(fileName)
   const putObjectCommand = new PutObjectCommand({
     Bucket: process.env.AWS_BUCKET_NAME!,
     Key: fileName,
   });
-
+  console.log(s3Client)
+  console.log(putObjectCommand)
   const uploadUrl = await getSignedUrl(
     s3Client,
     putObjectCommand,
     { expiresIn: 60 } // 60 seconds
   );
+
+  console.log(`aws s333 url + ${uploadUrl}`)
   const url = []
 
   url.push(uploadUrl)

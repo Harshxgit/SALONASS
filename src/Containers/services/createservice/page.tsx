@@ -1,5 +1,4 @@
 "use client";
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -58,15 +57,15 @@ export default function CreateServiceForm() {
     e.preventDefault();
     setLoading(true);
     
-    console.log(formData)
+
     const service = await createService({
       servicename: formData.name,
       price: formData.price,
       duration: formData.duration
     });
-    console.log(service);
+
     //i can generate generate urls by iterate for each image items
-    console.log(formData.images)
+
     formData.images.forEach(async (item) => {
       console.log("in aws url")
       const { uploadUrl } = await getSignedURL(
@@ -74,7 +73,7 @@ export default function CreateServiceForm() {
         item.type,
         service.serviceid || 0
       );
-      console.log(uploadUrl)
+      console.log(`url of signed + ${uploadUrl}`)
       if (uploadUrl) {
         await fetch(uploadUrl, {
           method: "PUT",
@@ -85,9 +84,8 @@ export default function CreateServiceForm() {
         });
       }
     });
-    // Simulating an API call
-    // await new Promise(resolve => setTimeout(resolve, 1000))
-    console.log("awss3")
+   
+    
     toast({
       title: "Service Created",
       description: `${formData.name} has been successfully added.`,
