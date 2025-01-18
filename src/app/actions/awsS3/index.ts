@@ -27,9 +27,9 @@ const s3Client = new S3Client({
   credentials: {
     accessKeyId: process.env.AWS_ACCESS_KEY!,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
-  },
+  }
 });
-
+console.log(process.env.AWS_BUCKET_REGION)
 interface SignedUrlResult {
   uploadUrl?: string;
   failure?: string;
@@ -42,10 +42,10 @@ export async function getSignedURL(
   serviceid: number
 ): Promise<SignedUrlResult> {
   //check user session
-  const session = await getSession();
-  if (!session) {
-    return { failure: "not authenticated" };
-  }
+  // const session = await getSession();
+  // if (!session) {
+  //   return { failure: "not authenticated" };
+  // }
 
   //check file type
   if (!allowedFileTypes.includes(fileType)) {
@@ -57,19 +57,19 @@ export async function getSignedURL(
     crypto.randomBytes(bytes).toString(`hex`);
 
   const fileName = generateFileName();
-  console.log(fileName)
+
+
   const putObjectCommand = new PutObjectCommand({
     Bucket: process.env.AWS_BUCKET_NAME!,
     Key: fileName,
   });
-  console.log(s3Client)
-  console.log(putObjectCommand)
+
   const uploadUrl = await getSignedUrl(
     s3Client,
     putObjectCommand,
     { expiresIn: 60 } // 60 seconds
   );
-
+  console.log(uploadUrl)
   console.log(`aws s333 url + ${uploadUrl}`)
   const url = []
 
