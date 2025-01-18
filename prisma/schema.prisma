@@ -82,7 +82,7 @@ model Services {
   servicename String   @unique
   price       Int
   duration    Int
-  img         String[]
+  img        String[] @default([])
 }
 
 model Pckages {

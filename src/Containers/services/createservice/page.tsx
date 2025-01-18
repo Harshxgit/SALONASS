@@ -13,15 +13,15 @@ import {
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "@/components/ui/use-toast";
-import createService from "@/app/actions/service/servic";
 import { getSignedURL } from "@/app/actions/awsS3";
+import createService from "@/app/actions/service/servic";
 type ServiceType = "Haircut" | "Coloring" | "Styling" | "Treatment";
 
 interface ServiceFormData {
   name: string;
   price: number;
   type: ServiceType;
-  duration: Date;
+  duration: number;
   images: File[];
 }
 
@@ -30,13 +30,18 @@ export default function CreateServiceForm() {
     name: "",
     price: 0,
     type: "Haircut",
-    duration: new Date(),
+    duration: 0,
     images: [],
   });
   const [isLoading, setLoading] = useState(false);
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    const { name, value ,type } = e.target;
+
+    if(name==="price" || name==="duration"||name==="price"){
+
+      setFormData((prev) => ({ ...prev, [name]:type==="number"?parseFloat( value) : value }));
+    }
+    else setFormData((prev)=>({...prev,[name]:value}))
   };
 
   const handleTypeChange = (value: ServiceType) => {
@@ -52,22 +57,24 @@ export default function CreateServiceForm() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-
+    
+    console.log(formData)
     const service = await createService({
       servicename: formData.name,
       price: formData.price,
-      duration: formData.duration,
+      duration: formData.duration
     });
-    console.log(service)
-    console.log("reached here");
+    console.log(service);
     //i can generate generate urls by iterate for each image items
+    console.log(formData.images)
     formData.images.forEach(async (item) => {
+      console.log("in aws url")
       const { uploadUrl } = await getSignedURL(
         formData.images.length || 0,
         item.type,
         service.serviceid || 0
       );
-
+      console.log(uploadUrl)
       if (uploadUrl) {
         await fetch(uploadUrl, {
           method: "PUT",
@@ -78,10 +85,9 @@ export default function CreateServiceForm() {
         });
       }
     });
-    console.log("reached here2");
     // Simulating an API call
     // await new Promise(resolve => setTimeout(resolve, 1000))
-
+    console.log("awss3")
     toast({
       title: "Service Created",
       description: `${formData.name} has been successfully added.`,
@@ -92,7 +98,7 @@ export default function CreateServiceForm() {
       name: "",
       price: 0,
       type: "Haircut",
-      duration: new Date(),
+      duration: 0,
       images: [],
     });
     setLoading(false);

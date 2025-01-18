@@ -68,16 +68,16 @@ export async function getSignedURL(
     putObjectCommand,
     { expiresIn: 60 } // 60 seconds
   );
+  const url = []
 
+  url.push(uploadUrl)
   //update DB
   await prisma.services.update({
     where: {
       id: serviceid,
     },
     data: {
-      img: {
-        push: uploadUrl,
-      },
+      img: url
     },
   });
 

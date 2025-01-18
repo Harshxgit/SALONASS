@@ -15,23 +15,23 @@ export async function getServices():Promise<Service[]> {
 } 
 
 //create service
-export default async function createService({ servicename, price, img ,duration}: Service) {
+export default async function createService({ servicename, price, duration}: Service) {
   const name = prisma.services.findUnique({
     where: { servicename:servicename },
   });
   if (!name) return { error: "Service already exist" };
   try {
-    console.log("reaching here")
+    console.log("reaching here in service")
+    
     const service = await prisma.services.create({
       data: {
         servicename:servicename,
         price:price,
-        img:img,
         duration : duration
       },
     });
-    console.log("reaching here2")
 
+    console.log("reaching here2")
     if (!service) return { error: "Service not created" };
     return { success: true , serviceid : service.id };
   } catch (error) {
