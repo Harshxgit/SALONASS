@@ -1,12 +1,6 @@
 "use server"
 import prisma from "@/db";
-
-interface Service {
-  servicename: string;
-  price: number;
-  duration : number
-  img?: string[];
-}
+import Service from "@/types/service";
 
 //get all services
 export async function getServices():Promise<Service[]> {

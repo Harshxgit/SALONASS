@@ -67,7 +67,6 @@ export default function CreateServiceForm() {
     //i can generate generate urls by iterate for each image items
 
     formData.images.forEach(async (item) => {
-      console.log("in aws url")
       const { uploadUrl } = await getSignedURL(
         formData.images.length || 0,
         item.type,
@@ -97,7 +96,7 @@ export default function CreateServiceForm() {
       price: 0,
       type: "Haircut",
       duration: 0,
-      images: [],
+      images: []
     });
     setLoading(false);
   };

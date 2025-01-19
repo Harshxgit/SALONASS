@@ -1,18 +1,30 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import Image from 'next/image'
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { services, Service } from '../../../constants/service'
+import { useState } from "react";
+import Image from "next/image";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+import useSWR from "swr";
+import { getServices } from "@/app/actions/service/servic";
+import Service from "@/types/service"
 
 export default function ServiceList() {
-  const [filter, setFilter] = useState<string>('All')
+  const { data: services, error, isLoading } = useSWR("/service", getServices);
 
-  const filteredServices = filter === 'All' 
-    ? services 
-    : services.filter(service => service.type === filter)
+  const [filter, setFilter] = useState<string>("All");
 
+  const filteredServices =
+    filter === "All"
+      ? services ?? []
+      : (services ?? []).filter((service) => service.type === filter);
+      
   return (
     <div className="container mx-auto py-10">
       <div className="flex justify-between items-center mb-6">
@@ -36,7 +48,7 @@ export default function ServiceList() {
         ))}
       </div>
     </div>
-  )
+  );
 }
 
 function ServiceCard({ service }: { service: Service }) {
@@ -48,7 +60,7 @@ function ServiceCard({ service }: { service: Service }) {
       <CardContent>
         <div className="flex items-center space-x-4">
           <Image
-            src={service.image}
+            src={service.img || "/default-image.png"}
             alt={service.name}
             width={100}
             height={100}
@@ -62,6 +74,5 @@ function ServiceCard({ service }: { service: Service }) {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
-

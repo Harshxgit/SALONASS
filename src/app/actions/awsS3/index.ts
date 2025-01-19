@@ -1,6 +1,5 @@
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { getSession } from "next-auth/react";
 import crypto from "crypto";
 import prisma from "@/db";
 import { services } from "@/constants/service";
@@ -23,13 +22,12 @@ type GetSignedURLParams = {
 
 //AWS S3 client connection
 const s3Client = new S3Client({
-  region: process.env.AWS_BUCKET_REGION!,
+  region: process.env.AWS_BUCKET_REGION ??  'us-east-1',
   credentials: {
     accessKeyId: process.env.AWS_ACCESS_KEY!,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
   }
 });
-console.log(process.env.AWS_BUCKET_REGION)
 interface SignedUrlResult {
   uploadUrl?: string;
   failure?: string;
@@ -41,6 +39,7 @@ export async function getSignedURL(
   fileType: string,
   serviceid: number
 ): Promise<SignedUrlResult> {
+
   //check user session
   // const session = await getSession();
   // if (!session) {
@@ -51,6 +50,8 @@ export async function getSignedURL(
   if (!allowedFileTypes.includes(fileType)) {
     return { failure: "File type not allowed" };
   }
+  
+  console.log(process.env)
 
   //function generate automatic file name
   const generateFileName = (bytes = 32) =>
@@ -69,8 +70,7 @@ export async function getSignedURL(
     putObjectCommand,
     { expiresIn: 60 } // 60 seconds
   );
-  console.log(uploadUrl)
-  console.log(`aws s333 url + ${uploadUrl}`)
+
   const url = []
 
   url.push(uploadUrl)
