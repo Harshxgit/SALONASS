@@ -13,7 +13,7 @@ type ServiceType = 'Haircut' | 'Coloring' | 'Styling' | 'Treatment'
 interface ServiceFormData {
   name: string
   price: string
-  type: ServiceType
+  type: string[]
   duration: string
   images: File[]
 }
@@ -23,10 +23,11 @@ export default function CreatePackageForm() {
   const [formData, setFormData] = useState<ServiceFormData>({
     name: '',
     price: '',
-    type: 'Haircut',
+    type:[],
     duration: '',
     images: []
   })
+
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target

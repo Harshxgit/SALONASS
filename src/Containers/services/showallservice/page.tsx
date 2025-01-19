@@ -16,10 +16,10 @@ import { getServices } from "@/app/actions/service/servic";
 import Service from "@/types/service"
 
 export default function ServiceList() {
-  const { data: services, error, isLoading } = useSWR("/service", getServices);
+  const { data: services, error, isLoading } = useSWR("services", getServices);
 
   const [filter, setFilter] = useState<string>("All");
-
+  console.log(services)
   const filteredServices =
     filter === "All"
       ? services ?? []
@@ -55,19 +55,20 @@ function ServiceCard({ service }: { service: Service }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{service.name}</CardTitle>
+        <CardTitle>{service.servicename}</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="flex items-center space-x-4">
           <Image
-            src={service.img || "/default-image.png"}
-            alt={service.name}
+            src={Array.isArray(service.img) ? service.img[0] : service.img || "/default-image.png"}
+            alt={service.servicename || "Service image"}
             width={100}
             height={100}
             className="rounded-md"
           />
           <div>
-            <p className="font-semibold">${service.price}</p>
+            <p className="font-semibold">{service.servicename}</p>
+            <p className="font-semibold">₹{service.price}</p>
             <p className="text-sm text-gray-500">{service.type}</p>
             <p className="text-sm text-gray-500">{service.duration} minutes</p>
           </div>

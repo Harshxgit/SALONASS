@@ -38,7 +38,7 @@ export default function CreateServiceForm() {
 
     if(name==="price" || name==="duration"||name==="price"){
 
-      setFormData((prev) => ({ ...prev, [name]:type==="number"?parseFloat( value) : value }));
+      setFormData((prev) => ({ ...prev, [name]:type==="number"?parseInt( value) : value }));
     }
     else setFormData((prev)=>({...prev,[name]:value}))
   };
@@ -57,11 +57,12 @@ export default function CreateServiceForm() {
     e.preventDefault();
     setLoading(true);
     
-
+    console.log(formData)
     const service = await createService({
       servicename: formData.name,
       price: formData.price,
-      duration: formData.duration
+      duration: formData.duration,
+      type  : formData.type
     });
 
     //i can generate generate urls by iterate for each image items

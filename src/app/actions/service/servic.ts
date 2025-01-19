@@ -1,33 +1,46 @@
-"use server"
+"use server";
 import prisma from "@/db";
 import Service from "@/types/service";
+interface Servicee {
+  servicename: string;
+  price: number;
+  type: string;
+  duration: number;
+}
 
 //get all services
-export async function getServices():Promise<Service[]> {
-    const services = await prisma.services.findMany({});
-    return services;
-} 
+export async function getServices(): Promise<Service[]> {
+  const services = await prisma.services.findMany({});
+  return services;
+}
 
 //create service
-export default async function createService({ servicename, price, duration}: Service) {
+export default async function createService({
+  servicename,
+  price,
+  duration,
+  type,
+}: Servicee) {
+  console.log(servicename,price,duration,type)
   const name = prisma.services.findUnique({
-    where: { servicename:servicename },
+    where: { servicename: servicename },
   });
   if (!name) return { error: "Service already exist" };
   try {
-    console.log("reaching here in service")
-    
+    console.log("reaching here in service");
+
     const service = await prisma.services.create({
       data: {
-        servicename:servicename,
-        price:price,
-        duration : duration
+        servicename: servicename,
+        price: price,
+        duration: duration,
+        type: type,
       },
     });
 
-    console.log("reaching here2")
+    console.log("reaching here2");
     if (!service) return { error: "Service not created" };
-    return { success: true , serviceid : service.id };
+    return { success: true, serviceid: service.id };
   } catch (error) {
     return { error: "Service created failed" };
   }
@@ -36,10 +49,10 @@ export default async function createService({ servicename, price, duration}: Ser
 export async function updateService({ servicename, price, img }: Service) {
   try {
     const service = await prisma.services.update({
-      where: { servicename:servicename },
+      where: { servicename: servicename },
       data: {
-        price:price,
-        img:img,
+        price: price,
+        img: img,
       },
     });
     if (!service) return { error: "Service not updated" };
@@ -52,7 +65,7 @@ export async function updateService({ servicename, price, img }: Service) {
 export async function deleteService(servicename: string) {
   try {
     const service = await prisma.services.delete({
-      where: { servicename:servicename },
+      where: { servicename: servicename },
     });
     if (!service) return { error: "Service not deleted" };
     return { success: true };

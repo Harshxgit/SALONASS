@@ -82,14 +82,17 @@ model Services {
   servicename String   @unique
   price       Int
   duration    Int
+  type        String
   img        String[] @default([])
+  packageID  Int
+  packages Packages @relation(fields: [packageID], references: [id])
 }
 
-model Pckages {
+model Packages {
   id       Int    @id @default(autoincrement())
   name     String
   price    Int
-  services Json[]
+  services Services[]
 }
 
 enum bookingstatus {
