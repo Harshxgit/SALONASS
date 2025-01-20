@@ -12,19 +12,23 @@ interface Item {
   
 type AdminService = {
     items : Item[]
-    additem : (item :Item) => void
+    additem : (item :Item[]) => void
 }
 const useAdminService = create<AdminService>()(
     persist(
         (set)=>({
             items :[],
-            additem : (item:Item) => set((state :{items:Item[]})=>({
-                items : [...state.items , item]
-            }))
+            additem : (item:Item[]) => set((state)=>{
+                const existingid = state.items.map((item)=>item.id)
+                const uniqservices = item.filter((item)=>!existingid.includes(item.id))
+                return {items : [...state.items, ...uniqservices]}
+
+        })
                 
         }),
         {
-            name : "admin service"
+            name : "adminservice",
+            // storage: localStorage
         }
     )
 )

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -18,31 +18,25 @@ import Service from "@/types/service";
 import useAdminService from "@/app/store/adminservice";
 import React from "react";
 export default function ServiceList() {
-  // const { data, error, isLoading } = useSWR("services", getServices); //fetch data
-  // const additem = useAdminService((state) => state.additem); //subscribed service for add item
-  // if (data) { //store fetched data to useAdminService zustand
-  //   data.forEach((service) =>
-  //     additem({
-  //       //add data to zustand
-  //       id : service.id,
-  //       servicename: service.servicename,
-  //       price: service.price,
-  //       duration: service.duration,
-  //       type: service.type,
-  //       img : service.img
-  //     })
-  //   );
-  // }
-  const services = useAdminService((state) => state.items);
-  console.log(services);
-  const [filter, setFilter] = useState<string>("All");
-  console.log(services);
+  const { data, error, isLoading } = useSWR("services", getServices); //fetch data
+  const additem = useAdminService((state) => state.additem); //subscribed service for add items
 
-  const filteredServices = useMemo(() => {
-    return filter === "All"
-      ? services ?? []
-      : (services ?? []).filter((service) => service.type === filter);
-  }, [filter, services]);
+  useEffect(()=>{
+
+    if (data) { //store fetched data to useAdminService zustand
+      additem(data)
+    }
+  },[])
+  const services = useAdminService((state) => state.items);
+
+  const [filter, setFilter] = useState<string>("All");
+
+
+  // const filteredServices = useMemo(() => {
+  //   return filter === "All"
+  //     ? services ?? []
+  //     : (services ?? []).filter((service) => service.type === filter);
+  // }, [filter, services]);
 
   return (
     <div className="container mx-auto py-10">
@@ -62,7 +56,7 @@ export default function ServiceList() {
         </Select>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredServices.map((service) => (
+        {services.map((service) => (
           <MemoizedServiceCard key={service.id} service={service} />
         ))}
       </div>
@@ -78,7 +72,7 @@ const ServiceCard = ({ service }: { service: Service }) => {
       </CardHeader>
       <CardContent>
         <div className="flex items-center space-x-4">
-          <Image
+          {/* <Image
             src={
               Array.isArray(service.img)
                 ? service.img[0]
@@ -88,7 +82,7 @@ const ServiceCard = ({ service }: { service: Service }) => {
             width={100}
             height={100}
             className="rounded-md"
-          />
+          /> */}
           <div>
             <p className="font-semibold">{service.servicename}</p>
             <p className="font-semibold">₹{service.price}</p>
