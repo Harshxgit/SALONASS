@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE "Services" ALTER COLUMN "img" SET DEFAULT ARRAY[]::TEXT[];

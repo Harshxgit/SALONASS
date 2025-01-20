@@ -34,8 +34,8 @@ export default function CreatePackageForm() {
     setFormData(prev => ({ ...prev, [name]: value }))
   }
 
-  const handleTypeChange = (value: ServiceType) => {
-    setFormData(prev => ({ ...prev, type: value }))
+  const handleTypeChange = (e: ServiceType) => {
+    setFormData(prev => ({ ...prev, type: Array.from(e.target.files!) }))
   }
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -85,19 +85,20 @@ CREATE TABLE "Services" (
     "servicename" TEXT NOT NULL,
     "price" INTEGER NOT NULL,
     "duration" INTEGER NOT NULL,
-    "img" TEXT[],
+    "type" TEXT NOT NULL,
+    "img" TEXT[] DEFAULT ARRAY[]::TEXT[],
+    "packageID" INTEGER,
 
     CONSTRAINT "Services_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "Pckages" (
+CREATE TABLE "Packages" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
     "price" INTEGER NOT NULL,
-    "services" JSONB[],
 
-    CONSTRAINT "Pckages_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Packages_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -123,3 +124,6 @@ ALTER TABLE "Booking" ADD CONSTRAINT "Booking_staffId_fkey" FOREIGN KEY ("staffI
 
 -- AddForeignKey
 ALTER TABLE "BookedService" ADD CONSTRAINT "BookedService_bookingId_fkey" FOREIGN KEY ("bookingId") REFERENCES "Booking"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Services" ADD CONSTRAINT "Services_packageID_fkey" FOREIGN KEY ("packageID") REFERENCES "Packages"("id") ON DELETE SET NULL ON UPDATE CASCADE;

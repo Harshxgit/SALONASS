@@ -84,8 +84,8 @@ model Services {
   duration    Int
   type        String
   img        String[] @default([])
-  packageID  Int
-  packages Packages @relation(fields: [packageID], references: [id])
+  packageID  Int?
+  packages Packages? @relation(fields: [packageID], references: [id])
 }
 
 model Packages {
