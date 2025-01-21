@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
 import {
   Select,
   SelectContent,
@@ -18,25 +19,29 @@ import Service from "@/types/service";
 import useAdminService from "@/app/store/adminservice";
 import React from "react";
 export default function ServiceList() {
-  const { data, error, isLoading } = useSWR("services", getServices); //fetch data
+  const { data, error, isLoading } = useSWR("action/services", getServices); //fetch data
   const additem = useAdminService((state) => state.additem); //subscribed service for add items
 
-  useEffect(()=>{
-
-    if (data) { //store fetched data to useAdminService zustand
-      additem(data)
+  // console.log(data)
+  useEffect(() => {
+    if (data) {
+      //store fetched data to useAdminService zustand
+      additem(data);
+      console.log("added data many times");
     }
-  },[])
+  }, [data, additem]);
   const services = useAdminService((state) => state.items);
-
   const [filter, setFilter] = useState<string>("All");
+  console.log(services+"servicedfdsfdflorems lorem45")
+  const filteredServices = useMemo(() => {
+    console.log("filter")
+    return filter === "All"
+      ? services
+      : services.filter((service) => service.type === filter);
+  }, [filter,  JSON.stringify(services)]);
+  if (error) return <div>something went wrong</div>;
 
-
-  // const filteredServices = useMemo(() => {
-  //   return filter === "All"
-  //     ? services ?? []
-  //     : (services ?? []).filter((service) => service.type === filter);
-  // }, [filter, services]);
+  if (isLoading) return <div>LOADING.................</div>;
 
   return (
     <div className="container mx-auto py-10">
@@ -56,8 +61,8 @@ export default function ServiceList() {
         </Select>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {services.map((service) => (
-          <MemoizedServiceCard key={service.id} service={service} />
+        {filteredServices.map((service, index) => (
+          <MemoizedServiceCard key={service.id || index} service={service} />
         ))}
       </div>
     </div>

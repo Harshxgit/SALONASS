@@ -7,25 +7,24 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { toast } from "@/components/ui/use-toast"
-
-type ServiceType = 'Haircut' | 'Coloring' | 'Styling' | 'Treatment'
-
-interface ServiceFormData {
+import useAdminService from '@/app/store/adminservice'
+import Service from '@/types/service'
+const service = useAdminService((state) => state.items);
+interface PackageFormData {
   name: string
   price: string
-  type: string[]
   duration: string
-  images: File[]
+  services: Service[]
 }
 
 export default function CreatePackageForm() {
     
-  const [formData, setFormData] = useState<ServiceFormData>({
+  const [formData, setFormData] = useState<PackageFormData>({
     name: '',
     price: '',
-    type:[],
     duration: '',
-    images: []
+    services:[]
+
   })
 
 
@@ -34,8 +33,15 @@ export default function CreatePackageForm() {
     setFormData(prev => ({ ...prev, [name]: value }))
   }
 
-  const handleTypeChange = (e: ServiceType) => {
-    setFormData(prev => ({ ...prev, type: Array.from(e.target.files!) }))
+  const selectService = (value: string) => {
+    const item = service.find(s => s.servicename === value);
+    if (item) {
+      setFormData(prev => {
+        const isSelected = prev.services.includes(item);
+        const items = isSelected ? prev.services.filter((service: Service) => service.id !== item.id) : [...prev.services, item];
+        return { ...prev, services: items };
+      });
+    }
   }
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -63,9 +69,8 @@ export default function CreatePackageForm() {
     setFormData({
       name: '',
       price: '',
-      type: 'Haircut',
       duration: '',
-      images: []
+      services: []
     })
   }
 
@@ -103,15 +108,16 @@ export default function CreatePackageForm() {
 
           <div className="space-y-2">
             <Label htmlFor="type">Service Type</Label>
-            <Select onValueChange={handleTypeChange} value={formData.type}>
+            <Select onValueChange={selectService} value={formData.services.map(s => s.servicename).join(', ')}>
               <SelectTrigger>
                 <SelectValue placeholder="Select service type" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Haircut">Haircut</SelectItem>
-                <SelectItem value="Coloring">Coloring</SelectItem>
-                <SelectItem value="Styling">Styling</SelectItem>
-                <SelectItem value="Treatment">Treatment</SelectItem>
+                {
+                  service.map((service) => (
+                   <SelectItem key={service.id} value={service.servicename}>{service.servicename}</SelectItem> 
+                  ))
+                }
               </SelectContent>
             </Select>
           </div>
