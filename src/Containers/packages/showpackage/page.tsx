@@ -1,22 +1,32 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { services, Service } from '../../../constants/service'
-
+import { getPackages } from '@/app/actions/packages/package'
+import useSWR from 'swr'
+import useAdminPackages from '@/app/store/adminPackages'
+import { Packages } from '@/types/packages'
 export default function PackageList() {
   const [filter, setFilter] = useState<string>('All')
+  const {data ,error , isLoading} = useSWR('api/packages',getPackages )
+  const additem = useAdminPackages((state) => state.additem)
 
-  const filteredServices = filter === 'All' 
-    ? services 
-    : services.filter(service => service.type === filter)
+  //leave logic for 
+  // const filteredServices = filter === 'All' 
+  //   ? data 
+  //   : data.filter(service => service.type === filter)
 
+    useEffect(()=>{
+        if(data){
+            additem(data)
+    }},[data,additem])
   return (
     <div className="container mx-auto py-10">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Our Services</h1>
+        <h1 className="text-2xl font-bold">Packages</h1>
         <Select onValueChange={setFilter} defaultValue="All">
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Filter by type" />
@@ -31,7 +41,7 @@ export default function PackageList() {
         </Select>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredServices.map((service) => (
+        {data && data.map((service) => (
           <ServiceCard key={service.id} service={service} />
         ))}
       </div>
@@ -39,7 +49,7 @@ export default function PackageList() {
   )
 }
 
-function ServiceCard({ service }: { service: Service }) {
+function ServiceCard({ service }: { service: Packages }) {
   return (
     <Card>
       <CardHeader>

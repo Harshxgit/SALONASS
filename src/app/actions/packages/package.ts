@@ -3,15 +3,13 @@ import prisma from "@/db";
 import { Packages } from "@/types/packages";
 import { Service } from "@/types/packages";
 type Package ={
-  id: number;
   packageName: string;
   price: number;
-  img: string[];
   service: Service[];
 }
 
 //get all packages
-export async function getServices(): Promise<Packages[]> {
+export async function getPackages(): Promise<Packages[]> {
   const packages = await prisma.packages.findMany({
     include: {
       services: true,
@@ -25,9 +23,8 @@ export default async function createPackages({
   packageName,
   price,
   service,
-  img,
 }: Package) {
-  console.log(packageName, price, service, img);
+  console.log(packageName, price, service);
   const name = prisma.packages.findUnique({
     where: { name: packageName },
   });

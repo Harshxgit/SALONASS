@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
 interface Item {
   id: number;
   servicename: string;
@@ -8,7 +7,6 @@ interface Item {
   type: string;
   img: string[];
 }
-
 type AdminService = {
   items: Item[];
   additem: (item: Item[]) => void;
