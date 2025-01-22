@@ -57,7 +57,7 @@ export default function CreateServiceForm() {
     e.preventDefault();
     setLoading(true);
     
-    console.log(formData)
+
     const service = await createService({
       servicename: formData.name,
       price: formData.price,
@@ -73,7 +73,7 @@ export default function CreateServiceForm() {
         item.type,
         service.serviceid || 0
       );
-      console.log(`url of signed + ${uploadUrl}`)
+      // console.log(`url of signed + ${uploadUrl}`)
       if (uploadUrl) {
         await fetch(uploadUrl, {
           method: "PUT",

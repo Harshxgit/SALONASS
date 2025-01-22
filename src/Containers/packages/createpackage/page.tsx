@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { toast } from "@/components/ui/use-toast"
 import useAdminService from '@/app/store/adminservice'
 import Service from '@/types/service'
-const service = useAdminService((state) => state.items);
+
 interface PackageFormData {
   name: string
   price: string
@@ -18,7 +18,8 @@ interface PackageFormData {
 }
 
 export default function CreatePackageForm() {
-    
+  const [isLoading, setLoading] = useState(false);
+  const service = useAdminService((state) => state.items);
   const [formData, setFormData] = useState<PackageFormData>({
     name: '',
     price: '',
@@ -27,6 +28,7 @@ export default function CreatePackageForm() {
 
   })
 
+  console.log(formData)
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -57,6 +59,8 @@ export default function CreatePackageForm() {
     // For this example, we'll just log it and show a success message
     console.log('Submitting service:', formData)
 
+    setLoading(true)
+    await 
     // Simulating an API call
     await new Promise(resolve => setTimeout(resolve, 1000))
 
@@ -108,7 +112,7 @@ export default function CreatePackageForm() {
 
           <div className="space-y-2">
             <Label htmlFor="type">Service Type</Label>
-            <Select onValueChange={selectService} value={formData.services.map(s => s.servicename).join(', ')}>
+            <Select onValueChange={selectService} value={formData.services.map(s => s.servicename.slice(1,4)).join(', ')}>
               <SelectTrigger>
                 <SelectValue placeholder="Select service type" />
               </SelectTrigger>

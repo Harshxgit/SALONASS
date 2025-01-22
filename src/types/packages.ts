@@ -1,9 +1,10 @@
 export interface Service {
-    id: string
-    name: string
-    description: string
-    duration: number
-    price: number
+  id: number;
+  servicename: string;
+  price: number;
+  duration: number;
+  type: string;
+  img: string[];
   }
   
   export interface StaffMember {
@@ -21,4 +22,10 @@ export interface Service {
     service: Service
   }
   
-  
+  export interface Packages {
+    id: number
+    name: string
+    price: number
+    // description: string
+    services: Service[]
+  }

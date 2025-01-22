@@ -84,14 +84,14 @@ model Services {
   duration    Int
   type        String
   img        String[] @default([])
-  packageID  Int?
-  packages Packages? @relation(fields: [packageID], references: [id])
+  packages    Packages[]
 }
 
 model Packages {
   id       Int    @id @default(autoincrement())
-  name     String
+  name     String @unique
   price    Int
+  img     String[] @default([])
   services Services[]
 }
 
