@@ -51,4 +51,4 @@ jobs:
               -e TWILIO_AUTH_TOKEN=${{ secrets.TWILIO_AUTH_TOKEN }} \
               -e TWILIO_PHONE_NUMBER=${{ secrets.TWILIO_PHONE_NUMBER }} \
               -e CLOUDFLARE=${{ secrets.CLOUDFLARE }} \
-              -d --name salonaas -p 3005:3000 harshuuu/salonaas:latest
+              -d --name salonaas -p 3004:3000 harshuuu/salonaas:latest
