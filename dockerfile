@@ -23,7 +23,7 @@ RUN  npx prisma generate
 
 COPY . .
 
-RUN npm run build
+RUN npm run build --production
 
 # Expose the port your application will run on
 EXPOSE 3000
