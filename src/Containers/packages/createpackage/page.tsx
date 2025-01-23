@@ -88,18 +88,18 @@ export default function CreatePackageForm() {
       duration: "",
       services: [],
     });
-    setLoading(true);
+    setLoading(false);
   };
 
   return (
     <Card className="w-full max-w-2xl mx-auto">
       <CardHeader>
-        <CardTitle>Create New Service</CardTitle>
+        <CardTitle>Create New Package</CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="name">Service Name</Label>
+            <Label htmlFor="name">Package Name</Label>
             <Input
               id="name"
               name="name"
@@ -124,17 +124,33 @@ export default function CreatePackageForm() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="type">Service Type</Label>
+            <Label htmlFor="type">Select Services</Label> <Label>{formData.services.length > 0
+                  ? (
+                    <div className="flex flex-wrap">{
+                    formData.services
+                      .map((service) => (
+                        <div key={service.id} className="flex items-center">
+                          {service.servicename}
+                          <button className="ml-2 text-red-500" onClick={() => selectService(service.servicename)}>
+                            <svg viewBox="0 0 24 24" className="h-4 w-4">
+                              <path
+                                fill="currentColor"
+                                d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"
+                              />
+                            </svg>
+                          </button>
+                        </div>
+))}
+                      </div>
+                      ):(
+                   "")}</Label>
             <Select
               onValueChange={selectService}
-              value={formData.services
-                .map((s) => s.servicename.slice(1, 4))
-                .join(", ")}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Select service type" />
+                <SelectValue placeholder="Select Services" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className=" backdrop-blur">
                 {service.map((service) => (
                   <SelectItem key={service.id} value={service.servicename}>
                     {service.servicename}
@@ -169,8 +185,8 @@ export default function CreatePackageForm() {
             />
           </div>
 
-          <Button type="submit" className="w-full">
-            Create Service
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            {!isLoading ? <>Create Package </> : <> Creating...........</>}
           </Button>
         </form>
       </CardContent>

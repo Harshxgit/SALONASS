@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 interface Item {
   id: number;
   servicename: string;
@@ -12,7 +13,7 @@ type AdminService = {
   additem: (item: Item[]) => void;
 };
 const useAdminService = create<AdminService>()(
- 
+ persist(
     (set) => ({
       items: [],
       additem: (item: Item[]) =>
@@ -26,7 +27,10 @@ const useAdminService = create<AdminService>()(
           return { items: [...state.items, ...uniqservices] };
         }),
     }),
-
+    {
+      name  :"admin-service"
+    }
+  )
 
 );
 export default useAdminService;

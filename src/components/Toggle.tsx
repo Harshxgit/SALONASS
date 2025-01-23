@@ -2,13 +2,13 @@
 import React, { use, useState, useEffect } from "react";
 
 export default function Toggle() {
-  const [theme, setTheme] = useState<string>("black");
+  const [theme, setTheme] = useState<string>("night");
 
   const toggeltheme = (e: any) => {
     if (e.target.checked) {
       setTheme("valentine");
     } else {
-      setTheme("black");
+      setTheme("night");
     }
   };
 
@@ -18,7 +18,7 @@ export default function Toggle() {
     const localtheme = localStorage.getItem("theme");
     document
       .querySelector("html")
-      ?.setAttribute("data-theme", localtheme || "valentine");
+      ?.setAttribute("data-theme", localtheme || "night");
   }, [theme]);
   return (
     <div>
