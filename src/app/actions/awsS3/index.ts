@@ -28,6 +28,7 @@ const s3Client = new S3Client({
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
   }
 });
+console.log(`bucket region ${process.env.AWS_SECRET_ACCESS_KEY}`)
 interface SignedUrlResult {
   uploadUrl?: string;
   failure?: string;
@@ -51,7 +52,6 @@ export async function getSignedURL(
     return { failure: "File type not allowed" };
   }
   
-  console.log(process.env)
 
   //function generate automatic file name
   const generateFileName = (bytes = 32) =>

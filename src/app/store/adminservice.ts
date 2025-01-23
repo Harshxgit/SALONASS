@@ -18,7 +18,6 @@ const useAdminService = create<AdminService>()(
       items: [],
       additem: (item: Item[]) =>
         set((state) => {
-            console.log(item + "sdfsdfdsfdsfsdf")
           const existingids = new Set( state.items.map((item) => item.id));
           const uniqservices = item.filter(
             (item) => !existingids.has(item.id)

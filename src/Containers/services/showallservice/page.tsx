@@ -27,14 +27,14 @@ export default function ServiceList() {
     if (data) {
       //store fetched data to useAdminService zustand
       additem(data);
-      console.log("added data many times");
+ 
     }
   }, [data, additem]);
   const services = useAdminService((state) => state.items);
   const [filter, setFilter] = useState<string>("All");
-  console.log(services+"servicedfdsfdflorems lorem45")
+
   const filteredServices = useMemo(() => {
-    console.log("filter")
+   
     return filter === "All"
       ? services
       : services.filter((service) => service.type === filter);

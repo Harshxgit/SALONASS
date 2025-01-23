@@ -73,7 +73,7 @@ export default function CreateServiceForm() {
         item.type,
         service.serviceid || 0
       );
-      // console.log(`url of signed + ${uploadUrl}`)
+      console.log(`url of signed + ${uploadUrl}`)
       if (uploadUrl) {
         await fetch(uploadUrl, {
           method: "PUT",
@@ -140,7 +140,7 @@ export default function CreateServiceForm() {
               <SelectTrigger>
                 <SelectValue placeholder="Select service type" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="backdrop-blur">
                 <SelectItem value="Haircut">Haircut</SelectItem>
                 <SelectItem value="Coloring">Coloring</SelectItem>
                 <SelectItem value="Styling">Styling</SelectItem>

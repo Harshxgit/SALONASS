@@ -22,7 +22,7 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: Build and Push Docker image
-      uses: docker/build-push-action@v21
+      uses: docker/build-push-action@v3
       with:
         context: .
         file: ./Dockerfile
