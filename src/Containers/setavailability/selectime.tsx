@@ -23,27 +23,25 @@ export function TimeRangeSelector() {
   const [startTime, setStartTime] = useState<string>('')
   const [endTime, setEndTime] = useState<string>('')
   const [isDateMode, setIsDateMode] = useState(true)
-  const [selectedDays, setSelectedDays] = useState<string[]>([])
+  const [selectedDays, setSelectedDays] = useState<string>()
 
   const handleDayToggle = (day: string) => {
-    setSelectedDays(prev =>
-      prev.includes(day) ? prev.filter(d => d !== day) : [...prev, day]
-    )
+    setSelectedDays(day)
   }
 
-  const handleStartDateSelect = (date: Date | null) => {
-    setStartDate(date)
+  const handleStartDateSelect = (date: Date | undefined) => {
+    setStartDate(date || null)
     if (date && (!endDate || date > endDate)) {
       setEndDate(date)
     }
   }
 
-  const handleEndDateSelect = (date: Date | null) => {
+  const handleEndDateSelect = (date: Date | undefined) => {
     if (date && startDate && date < startDate) {
       setEndDate(startDate)
       setStartDate(date)
     } else {
-      setEndDate(date)
+      setEndDate(date || null)
     }
   }
 
@@ -116,7 +114,7 @@ export function TimeRangeSelector() {
           {daysOfWeek.map(day => (
             <Button
               key={day}
-              variant={selectedDays.includes(day) ? 'default' : 'outline'}
+              variant={selectedDays ==day ? 'default' : 'outline'}
               onClick={() => handleDayToggle(day)}
             >
               {day.slice(0, 3)}
@@ -139,24 +137,34 @@ export function TimeRangeSelector() {
               {startTime || <span>Start time</span>}
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-auto p-0" align="start">
+          <PopoverContent className="w-auto p-0 max-h-60 absolute left-0 mt-2 overflow-y-auto backdrop-blur-sm" align="start">
             <div className="grid gap-2 p-2">
-              {Array.from({ length: 24 }, (_, i) => i).map(hour => (
-                <Button
-                  key={hour}
-                  variant="ghost"
-                  className="text-left font-normal"
-                  onClick={() => {
-                    const time = `${hour.toString().padStart(2, '0')}:00`
-                    setStartTime(time)
-                    if (!endTime || time > endTime) {
-                      setEndTime(time)
-                    }
-                  }}
-                >
-                  {`${hour.toString().padStart(2, '0')}:00`}
-                </Button>
-              ))}
+              {Array.from({ length: 12 * 4 +1}, (_, i) => i).map(index => {
+                const hour = 9 + Math.floor(index / 4)
+                const minute = (index % 4) * 15
+
+                // Formate the time for display 
+                const timeString = new Date(0, 0, 0, hour, minute).toLocaleTimeString('en-US', {
+                  hour: 'numeric',
+                  minute: '2-digit',
+                  hour12: true,
+                });
+                return (
+                  <Button
+                    key={index}
+                    variant="ghost"
+                    className="text-left font-normal"
+                    onClick={() => {
+                      setStartTime(timeString)
+                      if (!endTime || timeString > endTime) {
+                        setEndTime(timeString)
+                      }
+                    }}
+                  >
+                    {timeString}
+                  </Button>
+                )
+              })}
             </div>
           </PopoverContent>
         </Popover>
@@ -174,19 +182,34 @@ export function TimeRangeSelector() {
               {endTime || <span>End time</span>}
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-auto p-0" align="start">
+            <PopoverContent className="w-auto p-0 max-h-60 absolute left-0 mt-2 overflow-y-auto backdrop-blur-sm" align="start">
             <div className="grid gap-2 p-2">
-              {Array.from({ length: 24 }, (_, i) => i).map(hour => (
-                <Button
-                  key={hour}
-                  variant="ghost"
-                  className="text-left font-normal"
-                  onClick={() => setEndTime(`${hour.toString().padStart(2, '0')}:00`)}
-                  disabled={`${hour.toString().padStart(2, '0')}:00` < startTime}
-                >
-                  {`${hour.toString().padStart(2, '0')}:00`}
-                </Button>
-              ))}
+              {Array.from({ length: 12 * 4 +1}, (_, i) => i).map(index => {
+                const hour = 9 + Math.floor(index / 4)
+                const minute = (index % 4) * 15
+
+                // Formate the time for display 
+                const timeString = new Date(0, 0, 0, hour, minute).toLocaleTimeString('en-US', {
+                  hour: 'numeric',
+                  minute: '2-digit',
+                  hour12: true,
+                });
+                return (
+                  <Button
+                    key={index}
+                    variant="ghost"
+                    className="text-left font-normal"
+                    onClick={() => {
+                      setEndTime(timeString)
+                      if (!endTime || timeString > endTime) {
+                        setEndTime(timeString)
+                      }
+                    }}
+                  >
+                    {timeString}
+                  </Button>
+                )
+              })}
             </div>
           </PopoverContent>
         </Popover>
@@ -199,7 +222,7 @@ export function TimeRangeSelector() {
             ? `From ${startDate ? format(startDate, 'PPP') : 'N/A'} to ${
                 endDate ? format(endDate, 'PPP') : 'N/A'
               }`
-            : `On ${selectedDays.join(', ') || 'N/A'}`}
+            : `${selectedDays}`}
         </p>
         <p>
           Time: {startTime || 'N/A'} to {endTime || 'N/A'}
