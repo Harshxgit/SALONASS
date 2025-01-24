@@ -2,7 +2,7 @@ import PageTitle from "@/components/shared/PageTitle";
 import SalesOverview from "./SalesOverview";
 import StatusOverview from "./StatusOverview";
 import DashboardCharts from "./dashboard-charts";
-import RecentOrders from "@/Containers/orders/orders-table";
+
 
 export default function Dashboard() {
   return (
@@ -19,7 +19,7 @@ export default function Dashboard() {
       <section>
         <PageTitle component="h2">Recent Orders</PageTitle>
 
-        <RecentOrders />
+
       </section>
     </>
   );

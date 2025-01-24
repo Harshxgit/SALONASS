@@ -6,7 +6,7 @@ import useServicecart from "@/app/store/ServiceCart";
 export default function Navbar() {
   const {items} = useServicecart()
   return (
-    <div className="navbar bg-transparent glass sticky top-0 z-50  pr-5">
+    <div className="navbar bg-transparent backdrop-blur sticky top-0 z-50  pr-5">
       <div className="flex-1">
         <a className="btn btn-ghost text-xl">daisyUI</a>
       </div>

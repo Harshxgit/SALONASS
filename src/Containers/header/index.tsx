@@ -12,7 +12,7 @@ import Toggle from "@/components/Toggle";
 export default function Header() {
   const mounted = useGetMountStatus();
   return (
-    <header className="sticky top-0 left-0 w-full bg-popover py-4 shadow-sm z-40 backdrop-blur">
+    <header className="sticky top-0 left-0 w-full bg-popover py-4 shadow-sm z-40 backdrop">
       <Container>
         <div className="flex justify-between">
           {mounted ? (
