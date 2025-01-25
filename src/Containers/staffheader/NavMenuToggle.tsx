@@ -4,12 +4,11 @@ import { Menu } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import SidebarContent from "@/Containers/sidebar/SidebarContent";
+import SidebarContent from "@/Containers/staffsidebar/SidebarContent"
 import useGetWindowWidth from "@/hooks/useGetWindowWidth";
 import  StaffuseSidebar from "@/context/App";
 export default function NavMenuToggle() {
   const [isOpen, setIsOpen] = useState(false);
-
   const windowWidth = useGetWindowWidth();
   const toggle = StaffuseSidebar((state) => state.toggleSidebar);
 
@@ -42,7 +41,6 @@ export default function NavMenuToggle() {
       <SheetContent
         side="left"
         className="w-full !max-w-sidebar bg-popover p-0"
-        
       > 
         <SidebarContent onclickclose={handleCloseSheet}/>
       </SheetContent>
