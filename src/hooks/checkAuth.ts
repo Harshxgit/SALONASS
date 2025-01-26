@@ -1,28 +1,26 @@
 import { useSession } from "next-auth/react";
-import { useState , useEffect } from "react";
+import { useState, useEffect } from "react";
 
-export default function checkAuth(requiredRole ?:'CLIENT'|'STAFF'|'ADMIN') {
-    const { data: session, status } = useSession();
-    const [showAuthModal, setShowAuthModal] = useState(false)
-    if(status === "unauthenticated"){
-        if(!requiredRole || requiredRole === 'CLIENT'){
-            setShowAuthModal(true)
-        }      
-            else if(requiredRole === 'STAFF' && session?.user?.role !== 'STAFF'){
-                setShowAuthModal(true)                
-
-            }
+export default function checkAuth(allowedRoles: string[]) {
+  const { data: session, status } = useSession();
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      if (!allowedRoles) {
+        setShowAuthModal(true);
+      }
     }
-    else if(status === "authenticated"){
-        if(requiredRole === 'STAFF' && session?.user?.role !== 'STAFF'){
-            setShowAuthModal(true)                
-
-        }
+    if (status === "authenticated") {
+      if (allowedRoles && allowedRoles.length > 0) {
+        const isRoleAllowed = allowedRoles.includes(session.user.role);
+        setShowAuthModal(!isRoleAllowed);
+      }
     }
-    return {
-        session,
-        showAuthModal,
-        status,
-        setShowAuthModal
-    }
+  }, [status, session, allowedRoles]);
+  return {
+    session,
+    showAuthModal,
+    status,
+    setShowAuthModal,
+  };
 }

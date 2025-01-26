@@ -8,11 +8,10 @@ interface AuthModalProps {
   onClose: () => void;
 }
 export default function Authmodal() {
-  const {data:session, status} = useSession();
+ 
   const [isSignUp, setIsSignUp] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(true);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen] = useState(true);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -26,19 +25,7 @@ export default function Authmodal() {
   });
   const [isClosing, setIsClosing] = useState(false);
 
-  useEffect(() => {
-    if (status === 'authenticated') {
-      document.body.style.overflow = "hidden";
-      setIsOpen(true);
-    } else {
-      document.body.style.overflow = "unset";
-      setIsOpen(false);
-    }
-    return () => {
-      document.body.style.overflow = "unset";
-    };
-  }, [isOpen]);
-
+ 
   const handleClose = () => {
     setIsClosing(true);
     setTimeout(() => {

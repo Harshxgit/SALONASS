@@ -1,8 +1,21 @@
-import { NextAuthOptions, User as NextAuthUser, Session } from "next-auth";
+import { NextAuthOptions, User as NextAuthUser, Session as NextAuthSession } from "next-auth";
 
 interface User extends NextAuthUser {
   number?: string;
+  role?: string;
 }
+
+interface Session extends NextAuthSession {
+  user: {
+    _id?: string;
+    name?: string | null;
+    email?: string | null;
+    image?: string | null;
+    number?: string;
+    role?: string;
+  };
+}
+
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { sendOTP, verifyOtp } from "@/app/actions/otp";
@@ -50,7 +63,7 @@ export const authOptions: NextAuthOptions = {
         } = credentials;
 
         try {
-          //sign-in method , which have included admin or staff sign-in methods
+         // 1. sign-in method , which have included admin or staff sign-in methods
           if (mode === "login") {
             //if user try to signing-in
             if (type === "user") {
@@ -77,34 +90,34 @@ export const authOptions: NextAuthOptions = {
               }
             } else if (type === "admin") {
               //sign in verify with otp
-              const staff = await findStaff(number);
-              if (!staff) throw new Error("user not found");
+              const user = await findStaff(number);
+              if (!user) throw new Error("user not found");
 
               //if try to sign-in with otp
               if (step === "otp") {
                 const isVerified = await verifyOtp(number, otp);
                 if (isVerified) throw new Error("password not matched");
-                return staff;
+                return user;
               }
               //if try to sign-in with password
               if (step === "password") {
-                if (!staff.password) throw new Error("User password is null");
+                if (!user.password) throw new Error("User password is null");
                 const iscorrectpassword = await bcrypt.compare(
                   password,
-                  staff.password
+                  user.password
                 );
                 if (!iscorrectpassword) throw new Error("password not matched");
 
-                return staff;
+                return user;
               }
             }
+         //2. if mode is signup
           } else if (mode === "signup") {
             //user signup method
             if (type === "user") {
               //first check if user existed
 
               const user = await findUser(number);
-
               if (user) {
                 return user;
               } else {
@@ -124,7 +137,6 @@ export const authOptions: NextAuthOptions = {
             //admin signup method
             else if (type === "admin") {
               //sign-up for admin
-
               const admin = await checkAdmin();
               if (admin) return { error: "admin already exist" };
               const createAdmin = await setAdmin(
@@ -147,20 +159,24 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user  }) {
       if (user) {
         token._id = user.id?.toString(); // Convert ObjectId to string
         token.name = user.name;
         token.number = (user as User).number;
+        token.role = (user as User).role;
       }
+     
       return token;
     },
-    async session({ session, token }) {
+
+    async session({ session, token }:any) {
       if (token) {
         if (session.user) {
-          // session.user._id = token._id;
+          session.user._id = token._id;
           session.user.name = token.name;
-          // session.user.number = token.number;
+          session.user.number = token.number;
+          session.user.role = token.role
         }
       }
       return session;
@@ -171,6 +187,6 @@ export const authOptions: NextAuthOptions = {
   },
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
-    signIn: "/signin",
+    signIn: "/"
   },
 };

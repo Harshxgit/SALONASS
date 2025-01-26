@@ -1,6 +1,9 @@
 -- CreateEnum
 CREATE TYPE "bookingstatus" AS ENUM ('DONE', 'ACCEPTED', 'REJECTED');
 
+-- CreateEnum
+CREATE TYPE "ROLE" AS ENUM ('USER');
+
 -- CreateTable
 CREATE TABLE "User" (
     "id" SERIAL NOT NULL,
@@ -9,6 +12,7 @@ CREATE TABLE "User" (
     "password" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "role" "ROLE" NOT NULL,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -87,7 +91,6 @@ CREATE TABLE "Services" (
     "duration" INTEGER NOT NULL,
     "type" TEXT NOT NULL,
     "img" TEXT[] DEFAULT ARRAY[]::TEXT[],
-    "packageID" INTEGER,
 
     CONSTRAINT "Services_pkey" PRIMARY KEY ("id")
 );
@@ -97,8 +100,17 @@ CREATE TABLE "Packages" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
     "price" INTEGER NOT NULL,
+    "img" TEXT[] DEFAULT ARRAY[]::TEXT[],
 
     CONSTRAINT "Packages_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "_PackagesToServices" (
+    "A" INTEGER NOT NULL,
+    "B" INTEGER NOT NULL,
+
+    CONSTRAINT "_PackagesToServices_AB_pkey" PRIMARY KEY ("A","B")
 );
 
 -- CreateIndex
@@ -109,6 +121,12 @@ CREATE UNIQUE INDEX "Staff_number_key" ON "Staff"("number");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Services_servicename_key" ON "Services"("servicename");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Packages_name_key" ON "Packages"("name");
+
+-- CreateIndex
+CREATE INDEX "_PackagesToServices_B_index" ON "_PackagesToServices"("B");
 
 -- AddForeignKey
 ALTER TABLE "Address" ADD CONSTRAINT "Address_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -126,4 +144,7 @@ ALTER TABLE "Booking" ADD CONSTRAINT "Booking_staffId_fkey" FOREIGN KEY ("staffI
 ALTER TABLE "BookedService" ADD CONSTRAINT "BookedService_bookingId_fkey" FOREIGN KEY ("bookingId") REFERENCES "Booking"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Services" ADD CONSTRAINT "Services_packageID_fkey" FOREIGN KEY ("packageID") REFERENCES "Packages"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "_PackagesToServices" ADD CONSTRAINT "_PackagesToServices_A_fkey" FOREIGN KEY ("A") REFERENCES "Packages"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_PackagesToServices" ADD CONSTRAINT "_PackagesToServices_B_fkey" FOREIGN KEY ("B") REFERENCES "Services"("id") ON DELETE CASCADE ON UPDATE CASCADE;
