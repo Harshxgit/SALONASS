@@ -1,12 +1,11 @@
-import { AutoPopupAuth } from "./autcomp/authpopup"
-
-export default function AUTHCOMP() {
-  return (
-    <div className="min-h-screen bg-gradient-to-r from-blue-400 to-purple-500 flex flex-col items-center justify-center p-4">
-      <h1 className="text-4xl font-bold text-white mb-8">Welcome to Our App</h1>
-      <p className="text-xl text-white mb-12">Experience the future of web applications</p>
-      <AutoPopupAuth />
-    </div>
-  )
+"use client"
+import { AutoPopupAuth } from "./autcomp/authpopup";
+import { useCheckAuth } from "@/hooks/checkauth";
+import { useSession } from "next-auth/react";
+export default function AUTHCOMP({ mode }: { mode: string }) {
+  const {showAuthModal} = useCheckAuth([mode])
+  console.log(showAuthModal+"hgjh")
+  return <>
+  {!showAuthModal && <AutoPopupAuth />}
+   </>
 }
-

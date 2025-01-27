@@ -1,5 +1,13 @@
+<<<<<<< HEAD
 import { NextAuthOptions, User as NextAuthUser, Session as NextAuthSession } from "next-auth";
 
+=======
+import {
+  NextAuthOptions,
+  User as NextAuthUser,
+  Session as NextAuthSession,
+} from "next-auth";
+>>>>>>> 9225931
 interface User extends NextAuthUser {
   number?: string;
   role?: string;
@@ -10,7 +18,6 @@ interface User extends NextAuthUser {
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { sendOTP, verifyOtp } from "@/app/actions/otp";
-
 import {
   findUser,
   setUser,
@@ -18,8 +25,6 @@ import {
   checkAdmin,
   setAdmin,
 } from "@/app/actions/user";
-
-
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -54,7 +59,11 @@ export const authOptions: NextAuthOptions = {
         } = credentials;
 
         try {
+<<<<<<< HEAD
          // 1. sign-in method , which have included admin or staff sign-in methods
+=======
+          // 1. sign-in method , which have included admin or staff sign-in methods
+>>>>>>> 9225931
           if (mode === "login") {
             //if user try to signing-in
             if (type === "user") {
@@ -102,7 +111,11 @@ export const authOptions: NextAuthOptions = {
                 return user;
               }
             }
+<<<<<<< HEAD
          //2. if mode is signup
+=======
+            //2. if mode is signup
+>>>>>>> 9225931
           } else if (mode === "signup") {
             //user signup method
             if (type === "user") {
@@ -157,27 +170,43 @@ export const authOptions: NextAuthOptions = {
         token.number = (user as User).number;
         token.role = (user as User).role;
       }
+<<<<<<< HEAD
      
       return token;
     },
 
     async session({ session, token }:any) {
+=======
+
+      return token;
+    },
+
+    async session({ session, token }: any) {
+>>>>>>> 9225931
       if (token) {
         if (session.user) {
           session.user._id = token._id;
           session.user.name = token.name;
           session.user.number = token.number;
+<<<<<<< HEAD
           session.user.role = token.role
+=======
+          session.user.role = token.role;
+>>>>>>> 9225931
         }
       }
       return session;
-    }
+    },
   },
   session: {
     strategy: "jwt",
   },
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
+<<<<<<< HEAD
     signIn: "/"
+=======
+    signIn: "/",
+>>>>>>> 9225931
   },
 };
