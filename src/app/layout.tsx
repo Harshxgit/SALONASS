@@ -8,6 +8,7 @@ import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { Providers } from "./provider";
 import { usePathname } from "next/navigation";
+import AUTHCOMP from "@/Containers/AuthModal/page";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -32,7 +33,8 @@ export default function RootLayout({
         >
            {!pathname.includes('/admin' ) && !pathname.includes('/staff')&& <Navbar /> }
           {children}
-          <Authmodal />
+          {/* <Authmodal /> */}
+          <AUTHCOMP/>
         </body>
       </Providers>
     </html>

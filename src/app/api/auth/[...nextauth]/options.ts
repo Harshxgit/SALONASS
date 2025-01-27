@@ -5,16 +5,7 @@ interface User extends NextAuthUser {
   role?: string;
 }
 
-interface Session extends NextAuthSession {
-  user: {
-    _id?: string;
-    name?: string | null;
-    email?: string | null;
-    image?: string | null;
-    number?: string;
-    role?: string;
-  };
-}
+
 
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
