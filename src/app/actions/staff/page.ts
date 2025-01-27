@@ -53,7 +53,6 @@ export async function getstafffavailablity({
       },
     },
   });
-
   if (!staff || !staff.StaffAvailability) {
     return [];
   }
@@ -62,7 +61,6 @@ export async function getstafffavailablity({
   const availability = StaffAvailability?.find(
     (avail) => avail.isAvailable === true && avail.day === dayofweek
   );
-
   if (!availability) {
     return [];
   }
@@ -102,18 +100,15 @@ async function generateslots({
     const endslot = new Date(
       currenttime.getTime() + parseInt(duration) * 60000
     );
-
     const isSlotAvailable = !booking.some((book) => {
       const bookstarttime = book.starttime;
       const bookendtime = book.endtime;
-
       return (
         (currenttime >= bookstarttime && currenttime < bookendtime) ||
         (endslot > bookstarttime && endslot <= bookendtime) ||
         (currenttime < bookstarttime && endslot > bookendtime)
       );
     });
-
     slots.push({
       time: currenttime,
       availabel: isSlotAvailable,
@@ -135,7 +130,6 @@ export async function updatestaffavailability({
   const isexsit = await prisma.staffAvailability.findFirst({
     where: {
       staffId: staffId,
-
       date: datestr,
     },
   });
@@ -160,7 +154,6 @@ export async function updatestaffavailability({
     });
     if(!isupdate) return {error:"staff availability not updated"}
     return {success:true}
-  }
-  
+  } 
 }
 

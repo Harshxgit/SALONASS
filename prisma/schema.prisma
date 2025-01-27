@@ -16,6 +16,7 @@ model User {
   updatedAt DateTime  @updatedAt
   address   Address[]
   booking   Booking[]
+  role ROLE
 }
 
 model Address {
@@ -101,4 +102,6 @@ enum bookingstatus {
   REJECTED
 }
 
-
+enum ROLE{
+  USER
+}
