@@ -6,14 +6,11 @@ import Navbar from "@/components/Navbar";
 import { Providers } from "./providers";
 import { usePathname } from "next/navigation";
 import AUTHCOMP from "@/Containers/AuthModal/page";
-<<<<<<< HEAD
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-=======
+
 // import { useCheckAuth } from "./checkauth/checkauth";
 import { useSession } from "next-auth/react";
 const geistSans = Geist({  variable: "--font-geist-sans",
->>>>>>> 9225931
+
   subsets: ["latin"],
 });
 
@@ -40,13 +37,11 @@ export default function RootLayout({
             <Navbar />
           )}
           {children}
-<<<<<<< HEAD
-          {/* <Authmodal /> */}
-          <AUTHCOMP/>
-=======
+
+     
 
           <AUTHCOMP mode="" />
->>>>>>> 9225931
+
         </body>
       </Providers>
     </html>
