@@ -1,148 +1,173 @@
-"use client"
-
-import { useState } from "react"
-import { useForm } from "react-hook-form"
-import { motion, AnimatePresence } from "framer-motion"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Button } from "@/components/ui/button"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { ChevronRight, ChevronLeft, Mail, Lock, User, Phone } from "lucide-react"
-
+"use client";
+import { useEffect } from "react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { motion, AnimatePresence } from "framer-motion";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import {
+  ChevronRight,
+  ChevronLeft,
+  Mail,
+  Lock,
+  User,
+  Phone,
+} from "lucide-react";
+import { sendOTP, verifyOtp } from "@/app/actions/otp";
+import { signIn } from "next-auth/react";
+import { toast } from "@/components/ui/use-toast";
+import { watch } from "fs";
+import { findUser } from "@/app/actions/user";
+import { Turnstile } from "@marsidev/react-turnstile"; // Adjust the import path as necessary
 type SignInData = {
-  email: string
-  password?: string
-  otp?: string
-}
+  number : number;
+  password?: string;
+  otp?: string;
+};
 
 type SignUpData = {
-  name: string
-  phoneNumber: string
-  otp: string
-  password: string
-}
+  number: number;
+  name: string;
+  phoneNumber: string;
+  otp: string;
+  password: string;
+  mode: string;
+  type: string;
+};
 
 const fadeInOut = {
   initial: { opacity: 0, y: 20 },
   animate: { opacity: 1, y: 0 },
   exit: { opacity: 0, y: -20 },
   transition: { duration: 0.2 },
-}
+};
 
 interface ModernAuthFormProps {
-  onAuthSuccess: () => void
-  type : string
+  onAuthSuccess: () => void;
+  type: string;
 }
 
-export function ModernAuthForm({ onAuthSuccess , type}: ModernAuthFormProps) {
-  const [formType, setFormType] = useState<"signup" | "signin">("signup")
-  const [signInMethod, setSignInMethod] = useState<"password" | "otp">("password")
-  const [signUpStep, setSignUpStep] = useState(1)
-  const [isOtpSent, setIsOtpSent] = useState(false)
+export function ModernAuthForm({ onAuthSuccess, type }: ModernAuthFormProps) {
+  const [formType, setFormType] = useState<"signup" | "signin">("signup");
+  const [signInMethod, setSignInMethod] = useState<"password" | "otp">(
+    "password"
+  );
+  
+  const [signUpStep, setSignUpStep] = useState(1);
+  const [isOtpSent, setIsOtpSent] = useState(false);
+  const[token , setToken] = useState("");
+  const { register, watch } = useForm();
+  const phoneNumber = watch("phoneNumber");
+  const otp = watch("otp");
+  const [isotpverfied, setOtpverified] = useState(false);
+  const { register: registerSignIn, handleSubmit: handleSubmitSignIn } =
+    useForm<SignInData>();
+  const { register: registerSignUp, handleSubmit: handleSubmitSignUp } =
+    useForm<SignUpData>();
+  const onSignIn = async(data: SignInData) => {
 
-  const { register: registerSignIn, handleSubmit: handleSubmitSignIn } = useForm<SignInData>()
-  const { register: registerSignUp, handleSubmit: handleSubmitSignUp } = useForm<SignUpData>()
-
-  const onSignIn = (data: SignInData) => {
-    console.log("Sign In Data:", data)
-    if (currentstep === "otp") {
       const response = await signIn("credentials", {
-        mode: "login",
-        number: number,
-        step: currentstep,
-        redirect: true,
+        mode: "signin",
+        number: data.number,
+        type : type,
+        password: data.password,
+        step : signInMethod,
+        otp: data.otp
       });
-      if (response) setMessage("signin sucessfully");
-    } else if (currentstep === "password") {
-      const response = await signIn("credentials", {
-        mode: "login",
-        number: number,
-        password:password,
-        step: currentstep,
-        redirect: true,
-      });
-      if (response) setMessage("signin sucessfully");
-    }
-    // Implement sign-in logic here
-    onAuthSuccess()
-  }
+      if (response)  toast({ description: "signin-successfully" });
+   
+    onAuthSuccess();
+  };
 
-  const onSignUp = (data: SignUpData) => {
-    console.log("Sign Up Data:", data)
-    // Implement sign-up logic here
-    const response = await signIn("credentials",{
-      number:number,
-      firstname :firstname,
-      lastname : lastname,
-      password : password
-      mode:
-      type:
-      isAdmin : type==="admin" ? true : false
-    })
-    if(response) setMessage("signup sucessfully")
-      setMessage("signup failed ")
-    onAuthSuccess()
-  }
+  //Sign-up function
+  const onSignUp = async (data: SignUpData) => {
+    const response = await signIn("credentials", {
+      number: data.number,
+      name: data.name,
+      password: data.password,
+      mode: "signup",
+      type: type,
+      isAdmin: type === "admin" ? true : false,
+    });
+    if (response) toast({ description: "signup successfully" });
+    toast({ description: "signup failed" });
+    onAuthSuccess();
+  };
 
   const sendOtp = () => {
     // Implement OTP sending logic here
     const sendotp = async (e: { preventDefault: () => void }) => {
-      const existuser = await findUser(number);
-  
+      const existuser = await findUser(phoneNumber);
+
       //check user exist or not
       if (!existuser) {
-        setMessage("user not found");
-        router.push("/signup");
+        toast({description :"user not found"});
+        setFormType("signup");
       }
-  
-      await sendOTP(number, token);
-      setMessage("!OTP Sent");
+
+      await sendOTP(phoneNumber, token);
+     toast({description :"OTP SENT"});
       e.preventDefault();
     };
-    setIsOtpSent(true)
-  }
+    setIsOtpSent(true);
+  };
   useEffect(() => {
     const verify = async () => {
       if (otp.length == 6) {
-        const verify = await verifyOtp(number, otp);
+        const verify = await verifyOtp(phoneNumber, otp);
 
         if (verify) {
           setOtpverified(true);
-          setMessage("otp verified!");
+          toast({description :"OTP VERIFIED"});
         } else {
-          setMessage("please enter valid otp");
+          toast({description :"PLEASE ENTER VALID OTP"});
           setOtpverified(false);
         }
       }
     };
     verify();
-  }, [otp, router]);
+  }, [otp]);
   return (
     <div className="w-full max-w-md mx-auto overflow-hidden bg-primary-content rounded-b-lg">
       <div className="p-6">
         <AnimatePresence mode="wait">
-          {formType === "signup" ? (
+          {formType === "signup" ? ( // Sign Up Form
             <motion.div key="signup" {...fadeInOut}>
               <form onSubmit={handleSubmitSignUp(onSignUp)}>
                 {signUpStep === 1 && (
                   <>
                     <div className="space-y-4">
                       <div className="relative">
-                        <Label htmlFor="name" className="text-sm font-medium text-white">
+                        <Label
+                          htmlFor="name"
+                          className="text-sm font-medium text-white"
+                        >
                           Name
                         </Label>
-                        <Input id="name" className="pl-10" {...registerSignUp("name", { required: true })} />
+                        <Input
+                          id="name"
+                          className="pl-10"
+                          {...registerSignUp("name", { required: true })}
+                        />
                         <User className="absolute left-3 top-8 h-5 w-5 text-white" />
                       </div>
                       <div className="relative">
-                        <Label htmlFor="phoneNumber" className="text-sm font-medium text-white">
+                        <Label
+                          htmlFor="phoneNumber"
+                          className="text-sm font-medium text-white"
+                        >
                           Phone Number
                         </Label>
                         <Input
                           id="phoneNumber"
                           type="tel"
                           className="pl-10"
-                          {...registerSignUp("phoneNumber", { required: true })}
+                          {...registerSignUp("phoneNumber", { required: true , pattern: {
+                            value: /^\d{10}$/, // Validate 10-digit phone number
+                            message: "Please enter a valid 10-digit phone number.",
+                          },})}
                         />
                         <Phone className="absolute left-3 top-8 h-5 w-5 text-white-400" />
                       </div>
@@ -160,7 +185,10 @@ export function ModernAuthForm({ onAuthSuccess , type}: ModernAuthFormProps) {
                   <>
                     <div className="space-y-4">
                       <div className="relative">
-                        <Label htmlFor="signUpOtp" className="text-sm font-medium text-white">
+                        <Label
+                          htmlFor="signUpOtp"
+                          className="text-sm font-medium text-white"
+                        >
                           OTP
                         </Label>
                         <Input
@@ -170,12 +198,20 @@ export function ModernAuthForm({ onAuthSuccess , type}: ModernAuthFormProps) {
                           {...registerSignUp("otp", { required: true })}
                         />
                         <Mail className="absolute left-3 top-8 h-5 w-5 text-white-400" />
-                        <Button type="button" variant="outline" className="mt-2 w-full" onClick={sendOtp}>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="mt-2 w-full"
+                          onClick={sendOtp}
+                        >
                           {isOtpSent ? "Resend OTP" : "Send OTP"}
                         </Button>
                       </div>
                       <div className="relative">
-                        <Label htmlFor="signUpPassword" className="text-sm font-medium text-white">
+                        <Label
+                          htmlFor="signUpPassword"
+                          className="text-sm font-medium text-white"
+                        >
                           Password
                         </Label>
                         <Input
@@ -188,10 +224,17 @@ export function ModernAuthForm({ onAuthSuccess , type}: ModernAuthFormProps) {
                       </div>
                     </div>
                     <div className="flex justify-between mt-6">
-                      <Button type="button" variant="outline" onClick={() => setSignUpStep(1)}>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => setSignUpStep(1)}
+                      >
                         <ChevronLeft className="mr-2 h-4 w-4" /> Back
                       </Button>
-                      <Button type="submit" className="bg-primary-content text-white">
+                      <Button
+                        type="submit"
+                        className="bg-primary-content text-white"
+                      >
                         Sign Up
                       </Button>
                     </div>
@@ -200,20 +243,31 @@ export function ModernAuthForm({ onAuthSuccess , type}: ModernAuthFormProps) {
               </form>
             </motion.div>
           ) : (
+            //sign in form
             <motion.div key="signin" {...fadeInOut}>
               <form onSubmit={handleSubmitSignIn(onSignIn)}>
                 <div className="space-y-4">
                   <div className="relative">
-                    <Label htmlFor="email" className="text-sm font-medium text-white">
+                    <Label
+                      htmlFor="email"
+                      className="text-sm font-medium text-white"
+                    >
                       Email
                     </Label>
-                    <Input id="email" type="email" className="pl-10" {...registerSignIn("email", { required: true })} />
+                    <Input
+                      id="email"
+                      type="email"
+                      className="pl-10"
+                      {...registerSignIn("number", { required: true })}
+                    />
                     <Mail className="absolute left-3 top-8 h-5 w-5 text-white" />
                   </div>
                   <RadioGroup
                     defaultValue="password"
                     className="flex space-x-4"
-                    onValueChange={(value) => setSignInMethod(value as "password" | "otp")}
+                    onValueChange={(value) =>
+                      setSignInMethod(value as "password" | "otp")
+                    }
                   >
                     <div className="flex items-center space-x-2">
                       <RadioGroupItem value="password" id="password" />
@@ -226,7 +280,10 @@ export function ModernAuthForm({ onAuthSuccess , type}: ModernAuthFormProps) {
                   </RadioGroup>
                   {signInMethod === "password" ? (
                     <div className="relative">
-                      <Label htmlFor="password" className="text-sm font-medium text-white">
+                      <Label
+                        htmlFor="password"
+                        className="text-sm font-medium text-white"
+                      >
                         Password
                       </Label>
                       <Input
@@ -239,18 +296,34 @@ export function ModernAuthForm({ onAuthSuccess , type}: ModernAuthFormProps) {
                     </div>
                   ) : (
                     <div className="relative">
-                      <Label htmlFor="otp" className="text-sm font-medium text-white">
+                      <Label
+                        htmlFor="otp"
+                        className="text-sm font-medium text-white"
+                      >
                         OTP
                       </Label>
-                      <Input id="otp" type="text" className="pl-10" {...registerSignIn("otp", { required: true })} />
+                      <Input
+                        id="otp"
+                        type="text"
+                        className="pl-10"
+                        {...registerSignIn("otp", { required: true })}
+                      />
                       <Mail className="absolute left-3 top-8 h-5 w-5 text-white" />
-                      <Button type="button" variant="outline" className="mt-2 w-full" onClick={sendOtp}>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="mt-2 w-full"
+                        onClick={sendOtp}
+                      >
                         Send OTP
                       </Button>
                     </div>
                   )}
                 </div>
-                <Button type="submit" className="w-full mt-6 bg-primary-content text-white">
+                <Button
+                  type="submit"
+                  className="w-full mt-6 bg-primary-content text-white"
+                >
                   Sign In
                 </Button>
               </form>
@@ -281,11 +354,18 @@ export function ModernAuthForm({ onAuthSuccess , type}: ModernAuthFormProps) {
               >
                 Sign up
               </Button>
+
             </>
           )}
         </p>
       </div>
+      <Turnstile
+            className="my-4 mx-1"
+            onSuccess={(token) => {
+              setToken(token);
+            }}
+            siteKey="0x4AAAAAAAwsPtO1RkLb-vFz"
+          />
     </div>
-  )
+  );
 }
-

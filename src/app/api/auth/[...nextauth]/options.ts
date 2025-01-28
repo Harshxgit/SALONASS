@@ -55,7 +55,7 @@ export const authOptions: NextAuthOptions = {
         try {
           // 1. sign-in method , which have included admin or staff sign-in methods
 
-          if (mode === "login") {
+          if (mode === "signin") {
             //if user try to signing-in
             if (type === "user") {
               //sign in verify with otp
@@ -117,7 +117,8 @@ export const authOptions: NextAuthOptions = {
                   firstname,
                   lastname,
                   number,
-                  password
+                  password,
+                  type
                 );
                 if (createUser) {
                   const newuser = await findUser(number);
@@ -136,7 +137,8 @@ export const authOptions: NextAuthOptions = {
                 lastname,
                 number,
                 password,
-                isAdmin
+                isAdmin,
+                type
               );
               if (createAdmin) {
                 const newadmin = await findStaff(number);
