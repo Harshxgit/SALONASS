@@ -38,6 +38,7 @@ model Staff {
   isAdmin   Boolean   @default(false)
   booking   Booking[]
   StaffAvailability StaffAvailability[]
+  Role ROLE
 }
 
 model StaffAvailability {
@@ -104,4 +105,6 @@ enum bookingstatus {
 
 enum ROLE{
   USER
+  ADMIN
+  STAFF
 }

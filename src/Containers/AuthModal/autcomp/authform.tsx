@@ -31,9 +31,10 @@ const fadeInOut = {
 
 interface ModernAuthFormProps {
   onAuthSuccess: () => void
+  type : string
 }
 
-export function ModernAuthForm({ onAuthSuccess }: ModernAuthFormProps) {
+export function ModernAuthForm({ onAuthSuccess , type}: ModernAuthFormProps) {
   const [formType, setFormType] = useState<"signup" | "signin">("signup")
   const [signInMethod, setSignInMethod] = useState<"password" | "otp">("password")
   const [signUpStep, setSignUpStep] = useState(1)
@@ -44,6 +45,24 @@ export function ModernAuthForm({ onAuthSuccess }: ModernAuthFormProps) {
 
   const onSignIn = (data: SignInData) => {
     console.log("Sign In Data:", data)
+    if (currentstep === "otp") {
+      const response = await signIn("credentials", {
+        mode: "login",
+        number: number,
+        step: currentstep,
+        redirect: true,
+      });
+      if (response) setMessage("signin sucessfully");
+    } else if (currentstep === "password") {
+      const response = await signIn("credentials", {
+        mode: "login",
+        number: number,
+        password:password,
+        step: currentstep,
+        redirect: true,
+      });
+      if (response) setMessage("signin sucessfully");
+    }
     // Implement sign-in logic here
     onAuthSuccess()
   }
@@ -51,16 +70,55 @@ export function ModernAuthForm({ onAuthSuccess }: ModernAuthFormProps) {
   const onSignUp = (data: SignUpData) => {
     console.log("Sign Up Data:", data)
     // Implement sign-up logic here
+    const response = await signIn("credentials",{
+      number:number,
+      firstname :firstname,
+      lastname : lastname,
+      password : password
+      mode:
+      type:
+      isAdmin : type==="admin" ? true : false
+    })
+    if(response) setMessage("signup sucessfully")
+      setMessage("signup failed ")
     onAuthSuccess()
   }
 
   const sendOtp = () => {
     // Implement OTP sending logic here
+    const sendotp = async (e: { preventDefault: () => void }) => {
+      const existuser = await findUser(number);
+  
+      //check user exist or not
+      if (!existuser) {
+        setMessage("user not found");
+        router.push("/signup");
+      }
+  
+      await sendOTP(number, token);
+      setMessage("!OTP Sent");
+      e.preventDefault();
+    };
     setIsOtpSent(true)
   }
+  useEffect(() => {
+    const verify = async () => {
+      if (otp.length == 6) {
+        const verify = await verifyOtp(number, otp);
 
+        if (verify) {
+          setOtpverified(true);
+          setMessage("otp verified!");
+        } else {
+          setMessage("please enter valid otp");
+          setOtpverified(false);
+        }
+      }
+    };
+    verify();
+  }, [otp, router]);
   return (
-    <div className="w-full max-w-md mx-auto overflow-hidden bg-white rounded-b-lg">
+    <div className="w-full max-w-md mx-auto overflow-hidden bg-primary-content rounded-b-lg">
       <div className="p-6">
         <AnimatePresence mode="wait">
           {formType === "signup" ? (
@@ -70,14 +128,14 @@ export function ModernAuthForm({ onAuthSuccess }: ModernAuthFormProps) {
                   <>
                     <div className="space-y-4">
                       <div className="relative">
-                        <Label htmlFor="name" className="text-sm font-medium text-gray-700">
+                        <Label htmlFor="name" className="text-sm font-medium text-white">
                           Name
                         </Label>
                         <Input id="name" className="pl-10" {...registerSignUp("name", { required: true })} />
-                        <User className="absolute left-3 top-8 h-5 w-5 text-gray-400" />
+                        <User className="absolute left-3 top-8 h-5 w-5 text-white" />
                       </div>
                       <div className="relative">
-                        <Label htmlFor="phoneNumber" className="text-sm font-medium text-gray-700">
+                        <Label htmlFor="phoneNumber" className="text-sm font-medium text-white">
                           Phone Number
                         </Label>
                         <Input
@@ -86,12 +144,12 @@ export function ModernAuthForm({ onAuthSuccess }: ModernAuthFormProps) {
                           className="pl-10"
                           {...registerSignUp("phoneNumber", { required: true })}
                         />
-                        <Phone className="absolute left-3 top-8 h-5 w-5 text-gray-400" />
+                        <Phone className="absolute left-3 top-8 h-5 w-5 text-white-400" />
                       </div>
                     </div>
                     <Button
                       type="button"
-                      className="w-full mt-6 bg-gradient-to-r from-purple-500 to-pink-500 text-white"
+                      className="w-full mt-6 bg-primary-content text-white"
                       onClick={() => setSignUpStep(2)}
                     >
                       Next <ChevronRight className="ml-2 h-4 w-4" />
@@ -102,7 +160,7 @@ export function ModernAuthForm({ onAuthSuccess }: ModernAuthFormProps) {
                   <>
                     <div className="space-y-4">
                       <div className="relative">
-                        <Label htmlFor="signUpOtp" className="text-sm font-medium text-gray-700">
+                        <Label htmlFor="signUpOtp" className="text-sm font-medium text-white">
                           OTP
                         </Label>
                         <Input
@@ -111,13 +169,13 @@ export function ModernAuthForm({ onAuthSuccess }: ModernAuthFormProps) {
                           className="pl-10"
                           {...registerSignUp("otp", { required: true })}
                         />
-                        <Mail className="absolute left-3 top-8 h-5 w-5 text-gray-400" />
+                        <Mail className="absolute left-3 top-8 h-5 w-5 text-white-400" />
                         <Button type="button" variant="outline" className="mt-2 w-full" onClick={sendOtp}>
                           {isOtpSent ? "Resend OTP" : "Send OTP"}
                         </Button>
                       </div>
                       <div className="relative">
-                        <Label htmlFor="signUpPassword" className="text-sm font-medium text-gray-700">
+                        <Label htmlFor="signUpPassword" className="text-sm font-medium text-white">
                           Password
                         </Label>
                         <Input
@@ -126,14 +184,14 @@ export function ModernAuthForm({ onAuthSuccess }: ModernAuthFormProps) {
                           className="pl-10"
                           {...registerSignUp("password", { required: true })}
                         />
-                        <Lock className="absolute left-3 top-8 h-5 w-5 text-gray-400" />
+                        <Lock className="absolute left-3 top-8 h-5 w-5 text-white" />
                       </div>
                     </div>
                     <div className="flex justify-between mt-6">
                       <Button type="button" variant="outline" onClick={() => setSignUpStep(1)}>
                         <ChevronLeft className="mr-2 h-4 w-4" /> Back
                       </Button>
-                      <Button type="submit" className="bg-gradient-to-r from-purple-500 to-pink-500 text-white">
+                      <Button type="submit" className="bg-primary-content text-white">
                         Sign Up
                       </Button>
                     </div>
@@ -146,11 +204,11 @@ export function ModernAuthForm({ onAuthSuccess }: ModernAuthFormProps) {
               <form onSubmit={handleSubmitSignIn(onSignIn)}>
                 <div className="space-y-4">
                   <div className="relative">
-                    <Label htmlFor="email" className="text-sm font-medium text-gray-700">
+                    <Label htmlFor="email" className="text-sm font-medium text-white">
                       Email
                     </Label>
                     <Input id="email" type="email" className="pl-10" {...registerSignIn("email", { required: true })} />
-                    <Mail className="absolute left-3 top-8 h-5 w-5 text-gray-400" />
+                    <Mail className="absolute left-3 top-8 h-5 w-5 text-white" />
                   </div>
                   <RadioGroup
                     defaultValue="password"
@@ -168,7 +226,7 @@ export function ModernAuthForm({ onAuthSuccess }: ModernAuthFormProps) {
                   </RadioGroup>
                   {signInMethod === "password" ? (
                     <div className="relative">
-                      <Label htmlFor="password" className="text-sm font-medium text-gray-700">
+                      <Label htmlFor="password" className="text-sm font-medium text-white">
                         Password
                       </Label>
                       <Input
@@ -177,22 +235,22 @@ export function ModernAuthForm({ onAuthSuccess }: ModernAuthFormProps) {
                         className="pl-10"
                         {...registerSignIn("password", { required: true })}
                       />
-                      <Lock className="absolute left-3 top-8 h-5 w-5 text-gray-400" />
+                      <Lock className="absolute left-3 top-8 h-5 w-5 text-white" />
                     </div>
                   ) : (
                     <div className="relative">
-                      <Label htmlFor="otp" className="text-sm font-medium text-gray-700">
+                      <Label htmlFor="otp" className="text-sm font-medium text-white">
                         OTP
                       </Label>
                       <Input id="otp" type="text" className="pl-10" {...registerSignIn("otp", { required: true })} />
-                      <Mail className="absolute left-3 top-8 h-5 w-5 text-gray-400" />
+                      <Mail className="absolute left-3 top-8 h-5 w-5 text-white" />
                       <Button type="button" variant="outline" className="mt-2 w-full" onClick={sendOtp}>
                         Send OTP
                       </Button>
                     </div>
                   )}
                 </div>
-                <Button type="submit" className="w-full mt-6 bg-gradient-to-r from-purple-500 to-pink-500 text-white">
+                <Button type="submit" className="w-full mt-6 bg-primary-content text-white">
                   Sign In
                 </Button>
               </form>
@@ -200,14 +258,14 @@ export function ModernAuthForm({ onAuthSuccess }: ModernAuthFormProps) {
           )}
         </AnimatePresence>
       </div>
-      <div className="bg-gray-50 p-6">
-        <p className="text-sm text-gray-600 text-center w-full">
+      <div className="bg-primary-content-content p-6">
+        <p className="text-sm text-white text-center w-full">
           {formType === "signup" ? (
             <>
               Already have an account?{" "}
               <Button
                 variant="link"
-                className="p-0 h-auto font-semibold text-purple-600 hover:text-purple-800"
+                className="p-0 h-auto font-semibold text-white hover:text-primary "
                 onClick={() => setFormType("signin")}
               >
                 Sign in
@@ -218,7 +276,7 @@ export function ModernAuthForm({ onAuthSuccess }: ModernAuthFormProps) {
               Don't have an account?{" "}
               <Button
                 variant="link"
-                className="p-0 h-auto font-semibold text-purple-600 hover:text-purple-800"
+                className="p-0 h-auto font-semibold text-white hover:text-primary "
                 onClick={() => setFormType("signup")}
               >
                 Sign up

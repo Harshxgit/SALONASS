@@ -21,9 +21,9 @@ export function PopupDialog({ title, description, children, autoOpen = false }: 
   }, [autoOpen])
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent className="sm:max-w-[425px] bg-transparent border-none shadow-none">
-        <DialogHeader className="bg-white rounded-t-lg p-4 -mb-3">
+    <Dialog open={isOpen}  >
+      <DialogContent className="sm:max-w-[425px] bg-transparent border-none shadow-none fixed z-50 overflow-y-auto transition-opacity duration-300">
+        <DialogHeader className="bg-primary-content rounded-t-lg p-4 -mb-3">
           <DialogTitle>{title}</DialogTitle>
           {description && <DialogDescription>{description}</DialogDescription>}
         </DialogHeader>

@@ -23,11 +23,14 @@ export async function checkAdmin(){
   });
   return !!isAdminexist
 } 
+import { ROLE } from "@prisma/client"; // Import the ROLE type from Prisma client
+
 export async function setUser(
   firstname: string,
   lastname: string,
   number: string,
-  password: string
+  password: string,
+  role : ROLE
 ) {
   const hashpassword = await bcrypt.hash(password, 10);
   try {
@@ -36,6 +39,7 @@ export async function setUser(
         name: firstname + lastname,
         number: number,
         password: hashpassword,
+        role : role || "USER"
       },
     });
     if (usercreate) {
@@ -54,7 +58,8 @@ export async function setAdmin(
   lastname: string,
   number: string,
   password: string,
-  isAdmin:boolean
+  isAdmin:boolean,
+  role : ROLE
 ) {
   const hashpassword = await bcrypt.hash(password, 10);
   try {
@@ -63,7 +68,8 @@ export async function setAdmin(
         name: firstname + lastname,
         number: number,
         password: hashpassword,
-        isAdmin:isAdmin
+        isAdmin:isAdmin,
+        Role : role || "STAFF"
       },
     });
     if (usercreate) {

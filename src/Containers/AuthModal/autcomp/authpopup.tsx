@@ -4,7 +4,7 @@ import { useState } from "react"
 import { PopupDialog } from "./popupdialog"
 import { ModernAuthForm } from "./authform"
 
-export function AutoPopupAuth() {
+export function AutoPopupAuth({type}: {type: string}) {
   const [showAuth, setShowAuth] = useState(true)
 
   const handleAuthSuccess = () => {
@@ -14,7 +14,7 @@ export function AutoPopupAuth() {
 
   return (
     <PopupDialog title="Welcome" description="Please sign in or create an account to continue" autoOpen={showAuth}>
-      <ModernAuthForm onAuthSuccess={handleAuthSuccess} />
+      <ModernAuthForm onAuthSuccess={handleAuthSuccess} type={type} />
     </PopupDialog>
   )
 }

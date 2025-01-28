@@ -9,7 +9,8 @@ import AUTHCOMP from "@/Containers/AuthModal/page";
 
 // import { useCheckAuth } from "./checkauth/checkauth";
 import { useSession } from "next-auth/react";
-const geistSans = Geist({  variable: "--font-geist-sans",
+const geistSans = Geist({
+  variable: "--font-geist-sans",
 
   subsets: ["latin"],
 });
@@ -26,7 +27,7 @@ export default function RootLayout({
 }>) {
   const pathname = usePathname();
   // const { showAuthModal } = useCheckAuth(["client"]);
- 
+
   return (
     <html lang="en">
       <Providers>
@@ -38,10 +39,7 @@ export default function RootLayout({
           )}
           {children}
 
-     
-
-          <AUTHCOMP mode="" />
-
+          <AUTHCOMP type="" />
         </body>
       </Providers>
     </html>
