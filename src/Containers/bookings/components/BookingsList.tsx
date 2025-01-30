@@ -21,7 +21,7 @@ function ServiceCard({ service }: { service: Service }) {
   return (
     <Card className="mb-4">
       <CardHeader>
-        <CardTitle>{service.name}</CardTitle>
+        <CardTitle>{service.servicename}</CardTitle>
         <CardDescription>{service.description}</CardDescription>
       </CardHeader>
       <CardContent>

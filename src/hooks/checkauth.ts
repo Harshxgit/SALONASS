@@ -14,7 +14,7 @@ export  function useCheckAuth(allowedRoles: string[]) {
     if (status === "authenticated") {
       if (allowedRoles && allowedRoles.length > 0) {
         const isRoleAllowed = allowedRoles.includes(session.user.role);
-        setShowAuthModal(!isRoleAllowed);
+        setShowAuthModal(isRoleAllowed);
       }
     }
   }, [status, session, allowedRoles]);

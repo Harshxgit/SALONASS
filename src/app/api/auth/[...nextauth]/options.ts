@@ -11,14 +11,14 @@ interface User extends NextAuthUser {
 
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
-import { sendOTP, verifyOtp } from "@/app/actions/otp";
+import { sendOTP, verifyOtp } from "@/app/actions/otp/actions";
 import {
   findUser,
   setUser,
   findStaff,
   checkAdmin,
   setAdmin,
-} from "@/app/actions/user";
+} from "@/app/actions/user/actions";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -57,7 +57,7 @@ export const authOptions: NextAuthOptions = {
 
           if (mode === "signin") {
             //if user try to signing-in
-            if (type === "user") {
+            if (type === "USER") {
               //sign in verify with otp
               const user = await findUser(number);
               if (!user) throw new Error("user not found");
@@ -79,7 +79,7 @@ export const authOptions: NextAuthOptions = {
 
                 return user;
               }
-            } else if (type === "admin") {
+            } else if (type === "STAFF" || "ADMIN") {
               //sign in verify with otp
               const user = await findStaff(number);
               if (!user) throw new Error("user not found");
@@ -106,7 +106,7 @@ export const authOptions: NextAuthOptions = {
             //2. if mode is signup
           } else if (mode === "signup") {
             //user signup method
-            if (type === "user") {
+            if (type === "USER") {
               //first check if user existed
 
               const user = await findUser(number);
@@ -128,7 +128,7 @@ export const authOptions: NextAuthOptions = {
               throw new Error("user not signed-Up");
             }
             //admin signup method
-            else if (type === "admin") {
+            else if (type === "STAFF" ||"ADMIN") {
               //sign-up for admin
               const admin = await checkAdmin();
               if (admin) return { error: "admin already exist" };
@@ -182,6 +182,6 @@ export const authOptions: NextAuthOptions = {
   },
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
-    signIn: "/, /auth/signin, /auth/signup",
+    signIn: "/",
   },
 };

@@ -5,6 +5,7 @@ interface Item {
   servicename: string;
   price: number;
   duration: number;
+  description: string;
   type: string;
   img: string[];
 }

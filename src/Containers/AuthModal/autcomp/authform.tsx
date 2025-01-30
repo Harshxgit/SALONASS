@@ -15,12 +15,11 @@ import {
   User,
   Phone,
 } from "lucide-react";
-import { sendOTP, verifyOtp } from "@/app/actions/otp";
+import { sendOTP, verifyOtp } from "@/app/actions/otp/actions";
 import { signIn } from "next-auth/react";
-import { toast } from "@/components/ui/use-toast";
-import { watch } from "fs";
-import { findUser } from "@/app/actions/user";
+import { findUser } from "@/app/actions/user/actions";
 import { Turnstile } from "@marsidev/react-turnstile"; // Adjust the import path as necessary
+import toast from "react-hot-toast";
 type SignInData = {
   number : number;
   password?: string;
@@ -76,7 +75,7 @@ export function ModernAuthForm({ onAuthSuccess, type }: ModernAuthFormProps) {
         step : signInMethod,
         otp: data.otp
       });
-      if (response)  toast({ description: "signin-successfully" });
+      if (response)  toast.success("signin-successfully" );
    
     onAuthSuccess();
   };
@@ -89,28 +88,28 @@ export function ModernAuthForm({ onAuthSuccess, type }: ModernAuthFormProps) {
       password: data.password,
       mode: "signup",
       type: type,
-      isAdmin: type === "admin" ? true : false,
+      isAdmin: type === "ADMIN" ? true : false,
     });
-    if (response) toast({ description: "signup successfully" });
-    toast({ description: "signup failed" });
+    if (response) toast.success( "signup successfully" );
+    toast.error("signup failed" );
     onAuthSuccess();
   };
 
-  const sendOtp = () => {
+  const sendOtp = async(e:any) => {
     // Implement OTP sending logic here
-    const sendotp = async (e: { preventDefault: () => void }) => {
+ 
       const existuser = await findUser(phoneNumber);
 
       //check user exist or not
       if (!existuser) {
-        toast({description :"user not found"});
+        toast.error("user not found");
         setFormType("signup");
       }
 
       await sendOTP(phoneNumber, token);
-     toast({description :"OTP SENT"});
+     toast.success("OTP SENT");
       e.preventDefault();
-    };
+
     setIsOtpSent(true);
   };
   useEffect(() => {
@@ -120,9 +119,9 @@ export function ModernAuthForm({ onAuthSuccess, type }: ModernAuthFormProps) {
 
         if (verify) {
           setOtpverified(true);
-          toast({description :"OTP VERIFIED"});
+          toast.success("OTP VERIFIED");
         } else {
-          toast({description :"PLEASE ENTER VALID OTP"});
+          toast.error("PLEASE ENTER VALID OTP");
           setOtpverified(false);
         }
       }
@@ -252,11 +251,11 @@ export function ModernAuthForm({ onAuthSuccess, type }: ModernAuthFormProps) {
                       htmlFor="email"
                       className="text-sm font-medium text-white"
                     >
-                      Email
+                      PhoneNumber
                     </Label>
                     <Input
-                      id="email"
-                      type="email"
+                      id="tel"
+                      type="tel"
                       className="pl-10"
                       {...registerSignIn("number", { required: true })}
                     />

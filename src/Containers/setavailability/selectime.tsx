@@ -14,7 +14,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { formatTime } from "@/lib/util";
-import { updatestaffavailability } from "@/app/actions/staff/page";
+import { updatestaffavailability } from "@/app/actions/staff/actions";
 
 // const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 const daysOfWeek = [

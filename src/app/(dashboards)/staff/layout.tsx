@@ -1,6 +1,8 @@
 "use client";
 
+import Authmodal from "@/components/Authmodal";
 import Container from "@/components/ui/container";
+import AUTHCOMP from "@/Containers/AuthModal/page";
 import Headerr from "@/Containers/staffheader";
 import Sideebar from "@/Containers/staffsidebar";
 
@@ -30,6 +32,7 @@ export default function RootLayout({
           </main>
         </div>
       </div>
+        <AUTHCOMP type="STAFF"/>
     </QueryClientProvider>
   );
 }

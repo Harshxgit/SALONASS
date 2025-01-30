@@ -35,6 +35,7 @@ export default async function createService({
         price: price,
         duration: duration,
         type: type,
+        description: "", // Add a default or dynamic description here
       },
     });
 

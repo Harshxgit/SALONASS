@@ -4,12 +4,11 @@ import { useEffect } from "react";
 import Image from "next/image";
 import { X, Loader2 } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-
+import toast from "react-hot-toast";
 import { Notification } from "@/types/notifications";
 import { Badge } from "@/components/ui/badge";
 import Typography from "@/components/ui/typography";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
 import { deleteNotification } from "@/data/notifications";
 
 type Props = {
@@ -18,7 +17,7 @@ type Props = {
 
 export default function NotificationItem({ notification }: Props) {
   const queryClient = useQueryClient();
-  const { toast } = useToast();
+
 
   const {
     mutate: handleDelete,
@@ -33,7 +32,7 @@ export default function NotificationItem({ notification }: Props) {
 
   useEffect(() => {
     if (isError) {
-      toast({
+      toast.success({
         variant: "destructive",
         description:
           "Something went wrong while trying to delete notification. Please try again.",

@@ -6,7 +6,6 @@ export default function AllStaff() {
   return (
     <section>
       <PageTitle>All Staff</PageTitle>
-
       <StaffFilters />
       <StaffTable />
     </section>

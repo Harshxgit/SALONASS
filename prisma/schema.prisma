@@ -85,6 +85,7 @@ model Services {
   price       Int
   duration    Int
   type        String
+  description String
   img        String[] @default([])
   packages    Packages[]
 }
@@ -93,6 +94,7 @@ model Packages {
   id       Int    @id @default(autoincrement())
   name     String @unique
   price    Int
+  description String
   img     String[] @default([])
   services Services[]
 }

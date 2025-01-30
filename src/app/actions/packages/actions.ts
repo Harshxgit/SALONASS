@@ -6,6 +6,7 @@ type Package ={
   packageName: string;
   price: number;
   service: Service[];
+  description: string;
 }
 
 //get all packages
@@ -23,8 +24,9 @@ export default async function createPackages({
   packageName,
   price,
   service,
+  description
 }: Package) {
-  console.log(packageName, price, service);
+  console.log(packageName, price, service,description);
   const name = prisma.packages.findUnique({
     where: { name: packageName },
   });
@@ -39,6 +41,7 @@ export default async function createPackages({
         services: {
           connect: service.map((item) => ({ id: item.id })),
         },
+        description : description
       },
     });
 

@@ -6,9 +6,9 @@ import Navbar from "@/components/Navbar";
 import { Providers } from "./providers";
 import { usePathname } from "next/navigation";
 import AUTHCOMP from "@/Containers/AuthModal/page";
-
+import {Toaster} from "react-hot-toast";
 // import { useCheckAuth } from "./checkauth/checkauth";
-import { useSession } from "next-auth/react";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
 
@@ -34,6 +34,7 @@ export default function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
+          <Toaster position="top-center"/>
           {!pathname.includes("/admin") && !pathname.includes("/staff") && (
             <Navbar />
           )}

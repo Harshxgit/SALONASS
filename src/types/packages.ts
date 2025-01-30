@@ -5,6 +5,7 @@ export interface Service {
   duration: number;
   type: string;
   img: string[];
+  description: string;
   }
   
   export interface StaffMember {
@@ -26,6 +27,6 @@ export interface Service {
     id: number
     name: string
     price: number
-    // description: string
+    description: string
     services: Service[]
   }

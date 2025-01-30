@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { services, Service } from '../../../constants/service'
-import { getPackages } from '@/app/actions/packages/package'
+import { getPackages } from '@/app/actions/packages/actions'
 import useSWR from 'swr'
 import useAdminPackages from '@/app/store/adminPackages'
 import { Packages } from '@/types/packages'

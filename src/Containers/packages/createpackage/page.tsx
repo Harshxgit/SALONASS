@@ -12,15 +12,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { toast } from "@/components/ui/use-toast";
+import { toast } from "react-hot-toast";
 import useAdminService from "@/app/store/adminservice";
 import Service from "@/types/service";
-import createPackages from "@/app/actions/packages/package";
+import createPackages from "@/app/actions/packages/actions";
 
 interface PackageFormData {
   name: string;
   price: string;
   duration?: string;
+  description: string;
   services: Service[];
 }
 
@@ -30,7 +31,7 @@ export default function CreatePackageForm() {
   const [formData, setFormData] = useState<PackageFormData>({
     name: "",
     price: "",
-    duration: "",
+    description: "",
     services: [],
   });
 
@@ -42,7 +43,7 @@ export default function CreatePackageForm() {
   };
 
   const selectService = (value: string) => {
-    const item = service.find((s) => s.servicename === value);
+    const item = service.find((s) => s.servicename === value) as Service;
     if (item) {
       setFormData((prev) => {
         const isSelected = prev.services.includes(item);
@@ -70,22 +71,21 @@ export default function CreatePackageForm() {
     setLoading(true);
     await createPackages({
       packageName: formData.name,
-      price: parseInt(formData.price),
+      price: parseFloat(formData.price),
       service: formData.services,
+      description: formData.description,      
     });
     // Simulating an API call
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    toast({
-      title: "Package Created",
-      description: `${formData.name} has been successfully added.`,
-    });
+    toast.success("Package created!");
 
     // Reset form after submission
     setFormData({
       name: "",
       price: "",
       duration: "",
+      description: "",
       services: [],
     });
     setLoading(false);

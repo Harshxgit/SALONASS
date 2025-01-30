@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/Input";
 import { Label } from "@/components/ui/label";
+import toast from "react-hot-toast";
 import {
   Select,
   SelectContent,
@@ -11,9 +12,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { toast } from "@/components/ui/use-toast";
-import { getSignedURL } from "@/app/actions/awsS3";
-import createService from "@/app/actions/service/servic";
+
+import { getSignedURL } from "@/app/actions/awsS3/actions";
+import createService from "@/app/actions/service/actions";
 type ServiceType = "Haircut" | "Coloring" | "Styling" | "Treatment";
 
 interface ServiceFormData {
@@ -34,13 +35,14 @@ export default function CreateServiceForm() {
   });
   const [isLoading, setLoading] = useState(false);
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value ,type } = e.target;
+    const { name, value, type } = e.target;
 
-    if(name==="price" || name==="duration"||name==="price"){
-
-      setFormData((prev) => ({ ...prev, [name]:type==="number"?parseInt( value) : value }));
-    }
-    else setFormData((prev)=>({...prev,[name]:value}))
+    if (name === "price" || name === "duration" || name === "price") {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: type === "number" ? parseInt(value) : value,
+      }));
+    } else setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleTypeChange = (value: ServiceType) => {
@@ -56,13 +58,12 @@ export default function CreateServiceForm() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    
 
     const service = await createService({
       servicename: formData.name,
       price: formData.price,
       duration: formData.duration,
-      type  : formData.type
+      type: formData.type,
     });
 
     //i can generate generate urls by iterate for each image items
@@ -73,7 +74,7 @@ export default function CreateServiceForm() {
         item.type,
         service.serviceid || 0
       );
-      console.log(`url of signed + ${uploadUrl}`)
+      console.log(`url of signed + ${uploadUrl}`);
       if (uploadUrl) {
         await fetch(uploadUrl, {
           method: "PUT",
@@ -84,12 +85,8 @@ export default function CreateServiceForm() {
         });
       }
     });
-   
-    
-    toast({
-      title: "Service Created",
-      description: `${formData.name} has been successfully added.`,
-    });
+
+    toast.success(`${formData.name} has been successfully added.`);
 
     // Reset form after submission
     setFormData({
@@ -97,7 +94,7 @@ export default function CreateServiceForm() {
       price: 0,
       type: "Haircut",
       duration: 0,
-      images: []
+      images: [],
     });
     setLoading(false);
   };

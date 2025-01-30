@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/select";
 
 import useSWR from "swr";
-import { getServices } from "@/app/actions/service/servic";
+import { getServices } from "@/app/actions/service/actions";
 import Service from "@/types/service";
 
 import useAdminService from "@/app/store/adminservice";

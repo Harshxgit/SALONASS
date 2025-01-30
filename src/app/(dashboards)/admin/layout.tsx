@@ -4,20 +4,13 @@ import Header from "@/Containers/header";
 import Sidebar from "@/Containers/sidebar";
 import Container from "@/components/ui/container";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
+import AUTHCOMP from "@/Containers/AuthModal/page";
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  // Check if the user is authenticated by calling the isAuth function.
-
-  // If the user is not authenticated (no session), redirect them to the login page.
-  // if (!session) {
-  //   return redirect("/login");
-  // }
-
-  return (
+    return (
     <QueryClientProvider client={new QueryClient()}>
       <div className="flex h-dvh overflow-hidden">
         <Sidebar />
@@ -30,6 +23,7 @@ export default function RootLayout({
           </main>
         </div>
       </div>
+       <AUTHCOMP type="ADMIN"/>
     </QueryClientProvider>
   );
 }

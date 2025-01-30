@@ -1,8 +1,15 @@
 export default interface Service {
-  id: number ;
+  id: number;
+
   servicename: string;
+
   price: number;
-  duration : number;
-  type : string;
+
+  duration: number;
+
+  type: string;
+
   img: string[];
+
+  description: string;
   }
