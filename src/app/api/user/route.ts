@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import { setUser } from "@/app/actions/user"
+import { setUser } from "@/app/actions/user/actions"
 
 export async function POST(req:NextRequest){
     const {firstname, lastname , number,password,role} = await req.json()

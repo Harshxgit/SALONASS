@@ -15,6 +15,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import { getSignedURL } from "@/app/actions/awsS3/actions";
 import createService from "@/app/actions/service/actions";
+import { useForm } from "react-hook-form";
+
 type ServiceType = "Haircut" | "Coloring" | "Styling" | "Treatment";
 
 interface ServiceFormData {
@@ -26,76 +28,42 @@ interface ServiceFormData {
 }
 
 export default function CreateServiceForm() {
-  const [formData, setFormData] = useState<ServiceFormData>({
-    name: "",
-    price: 0,
-    type: "Haircut",
-    duration: 0,
-    images: [],
+  const {
+    register: registerService,
+    handleSubmit,
+    setValue,
+    watch,
+  } = useForm<ServiceFormData>({
+    defaultValues: { name: "", price: 0, duration: 0, type: "Coloring" },
   });
+
+  const type = watch("type");
   const [isLoading, setLoading] = useState(false);
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type } = e.target;
-
-    if (name === "price" || name === "duration" || name === "price") {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: type === "number" ? parseInt(value) : value,
-      }));
-    } else setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleTypeChange = (value: ServiceType) => {
-    setFormData((prev) => ({ ...prev, type: value }));
-  };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      setFormData((prev) => ({ ...prev, images: Array.from(e.target.files!) }));
+      const files = Array.from(e.target.files);
+      setValue("images", files);
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoading(true);
+  const submitData = async (data: ServiceFormData) => {
+    console.log(data)
+    console.log("clicked");
+    setLoading(true); 
 
     const service = await createService({
-      servicename: formData.name,
-      price: formData.price,
-      duration: formData.duration,
-      type: formData.type,
+      servicename: data.name,
+      price: Number(data.price),
+      duration: Number(data.duration),
+      type: data.type,
+      description: "hi everyone , aur kya haal chaal",
     });
+    if (!service) throw new Error(service);
+   
 
-    //i can generate generate urls by iterate for each image items
+    toast.success(`${data.name} has been successfully added.`);
 
-    formData.images.forEach(async (item) => {
-      const { uploadUrl } = await getSignedURL(
-        formData.images.length || 0,
-        item.type,
-        service.serviceid || 0
-      );
-      console.log(`url of signed + ${uploadUrl}`);
-      if (uploadUrl) {
-        await fetch(uploadUrl, {
-          method: "PUT",
-          headers: {
-            "Content-Type": item.type,
-          },
-          body: item,
-        });
-      }
-    });
-
-    toast.success(`${formData.name} has been successfully added.`);
-
-    // Reset form after submission
-    setFormData({
-      name: "",
-      price: 0,
-      type: "Haircut",
-      duration: 0,
-      images: [],
-    });
     setLoading(false);
   };
 
@@ -105,14 +73,12 @@ export default function CreateServiceForm() {
         <CardTitle>Create New Service</CardTitle>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit(submitData)} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="name">Service Name</Label>
             <Input
               id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleInputChange}
+              {...registerService("name", { required: true })}
               required
             />
           </div>
@@ -121,19 +87,20 @@ export default function CreateServiceForm() {
             <Label htmlFor="price">Price</Label>
             <Input
               id="price"
-              name="price"
-              type="number"
+              type="tel"
               min="0"
               step="0.01"
-              value={formData.price}
-              onChange={handleInputChange}
+              {...registerService("price", { required: true })}
               required
             />
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="type">Service Type</Label>
-            <Select onValueChange={handleTypeChange} value={formData.type}>
+            <Select
+              onValueChange={(value)=>setValue("type", value as ServiceType)}
+              value={type}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Select service type" />
               </SelectTrigger>
@@ -150,11 +117,10 @@ export default function CreateServiceForm() {
             <Label htmlFor="duration">Duration (minutes)</Label>
             <Input
               id="duration"
-              name="duration"
-              type="number"
+              type="tel"
               min="0"
               // value={formData.duration}
-              onChange={handleInputChange}
+              {...registerService("duration", { required: true })}
               required
             />
           </div>
@@ -162,8 +128,6 @@ export default function CreateServiceForm() {
           <div className="space-y-2">
             <Label htmlFor="images">Images</Label>
             <Input
-              id="images"
-              name="images"
               type="file"
               onChange={handleImageUpload}
               multiple
@@ -172,7 +136,7 @@ export default function CreateServiceForm() {
           </div>
 
           <Button type="submit" className="w-full" disabled={isLoading}>
-            Create Service
+            {isLoading ? <>Creating........</> : <>Create Serivce</>}
           </Button>
         </form>
       </CardContent>

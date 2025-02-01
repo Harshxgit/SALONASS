@@ -6,6 +6,7 @@ interface Servicee {
   price: number;
   type: string;
   duration: number;
+  description : string
 }
 
 //get all services
@@ -20,8 +21,9 @@ export default async function createService({
   price,
   duration,
   type,
+  description
 }: Servicee) {
-  console.log(servicename,price,duration,type)
+  console.log(servicename,price,duration,type,description)
   const name = prisma.services.findUnique({
     where: { servicename: servicename },
   });
@@ -35,7 +37,7 @@ export default async function createService({
         price: price,
         duration: duration,
         type: type,
-        description: "", // Add a default or dynamic description here
+        description: description ||"hkjjhjkh", // Add a default or dynamic description here
       },
     });
 

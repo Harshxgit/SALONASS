@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import Razorpay from "razorpay";
-export default async function POST(req:NextRequest){
+export  async function POST(req:NextRequest){
     try{
         const body = await req.json() 
         const razorpay = new Razorpay({
@@ -8,7 +8,7 @@ export default async function POST(req:NextRequest){
             key_secret: process.env.RAZORPAY_KEY_SECRET
         })
         const options = {
-            amount : body.amount * 100 ,//convert to paise
+            amount : body.amount ,
             currency : "INR",
             receipt : `receipt_${Date.now()}`,
         }

@@ -1,4 +1,4 @@
-import createService, { getServices } from "@/app/actions/service/servic";
+import createService, { getServices } from "@/app/actions/service/actions";
 import { NextRequest } from "next/server";
 
 export async function GET(){

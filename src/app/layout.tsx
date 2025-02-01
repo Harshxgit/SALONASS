@@ -40,7 +40,7 @@ export default function RootLayout({
           )}
           {children}
 
-          <AUTHCOMP type="" />
+          {/* <AUTHCOMP type="" /> */}
         </body>
       </Providers>
     </html>

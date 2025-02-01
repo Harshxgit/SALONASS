@@ -23,7 +23,7 @@ export default function RootLayout({
           </main>
         </div>
       </div>
-       <AUTHCOMP type="ADMIN"/>
+       {/* <AUTHCOMP type="ADMIN"/> */}
     </QueryClientProvider>
   );
 }
