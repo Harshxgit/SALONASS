@@ -1,9 +1,10 @@
-"use server"
+"use server";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import crypto from "crypto";
 import prisma from "@/db";
-import { services } from "@/constants/service";
+import dotenv from "dotenv";
+dotenv.config();
 
 //all types
 const allowedFileTypes = [
@@ -20,28 +21,33 @@ type GetSignedURLParams = {
   fileSize: number;
   checksum: string;
 };
-
-//AWS S3 client connection
-const s3Client = new S3Client({
-  region: process.env.AWS_BUCKET_REGION ??  'us-east-1',
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY!,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
-  }
-});
-console.log(`bucket region ${process.env.AWS_SECRET_ACCESS_KEY}`)
 interface SignedUrlResult {
   uploadUrl?: string;
   failure?: string;
 }
 
+//AWS S3 client connection
+const s3Client = new S3Client({
+  region: process.env.AWS_BUCKET_REGION ?? "us-east-1",
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY! || "",
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY! || "",
+  },
+});
+//extract object key
+const getobject = async (url: string) => {
+  const object = new URL(url);
+
+  const objectKey = object.pathname.substring(1); //Remove leading
+  console.log(objectKey);
+  return objectKey;
+};
 //get signedURL function , with the help of we will taking signed url
 export async function getSignedURL(
   numberOfFiles: number,
   fileType: string,
   serviceid: number
 ): Promise<SignedUrlResult> {
-
   //check user session
   // const session = await getSession();
   // if (!session) {
@@ -52,7 +58,6 @@ export async function getSignedURL(
   if (!allowedFileTypes.includes(fileType)) {
     return { failure: "File type not allowed" };
   }
-  
 
   //function generate automatic file name
   const generateFileName = (bytes = 32) =>
@@ -60,30 +65,50 @@ export async function getSignedURL(
 
   const fileName = generateFileName();
 
-
   const putObjectCommand = new PutObjectCommand({
     Bucket: process.env.AWS_BUCKET_NAME!,
     Key: fileName,
+    ContentType: fileType,
   });
 
-  const uploadUrl = await getSignedUrl(
-    s3Client,
-    putObjectCommand,
-    { expiresIn: 60 } // 60 seconds
-  );
-
-  const url = []
-
-  url.push(uploadUrl)
-  //update DB
-  await prisma.services.update({
-    where: {
-      id: serviceid,
-    },
-    data: {
-      img: url
-    },
-  });
-
-  return { uploadUrl };
+  console.log(s3Client);
+  try {
+    const uploadUrl = await getSignedUrl(
+      s3Client,
+      putObjectCommand,
+      { expiresIn: 60 } // 60 seconds
+    );
+    const objectkey = await getobject(uploadUrl); //extract object key
+    // console.log(objectkey)
+    //convert this into permanent URL
+    const permanentURL = `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_BUCKET_REGION}.amazonaws.com/${objectkey}`;
+    const service = await prisma.services.findUnique({
+      where: {
+        id: serviceid,
+      },
+      select: {
+        img: true,
+      },
+    });
+    if (!service) {
+      throw new Error(`Service with ID ${serviceid} not found`);
+    }
+    const existingImages = service?.img || [];
+    existingImages.push(permanentURL);
+    //update DB
+    await prisma.services.update({
+      where: {
+        id: serviceid,
+      },
+      data: {
+        img: existingImages,
+      },
+    });
+    console.log(permanentURL);
+    console.log(uploadUrl)
+    return { uploadUrl };
+  } catch (error) {
+    console.error("Error generating signed URL:" + error);
+    return { failure: "An error occurred while generating the signed URL" };
+  }
 }

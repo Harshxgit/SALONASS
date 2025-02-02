@@ -4,7 +4,6 @@ import Container from "@/components/ui/container";
 import { Skeleton } from "@/components/ui/skeleton";
 import ThemeToggle from "@/Containers/header/ThemeToggle";
 import NavMenuToggle from "@/Containers/header/NavMenuToggle";
-import Notifications from "@/Containers/header/Notifications";
 import Profile from "@/Containers/header/Profile";
 import useGetMountStatus from "@/hooks/useGetMountStatus";
 import Toggle from "@/components/Toggle";
@@ -25,7 +24,7 @@ export default function Headerr() {
           {/* left side  */}
           <div className="flex items-center gap-x-2 ml-auto">
             <Toggle />
-            <Notifications />
+     
             <Profile />
           </div>
 

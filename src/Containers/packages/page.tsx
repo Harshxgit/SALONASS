@@ -7,7 +7,7 @@ export default function Package() {
   return (
     <Container>
         <CreatePackageForm/>
-        <PackageList/>
+        {/* <PackageList/> */}
     </Container>
   )
 }

@@ -1,7 +1,7 @@
 import PageTitle from "@/components/shared/PageTitle";
 import SalesOverview from "./SalesOverview";
 import StatusOverview from "./StatusOverview";
-import DashboardCharts from "./dashboard-charts";
+// import DashboardCharts from "./dashboard-charts";
 
 
 export default function Dashboard() {
@@ -12,7 +12,7 @@ export default function Dashboard() {
         <div className="space-y-8 mb-8">
           <SalesOverview />
           <StatusOverview />
-          <DashboardCharts />
+          {/* <DashboardCharts /> */}
         </div>
       </section>
 

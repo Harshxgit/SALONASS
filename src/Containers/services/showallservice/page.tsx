@@ -27,18 +27,16 @@ export default function ServiceList() {
     if (data) {
       //store fetched data to useAdminService zustand
       additem(data);
- 
     }
   }, [data, additem]);
   const services = useAdminService((state) => state.items);
   const [filter, setFilter] = useState<string>("All");
 
   const filteredServices = useMemo(() => {
-   
     return filter === "All"
       ? services
       : services.filter((service) => service.type === filter);
-  }, [filter,  JSON.stringify(services)]);
+  }, [filter, JSON.stringify(services)]);
   if (error) return <div>something went wrong</div>;
 
   if (isLoading) return <div>LOADING.................</div>;
@@ -78,11 +76,7 @@ const ServiceCard = ({ service }: { service: Service }) => {
       <CardContent>
         <div className="flex items-center space-x-4">
           {/* <Image
-            src={
-              Array.isArray(service.img)
-                ? service.img[0]
-                : service.img || "/default-image.png"
-            }
+            src={service.img[0]}
             alt={service.servicename || "Service image"}
             width={100}
             height={100}

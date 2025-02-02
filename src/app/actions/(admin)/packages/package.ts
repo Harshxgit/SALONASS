@@ -13,9 +13,21 @@ export async function fetchBookings(status?: string): Promise<Booking[]> {
   ]
 
   const mockServices: Service[] = [
-    { id: '1', name: 'Haircut', description: 'Standard haircut service', duration: 30, price: 30 },
-    { id: '2', name: 'Manicure', description: 'Basic manicure service', duration: 45, price: 25 },
-    { id: '3', name: 'Massage', description: 'Relaxing full body massage', duration: 60, price: 60 },
+    {
+      id: 1, servicename: 'Haircut', description: 'Standard haircut service', duration: 30, price: 30,
+      type: '',
+      img: []
+    },
+    {
+      id: 2, servicename: 'Manicure', description: 'Basic manicure service', duration: 45, price: 25,
+      type: '',
+      img: []
+    },
+    {
+      id: 3, servicename: 'Massage', description: 'Relaxing full body massage', duration: 60, price: 60,
+      type: '',
+      img: []
+    },
   ]
 
   const mockBookings: Booking[] = [

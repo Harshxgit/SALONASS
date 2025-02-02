@@ -33,13 +33,20 @@ export default function CreateServiceForm() {
     handleSubmit,
     setValue,
     watch,
+    getValues,
   } = useForm<ServiceFormData>({
-    defaultValues: { name: "", price: 0, duration: 0, type: "Coloring" },
+    defaultValues: {
+      name: "",
+      price: 0,
+      duration: 0,
+      type: "Coloring",
+      images: [],
+    },
   });
 
   const type = watch("type");
   const [isLoading, setLoading] = useState(false);
-
+  const formData = getValues();
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const files = Array.from(e.target.files);
@@ -48,10 +55,9 @@ export default function CreateServiceForm() {
   };
 
   const submitData = async (data: ServiceFormData) => {
-    console.log(data)
+    console.log(data);
     console.log("clicked");
-    setLoading(true); 
-
+    setLoading(true);
     const service = await createService({
       servicename: data.name,
       price: Number(data.price),
@@ -59,11 +65,39 @@ export default function CreateServiceForm() {
       type: data.type,
       description: "hi everyone , aur kya haal chaal",
     });
+    console.log("serviceid" + service.serviceid);
     if (!service) throw new Error(service);
-   
+    console.log(formData.images);
+    //  console.log(first)
+    formData.images.forEach(async (item) => {
+      const { uploadUrl } = await getSignedURL(
+        formData.images.length || 0,
+        item.type,
+        service.serviceid || 0
+      );
+      
+      if (uploadUrl) {
+        try {
+          const response = await fetch(uploadUrl, {
+            method: "PUT",
+            headers: {
+              "Content-Type": item.type,
+            },
+            body: item,
+            mode: "cors",
+          });
+          if (!response) throw new Error("Upload failed");
+          console.log(response)
+          console.log("File uploaded successfully");
+        } catch (error) {
+          console.log(error);
+        }
+
+        console.log("fetched");
+      }
+    });
 
     toast.success(`${data.name} has been successfully added.`);
-
     setLoading(false);
   };
 
@@ -90,7 +124,7 @@ export default function CreateServiceForm() {
               type="tel"
               min="0"
               step="0.01"
-              {...registerService("price", { required: true })}
+              {...registerService("price")}
               required
             />
           </div>
@@ -98,7 +132,7 @@ export default function CreateServiceForm() {
           <div className="space-y-2">
             <Label htmlFor="type">Service Type</Label>
             <Select
-              onValueChange={(value)=>setValue("type", value as ServiceType)}
+              onValueChange={(value) => setValue("type", value as ServiceType)}
               value={type}
             >
               <SelectTrigger>

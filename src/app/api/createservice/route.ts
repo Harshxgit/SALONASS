@@ -15,6 +15,6 @@ export async function GET(){
 export async function POST(req:NextRequest){
         const { servicename, price, duration, type } = await req.json()
 
-        const isCreated = await createService({ servicename, price, duration, type })
+        const isCreated = await createService({ servicename, price, duration, type, description: "default description" })
         if(isCreated) return Response.json({isCreated})
  }
