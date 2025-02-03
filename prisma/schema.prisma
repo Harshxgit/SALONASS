@@ -86,7 +86,7 @@ model Services {
   duration    Int
   type        String
   description String
-  img        String[] @default([])
+  img         Json @default("[]") 
   packages    Packages[]
 }
 

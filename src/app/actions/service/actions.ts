@@ -11,8 +11,17 @@ interface Servicee {
 
 //get all services
 export async function getServices(): Promise<Service[]> {
-  const services = await prisma.services.findMany({});
-  return services;
+  try{
+    const services = await prisma.services.findMany({});
+    return services.map(service => ({
+      ...service,
+      img: Array.isArray(service.img) ? (service.img as string[]) : [], // Ensure img is always an array
+    }))
+
+  }catch(error){
+      console.log("got failed error"+error)
+      return []; // Return an empty array in case of error
+  }
 }
 
 //create service

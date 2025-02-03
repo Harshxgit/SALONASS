@@ -3,9 +3,7 @@ import { NextRequest } from "next/server";
 
 export async function GET(){
     try{
-        console.log("first")
         const data = await getServices()
-        console.log(data)
         return Response.json(data)
     }
     catch{

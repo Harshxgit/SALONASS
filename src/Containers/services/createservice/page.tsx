@@ -50,6 +50,7 @@ export default function CreateServiceForm() {
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const files = Array.from(e.target.files);
+      console.log(files)
       setValue("images", files);
     }
   };
@@ -166,6 +167,7 @@ export default function CreateServiceForm() {
               onChange={handleImageUpload}
               multiple
               accept="image/*"
+              required
             />
           </div>
 

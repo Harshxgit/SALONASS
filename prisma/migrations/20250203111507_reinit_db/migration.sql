@@ -2,7 +2,7 @@
 CREATE TYPE "bookingstatus" AS ENUM ('DONE', 'ACCEPTED', 'REJECTED');
 
 -- CreateEnum
-CREATE TYPE "ROLE" AS ENUM ('USER');
+CREATE TYPE "ROLE" AS ENUM ('USER', 'ADMIN', 'STAFF');
 
 -- CreateTable
 CREATE TABLE "User" (
@@ -37,6 +37,7 @@ CREATE TABLE "Staff" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3),
     "isAdmin" BOOLEAN NOT NULL DEFAULT false,
+    "Role" "ROLE" NOT NULL,
 
     CONSTRAINT "Staff_pkey" PRIMARY KEY ("id")
 );
@@ -90,7 +91,8 @@ CREATE TABLE "Services" (
     "price" INTEGER NOT NULL,
     "duration" INTEGER NOT NULL,
     "type" TEXT NOT NULL,
-    "img" TEXT[] DEFAULT ARRAY[]::TEXT[],
+    "description" TEXT NOT NULL,
+    "img" JSONB NOT NULL DEFAULT '[]',
 
     CONSTRAINT "Services_pkey" PRIMARY KEY ("id")
 );
@@ -100,6 +102,7 @@ CREATE TABLE "Packages" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
     "price" INTEGER NOT NULL,
+    "description" TEXT NOT NULL,
     "img" TEXT[] DEFAULT ARRAY[]::TEXT[],
 
     CONSTRAINT "Packages_pkey" PRIMARY KEY ("id")

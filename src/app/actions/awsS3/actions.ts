@@ -4,6 +4,7 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import crypto from "crypto";
 import prisma from "@/db";
 import dotenv from "dotenv";
+import { Prisma } from "@prisma/client";
 dotenv.config();
 
 //all types
@@ -27,7 +28,7 @@ interface SignedUrlResult {
 }
 
 //AWS S3 client connection
-const s3Client = new S3Client({
+const s3Client =  new S3Client({
   region: process.env.AWS_BUCKET_REGION ?? "us-east-1",
   credentials: {
     accessKeyId: process.env.AWS_ACCESS_KEY! || "",
@@ -39,7 +40,7 @@ const getobject = async (url: string) => {
   const object = new URL(url);
 
   const objectKey = object.pathname.substring(1); //Remove leading
-  console.log(objectKey);
+  // console.log(objectKey);
   return objectKey;
 };
 //get signedURL function , with the help of we will taking signed url
@@ -58,7 +59,9 @@ export async function getSignedURL(
   if (!allowedFileTypes.includes(fileType)) {
     return { failure: "File type not allowed" };
   }
-
+    // console.log(process.env.AWS_ACCESS_KEY)
+    // console.log(process.env.AWS_SECRET_ACCESS_KEY)
+    // console.log(process.env.AWS_BUCKET_REGION)
   //function generate automatic file name
   const generateFileName = (bytes = 32) =>
     crypto.randomBytes(bytes).toString(`hex`);
@@ -71,7 +74,8 @@ export async function getSignedURL(
     ContentType: fileType,
   });
 
-  console.log(s3Client);
+  // console.log(s3Client);
+  // console.log(putObjectCommand)
   try {
     const uploadUrl = await getSignedUrl(
       s3Client,
@@ -82,6 +86,7 @@ export async function getSignedURL(
     // console.log(objectkey)
     //convert this into permanent URL
     const permanentURL = `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_BUCKET_REGION}.amazonaws.com/${objectkey}`;
+    console.log(permanentURL)
     const service = await prisma.services.findUnique({
       where: {
         id: serviceid,
@@ -93,8 +98,8 @@ export async function getSignedURL(
     if (!service) {
       throw new Error(`Service with ID ${serviceid} not found`);
     }
-    const existingImages = service?.img || [];
-    existingImages.push(permanentURL);
+    const existingImages : Prisma.JsonArray = [...(service.img as string[]), permanentURL]
+   
     //update DB
     await prisma.services.update({
       where: {
@@ -104,8 +109,8 @@ export async function getSignedURL(
         img: existingImages,
       },
     });
-    console.log(permanentURL);
-    console.log(uploadUrl)
+    // console.log(permanentURL);
+    // console.log(uploadUrl)
     return { uploadUrl };
   } catch (error) {
     console.error("Error generating signed URL:" + error);

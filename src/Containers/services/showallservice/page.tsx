@@ -19,7 +19,11 @@ import Service from "@/types/service";
 import useAdminService from "@/app/store/adminservice";
 import React from "react";
 export default function ServiceList() {
-  const { data, error, isLoading } = useSWR("action/services", getServices); //fetch data
+  const { data, error, isLoading } = useSWR("action/services", getServices ,{
+    revalidateIfStale : true,
+    revalidateOnFocus: true,
+    revalidateOnReconnect: true
+  }); //fetch data
   const additem = useAdminService((state) => state.additem); //subscribed service for add items
 
   // console.log(data)
