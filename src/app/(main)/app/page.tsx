@@ -1,3 +1,4 @@
+"use client"
 import MyDrawer from '@/components/MyDrawer'
 import React from 'react'
 import { useSession } from 'next-auth/react'

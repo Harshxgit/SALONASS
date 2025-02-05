@@ -1,3 +1,4 @@
+"use server"
 import createService, { getServices } from "@/app/actions/service/actions";
 import { NextRequest } from "next/server";
 

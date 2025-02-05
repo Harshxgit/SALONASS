@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -17,7 +17,7 @@ import useAdminService from "@/app/store/adminservice";
 import Service from "@/types/service";
 import createPackages from "@/app/actions/packages/actions";
 import { useForm } from "react-hook-form";
-
+import { getSignedURL } from "@/app/actions/awsS3/actions";
 interface PackageFormData {
   name: string;
   price: number;
@@ -30,7 +30,7 @@ interface PackageFormData {
 export default function CreatePackageForm() {
   const [isLoading, setLoading] = useState(false);
   const service = useAdminService((state) => state.items);
-  const { register, handleSubmit, setValue, watch, getValues } =
+  const { register, handleSubmit, setValue, watch, getValues , reset } =
     useForm<PackageFormData>({
       defaultValues: { name: "", price: 0, duration: 0, services: [] ,description:""},
     });
@@ -66,7 +66,7 @@ export default function CreatePackageForm() {
     // For this example, we'll just log it and show a success message
 
     setLoading(true);
-    await createPackages({
+   const packageid =  await createPackages({
       packageName: data.name,
       price: Number(data.price),
       service: data.services,
@@ -74,7 +74,29 @@ export default function CreatePackageForm() {
     });
     // Simulating an API call
     await new Promise((resolve) => setTimeout(resolve, 1000));
-
+    formdata.images?.forEach(async (item) => {
+          const { uploadUrl } = await getSignedURL(
+            formdata.images?.length || 0,
+            item.type,
+            packageid.serviceid || 0
+          );
+    
+          if (uploadUrl) {
+            try {
+              const response = await fetch(uploadUrl, {
+                method: "PUT",
+                headers: {
+                  "Content-Type": item.type,
+                },
+                body: item,
+                mode: "cors",
+              });
+              if (!response) throw new Error("Upload failed");
+            } catch (error) {
+              console.log(error);
+            }
+          }
+        });
     toast.success("Package created!");
 
     // Reset form after submission
@@ -109,7 +131,7 @@ export default function CreatePackageForm() {
             <Label htmlFor="type">Select Services</Label>{" "}
             <Label>
               {formdata.services.length > 0 ? (
-                <div className="flex flex-wrap">
+                <div className="flex flex-wrap overflow-y-auto">
                   {formdata.services.map((service) => (
                     <div key={service.id} className="flex items-center">
                       {service.servicename}
@@ -165,6 +187,7 @@ export default function CreatePackageForm() {
               onChange={handleImageUpload}
               multiple
               accept="image/*"
+              required
             />
           </div>
 

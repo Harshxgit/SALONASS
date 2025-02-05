@@ -3,10 +3,10 @@
 import Container from "@/components/ui/container";
 import { Skeleton } from "@/components/ui/skeleton";
 import ThemeToggle from "@/Containers/header/ThemeToggle";
-import NavMenuToggle from "@/Containers/header/NavMenuToggle";
 import Profile from "@/Containers/header/Profile";
 import useGetMountStatus from "@/hooks/useGetMountStatus";
 import Toggle from "@/components/Toggle";
+import NavMenuToggle from "./NavMenuToggle";
 
 export default function Headerr() {
   const mounted = useGetMountStatus();
@@ -15,7 +15,7 @@ export default function Headerr() {
       <Container>
         <div className="flex justify-between">
           {mounted ? (
-            <NavMenuToggle />
+            <NavMenuToggle/>
           ) : (
             <Skeleton className="size-10 rounded-full" />
           )}

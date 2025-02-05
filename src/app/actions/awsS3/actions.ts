@@ -59,10 +59,7 @@ export async function getSignedURL(
   if (!allowedFileTypes.includes(fileType)) {
     return { failure: "File type not allowed" };
   }
-    // console.log(process.env.AWS_ACCESS_KEY)
-    // console.log(process.env.AWS_SECRET_ACCESS_KEY)
-    // console.log(process.env.AWS_BUCKET_REGION)
-  //function generate automatic file name
+  
   const generateFileName = (bytes = 32) =>
     crypto.randomBytes(bytes).toString(`hex`);
 
@@ -74,8 +71,6 @@ export async function getSignedURL(
     ContentType: fileType,
   });
 
-  // console.log(s3Client);
-  // console.log(putObjectCommand)
   try {
     const uploadUrl = await getSignedUrl(
       s3Client,
@@ -83,11 +78,10 @@ export async function getSignedURL(
       { expiresIn: 60 } // 60 seconds
     );
     const objectkey = await getobject(uploadUrl); //extract object key
-    // console.log(objectkey)
-    //convert this into permanent URL
+    
     const permanentURL = `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_BUCKET_REGION}.amazonaws.com/${objectkey}`;
     console.log(permanentURL)
-    const service = await prisma.services.findUnique({
+     const service = await prisma.services.findUnique({
       where: {
         id: serviceid,
       },
@@ -98,7 +92,7 @@ export async function getSignedURL(
     if (!service) {
       throw new Error(`Service with ID ${serviceid} not found`);
     }
-    const existingImages : Prisma.JsonArray = [...(service.img as string[]), permanentURL]
+    const existingImages = [...(service.img as string[]), permanentURL]
    
     //update DB
     await prisma.services.update({
@@ -106,11 +100,10 @@ export async function getSignedURL(
         id: serviceid,
       },
       data: {
-        img: existingImages,
+        img: JSON.stringify(existingImages),
       },
     });
-    // console.log(permanentURL);
-    // console.log(uploadUrl)
+   
     return { uploadUrl };
   } catch (error) {
     console.error("Error generating signed URL:" + error);

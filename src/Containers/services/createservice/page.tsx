@@ -34,30 +34,27 @@ export default function CreateServiceForm() {
     setValue,
     watch,
     getValues,
+    reset,
   } = useForm<ServiceFormData>({
     defaultValues: {
       name: "",
-      price: 0,
-      duration: 0,
       type: "Coloring",
       images: [],
     },
   });
+  const formData = getValues();
 
   const type = watch("type");
   const [isLoading, setLoading] = useState(false);
-  const formData = getValues();
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      const files = Array.from(e.target.files);
-      console.log(files)
-      setValue("images", files);
-    }
+    if (!e.target.files) return;
+
+    const files = Array.from(e.target.files);
+    const isMultiple = e.target.multiple;
+    setValue("images", isMultiple ? files : [files[0]]);
   };
 
   const submitData = async (data: ServiceFormData) => {
-    console.log(data);
-    console.log("clicked");
     setLoading(true);
     const service = await createService({
       servicename: data.name,
@@ -66,39 +63,39 @@ export default function CreateServiceForm() {
       type: data.type,
       description: "hi everyone , aur kya haal chaal",
     });
-    console.log("serviceid" + service.serviceid);
-    if (!service) throw new Error(service);
-    console.log(formData.images);
-    //  console.log(first)
-    formData.images.forEach(async (item) => {
-      const { uploadUrl } = await getSignedURL(
-        formData.images.length || 0,
-        item.type,
-        service.serviceid || 0
-      );
-      
-      if (uploadUrl) {
-        try {
-          const response = await fetch(uploadUrl, {
-            method: "PUT",
-            headers: {
-              "Content-Type": item.type,
-            },
-            body: item,
-            mode: "cors",
-          });
-          if (!response) throw new Error("Upload failed");
-          console.log(response)
-          console.log("File uploaded successfully");
-        } catch (error) {
-          console.log(error);
-        }
 
-        console.log("fetched");
-      }
-    });
+    if (!service) throw new Error(service);
+    console.log("each");
+    console.log(formData.images);
+    await Promise.all(
+      formData.images.map(async (item) => {
+        console.log("each2");
+        const { uploadUrl } = await getSignedURL(
+          formData.images.length || 0,
+          item.type,
+          service.serviceid || 0
+        );
+        console.log(uploadUrl);
+        if (uploadUrl) {
+          try {
+            const response = await fetch(uploadUrl, {
+              method: "PUT",
+              headers: {
+                "Content-Type": item.type,
+              },
+              body: item,
+              mode: "cors",
+            });
+            if (!response) throw new Error("Upload failed");
+          } catch (error) {
+            console.log(error);
+          }
+        }
+      })
+    );
 
     toast.success(`${data.name} has been successfully added.`);
+    reset();
     setLoading(false);
   };
 
@@ -109,27 +106,28 @@ export default function CreateServiceForm() {
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit(submitData)} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="name">Service Name</Label>
-            <Input
-              id="name"
-              {...registerService("name", { required: true })}
-              required
-            />
-          </div>
+          <div className="flex flex-row  gap-8">
+            <div className="space-y-2 w-full">
+              <Label htmlFor="name">Service Name</Label>
+              <Input
+                id="name"
+                {...registerService("name", { required: true })}
+                required
+              />
+            </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="price">Price</Label>
-            <Input
-              id="price"
-              type="tel"
-              min="0"
-              step="0.01"
-              {...registerService("price")}
-              required
-            />
+            <div className="space-y-2 w-full relative">
+              <Label htmlFor="price">Price ₹</Label>
+              <Input
+                id="price"
+                type="tel"
+                min="0"
+                step="0.01"
+                {...registerService("price")}
+                required
+              />
+            </div>
           </div>
-
           <div className="space-y-2">
             <Label htmlFor="type">Service Type</Label>
             <Select
@@ -172,7 +170,14 @@ export default function CreateServiceForm() {
           </div>
 
           <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? <>Creating........</> : <>Create Serivce</>}
+            {isLoading ? (
+              <>
+                Creating{" "}
+                <span className="loading loading-ring loading-xs"></span>
+              </>
+            ) : (
+              <>Create Serivce</>
+            )}
           </Button>
         </form>
       </CardContent>

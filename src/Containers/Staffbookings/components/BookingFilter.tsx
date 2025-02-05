@@ -3,7 +3,7 @@
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Button } from "@/components/ui/button"
 
-export default function BookingsFilter() {
+export default async function BookingsFilter() {
   const router = useRouter()
   const searchParams = useSearchParams()
 

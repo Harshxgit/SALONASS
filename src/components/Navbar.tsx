@@ -4,7 +4,7 @@ import Toggle from "./Toggle";
 import useServicecart from "@/app/store/ServiceCart";
 
 export default function Navbar() {
-  const {items} = useServicecart()
+  const items = useServicecart(state=>state.items)
   return (
     <div className="navbar bg-transparent backdrop-blur sticky top-0 z-50  pr-5">
       <div className="flex-1">

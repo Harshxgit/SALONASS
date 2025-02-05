@@ -1,9 +1,8 @@
 "use client";
-
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
+import { MdOutlineDeleteForever } from "react-icons/md";
 import {
   Select,
   SelectContent,
@@ -13,16 +12,17 @@ import {
 } from "@/components/ui/select";
 
 import useSWR from "swr";
-import { getServices } from "@/app/actions/service/actions";
+import { deleteService, getServices } from "@/app/actions/service/actions";
 import Service from "@/types/service";
 
 import useAdminService from "@/app/store/adminservice";
 import React from "react";
+import toast from "react-hot-toast";
 export default function ServiceList() {
-  const { data, error, isLoading } = useSWR("action/services", getServices ,{
-    revalidateIfStale : true,
+  const { data, error, isLoading } = useSWR("action/services", getServices, {
+    revalidateIfStale: true,
     revalidateOnFocus: true,
-    revalidateOnReconnect: true
+    revalidateOnReconnect: true,
   }); //fetch data
   const additem = useAdminService((state) => state.additem); //subscribed service for add items
 
@@ -32,7 +32,10 @@ export default function ServiceList() {
       //store fetched data to useAdminService zustand
       additem(data);
     }
+    return () => useAdminService.setState((state) => ({ ...state, items: [] }), true);
+      
   }, [data, additem]);
+
   const services = useAdminService((state) => state.items);
   const [filter, setFilter] = useState<string>("All");
 
@@ -43,8 +46,17 @@ export default function ServiceList() {
   }, [filter, JSON.stringify(services)]);
   if (error) return <div>something went wrong</div>;
 
-  if (isLoading) return <div>LOADING.................</div>;
-
+  if (isLoading)
+    return (
+      <div>
+        <span className="loading loading-dots loading-lg">Loading</span>
+      </div>
+    );
+  const deleteItem = async (servicename: string) => {
+    const isdelete = await deleteService(servicename);
+    if (!isdelete) toast.error("failed to delete");
+    toast.success("deleted");
+  };
   return (
     <div className="container mx-auto py-10">
       <div className="flex justify-between items-center mb-6">
@@ -64,28 +76,43 @@ export default function ServiceList() {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredServices.map((service, index) => (
-          <MemoizedServiceCard key={service.id || index} service={service} />
+          <MemoizedServiceCard
+            key={service.id || index}
+            service={service}
+            deleteItem={deleteItem}
+          />
         ))}
       </div>
     </div>
   );
 }
 
-const ServiceCard = ({ service }: { service: Service }) => {
+const ServiceCard = ({
+  service,
+  deleteItem,
+}: {
+  service: Service;
+  deleteItem: (servicename: string) => Promise<void>;
+}) => {
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="relative">
         <CardTitle>{service.servicename}</CardTitle>
+        <div className="absolute p-4 top-1 right-2 text-red-700 cursor-pointer text-4xl">
+          <MdOutlineDeleteForever
+            onClick={() => deleteItem(service.servicename)}
+          />
+        </div>
       </CardHeader>
       <CardContent>
         <div className="flex items-center space-x-4">
-          {/* <Image
+          <Image
             src={service.img[0]}
             alt={service.servicename || "Service image"}
             width={100}
             height={100}
             className="rounded-md"
-          /> */}
+          />
           <div>
             <p className="font-semibold">{service.servicename}</p>
             <p className="font-semibold">₹{service.price}</p>

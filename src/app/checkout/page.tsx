@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useState } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -20,7 +20,7 @@ declare global {
   }
 }
 
-export default function page() {
+ function Paymentpagecontent() {
     const router = useRouter()
     const params = useSearchParams()
     const amount = params.get("amount")
@@ -105,11 +105,7 @@ export default function page() {
     };
   return (
     <>
-     <Script
-        id="razorpay-checkout-js"
-        src="https://checkout.razorpay.com/v1/checkout.js"
-     
-      />
+    
      <section className="container h-screen flex flex-col justify-center items-center gap-10">
         <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight">
           Checkout
@@ -136,4 +132,17 @@ export default function page() {
       </section>
     </>
   )
+}
+
+export default function page (){
+  return <>
+   <Script
+        id="razorpay-checkout-js"
+        src="https://checkout.razorpay.com/v1/checkout.js"
+     
+      />
+      <Suspense fallback={<div>Loading payment page...</div>}>
+          <Paymentpagecontent />
+      </Suspense>
+  </>
 }

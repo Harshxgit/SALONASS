@@ -11,6 +11,7 @@ export async function fetchBookings(status?: string): Promise<Booking[]> {
     { id: '2', name: 'Bob Smith' },
     { id: '3', name: 'Carol Williams' },
   ]
+  
 
   const mockServices: Service[] = [
     {

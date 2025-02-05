@@ -1,3 +1,4 @@
+"use client"
 import { create } from "zustand";
 import Service from "@/types/service";
 import { Packages } from "@/types/packages";

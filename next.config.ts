@@ -7,6 +7,9 @@ const nextConfig: NextConfig = {
     AWS_ACCESS_KEY: process.env.AWS_ACCESS_KEY,
     AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
   },
+  reactStrictMode: true,
+  experimental: {
+  },
 };
 
 export default nextConfig;

@@ -1,3 +1,4 @@
+"use client"
 import StaffAvailabilit from '@/Containers/staffavailability/page'
 import React from 'react'
 

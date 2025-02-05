@@ -1,4 +1,4 @@
-"use client"
+
 import Container from '@/components/ui/container'
 import React from 'react'
 import CreateServiceForm from './createservice/page'

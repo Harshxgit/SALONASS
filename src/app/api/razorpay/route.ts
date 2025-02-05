@@ -1,3 +1,4 @@
+"use server"
 import { NextRequest } from "next/server";
 import Razorpay from "razorpay";
 export  async function POST(req:NextRequest){

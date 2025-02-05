@@ -1,3 +1,4 @@
+"use client"
 import LiveClock from './LiveClock'
 import { TimeRangeSelector } from './selectime'
 

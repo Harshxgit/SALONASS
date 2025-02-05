@@ -1,3 +1,4 @@
+"use client"
 import StaffAvailability from "./staff-comp/staff-availability";
 
 

@@ -17,14 +17,14 @@ export default function MyDrawer({ children }: any) {
         </Drawer.Trigger>
         <Drawer.Portal >
           <Drawer.Overlay className="fixed inset-0 bg-black/40" />
-          <Drawer.Content className="flex backdrop-blur-sm bg-slate-500/50 flex-col md:w-1/2 md:m-auto rounded-t-[10px] h-full mt-24 max-h-[75%] fixed bottom-0 left-0 right-0">
+          <Drawer.Content className="flex  backdrop-blur-3xl flex-col md:w-1/2 md:m-auto rounded-t-[10px] h-full mt-24 max-h-[75%] fixed bottom-0 left-0 right-0">
             <div className="p-4  rounded-t-[10px] flex-1">
               <div className="mx-auto w-12 h-1.5 flex-shrink-0 rounded-full bg-gray-300 mb-8" />
               <div className="max-w-md mx-auto">
                 <Drawer.Title className="font-medium mb-4">
                   Drawer for React.
                 </Drawer.Title>
-                <p className="text-gray-600 mb-2">
+                <p className="text-white mb-2">
                   This component can be used as a Dialog replacement on mobile
                   and tablet devices.
                 </p>
@@ -51,7 +51,7 @@ export default function MyDrawer({ children }: any) {
                 </p>
               </div>
             </div>
-            <div className="p-4 bg-gray-100 border-t border-gray-200 mt-auto">
+            <div className="p-4  border-t border-gray-200 mt-auto">
               <div className="flex gap-6 justify-end max-w-md mx-auto">
                 <a
                   className="text-xs text-gray-600 flex items-center gap-0.25"

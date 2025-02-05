@@ -1,4 +1,6 @@
+"use client"
 import { Suspense } from 'react'
+import useSWR from 'swr'
 import BookingsList from './components/BookingsList'
 import BookingsFilter from './components/BookingFilter'
 import { fetchBookings } from '@/app/actions/(admin)/packages/package'
@@ -9,7 +11,7 @@ export default async function BookingsPage({
   searchParams: { [key: string]: string | string[] | undefined }
 }) {
   const status = typeof searchParams.status === 'string' ? searchParams.status : undefined
-  const bookings = await fetchBookings(status)
+  const { data: bookings } = useSWR(() => fetchBookings(status))
 
   return (
     <div className="container mx-auto py-10">

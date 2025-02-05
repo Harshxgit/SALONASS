@@ -4,7 +4,6 @@ import Header from "@/Containers/header";
 import Sidebar from "@/Containers/sidebar";
 import Container from "@/components/ui/container";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import AUTHCOMP from "@/Containers/AuthModal/page";
 export default function RootLayout({
   children,
 }: {

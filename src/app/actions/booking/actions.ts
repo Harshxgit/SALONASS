@@ -1,3 +1,4 @@
+"use server"
 import prisma from "@/db";
 interface getBooking {
   staffid?: number;

@@ -32,7 +32,7 @@ function ServiceCard({ service }: { service: Service }) {
   )
 }
 
-export default function BookingsList({ initialBookings }: { initialBookings: Booking[] }) {
+export default  function BookingsList({ initialBookings }: { initialBookings: Booking[] }) {
   const [bookings, setBookings] = useState(initialBookings)
   const searchParams = useSearchParams()
 

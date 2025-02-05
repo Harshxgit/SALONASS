@@ -95,7 +95,7 @@ model Packages {
   name     String @unique
   price    Int
   description String
-  img     String[] @default([])
+  img       Json @default("[]")
   services Services[]
 }
 

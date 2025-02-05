@@ -2,12 +2,12 @@
 import prisma from "@/db";
 import { Packages } from "@/types/packages";
 import { Service } from "@/types/packages";
-type Package ={
+type Package = {
   packageName: string;
   price: number;
   service: Service[];
   description: string;
-}
+};
 
 //get all packages
 export async function getPackages(): Promise<Packages[]> {
@@ -16,7 +16,14 @@ export async function getPackages(): Promise<Packages[]> {
       services: true,
     },
   });
-  return packages;
+  return packages.map((pkg) => ({
+    ...pkg,
+    services: pkg.services.map((service) => ({
+      ...service,
+      img: Array.isArray(service.img) ? (service.img as string[]) : [],
+    })),
+    img: Array.isArray(pkg.img) ? (pkg.img as string[]) : [],
+  }));
 }
 
 //create packages
@@ -24,9 +31,9 @@ export default async function createPackages({
   packageName,
   price,
   service,
-  description
+  description,
 }: Package) {
-  console.log(packageName, price, service,description);
+  console.log(packageName, price, service, description);
   const name = prisma.packages.findUnique({
     where: { name: packageName },
   });
@@ -41,7 +48,7 @@ export default async function createPackages({
         services: {
           connect: service.map((item) => ({ id: item.id })),
         },
-        description : description
+        description: description,
       },
     });
 
