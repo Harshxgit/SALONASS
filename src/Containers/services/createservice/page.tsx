@@ -42,16 +42,15 @@ export default function CreateServiceForm() {
       images: [],
     },
   });
-  const formData = getValues();
 
   const type = watch("type");
+  const images = watch("images");
   const [isLoading, setLoading] = useState(false);
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files) return;
 
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || e.target.files.length === 0) return;
     const files = Array.from(e.target.files);
-    const isMultiple = e.target.multiple;
-    setValue("images", isMultiple ? files : [files[0]]);
+    setValue("images", files);
   };
 
   const submitData = async (data: ServiceFormData) => {
@@ -65,35 +64,30 @@ export default function CreateServiceForm() {
     });
 
     if (!service) throw new Error(service);
-    console.log("each");
-    console.log(formData.images);
-    await Promise.all(
-      formData.images.map(async (item) => {
-        console.log("each2");
-        const { uploadUrl } = await getSignedURL(
-          formData.images.length || 0,
-          item.type,
-          service.serviceid || 0
-        );
-        console.log(uploadUrl);
-        if (uploadUrl) {
-          try {
-            const response = await fetch(uploadUrl, {
-              method: "PUT",
-              headers: {
-                "Content-Type": item.type,
-              },
-              body: item,
-              mode: "cors",
-            });
-            if (!response) throw new Error("Upload failed");
-          } catch (error) {
-            console.log(error);
-          }
-        }
-      })
-    );
 
+    for (const item of images) {
+      const { uploadUrl } = await getSignedURL(
+        images.length || 0,
+        item.type,
+        service.serviceid || 0
+      );
+
+      if (uploadUrl) {
+        try {
+          const response = await fetch(uploadUrl, {
+            method: "PUT",
+            headers: {
+              "Content-Type": item.type,
+            },
+            body: item,
+            mode: "cors",
+          });
+          if (!response) throw new Error("Upload failed");
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    }
     toast.success(`${data.name} has been successfully added.`);
     reset();
     setLoading(false);
@@ -137,11 +131,14 @@ export default function CreateServiceForm() {
               <SelectTrigger>
                 <SelectValue placeholder="Select service type" />
               </SelectTrigger>
-              <SelectContent className="backdrop-blur">
-                <SelectItem value="Haircut">Haircut</SelectItem>
-                <SelectItem value="Coloring">Coloring</SelectItem>
-                <SelectItem value="Styling">Styling</SelectItem>
-                <SelectItem value="Treatment">Treatment</SelectItem>
+              <SelectContent className="backdrop-blur text-3xl font-bold">
+                <SelectItem value="Haircut">Hair care</SelectItem>
+                <SelectItem value="Coloring">Pedicure</SelectItem>
+                <SelectItem value="Styling">Manicure</SelectItem>
+                <SelectItem value="Facial & cleanup">Facial & cleanup</SelectItem>
+                <SelectItem value="Bleach & detan">Bleach & detan</SelectItem>
+                <SelectItem value="Waxing">Waxing</SelectItem>
+                <SelectItem value="Threading & face waxing">Threading & face waxing</SelectItem>
               </SelectContent>
             </Select>
           </div>

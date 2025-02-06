@@ -30,6 +30,7 @@ interface PackageFormData {
 export default function CreatePackageForm() {
   const [isLoading, setLoading] = useState(false);
   const service = useAdminService((state) => state.items);
+  console.log(service)
   const { register, handleSubmit, setValue, watch, getValues , reset } =
     useForm<PackageFormData>({
       defaultValues: { name: "", price: 0, duration: 0, services: [] ,description:""},

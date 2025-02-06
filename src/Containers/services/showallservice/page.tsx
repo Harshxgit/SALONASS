@@ -19,33 +19,34 @@ import useAdminService from "@/app/store/adminservice";
 import React from "react";
 import toast from "react-hot-toast";
 export default function ServiceList() {
-  const { data, error, isLoading } = useSWR("action/services", getServices, {
-    revalidateIfStale: true,
-    revalidateOnFocus: true,
-    revalidateOnReconnect: true,
-  }); //fetch data
+  const { data, error, isLoading, mutate } = useSWR(
+    "action/services",
+    getServices,
+    {
+      revalidateIfStale: true,
+      revalidateOnFocus: true,
+      revalidateOnReconnect: true,
+    }
+  ); //fetch data
   const additem = useAdminService((state) => state.additem); //subscribed service for add items
-
   // console.log(data)
   useEffect(() => {
     if (data) {
       //store fetched data to useAdminService zustand
       additem(data);
     }
-    return () => useAdminService.setState((state) => ({ ...state, items: [] }), true);
-      
+    return () =>
+      useAdminService.setState((state) => ({ ...state, items: [] }), true);
   }, [data, additem]);
 
   const services = useAdminService((state) => state.items);
   const [filter, setFilter] = useState<string>("All");
-
   const filteredServices = useMemo(() => {
     return filter === "All"
       ? services
       : services.filter((service) => service.type === filter);
   }, [filter, JSON.stringify(services)]);
   if (error) return <div>something went wrong</div>;
-
   if (isLoading)
     return (
       <div>
@@ -55,8 +56,10 @@ export default function ServiceList() {
   const deleteItem = async (servicename: string) => {
     const isdelete = await deleteService(servicename);
     if (!isdelete) toast.error("failed to delete");
+    mutate();
     toast.success("deleted");
   };
+  console.log(services);
   return (
     <div className="container mx-auto py-10">
       <div className="flex justify-between items-center mb-6">
@@ -65,12 +68,17 @@ export default function ServiceList() {
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Filter by type" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="backdrop-blur-lg text-4xl font-bold">
             <SelectItem value="All">All Services</SelectItem>
-            <SelectItem value="Haircut">Haircut</SelectItem>
-            <SelectItem value="Coloring">Coloring</SelectItem>
-            <SelectItem value="Styling">Styling</SelectItem>
-            <SelectItem value="Treatment">Treatment</SelectItem>
+            <SelectItem value="Haircut">Hair care</SelectItem>
+            <SelectItem value="Coloring">Pedicure</SelectItem>
+            <SelectItem value="Styling">Manicure</SelectItem>
+            <SelectItem value="Facial & cleanup">Facial & cleanup</SelectItem>
+            <SelectItem value="Bleach & detan">Bleach & detan</SelectItem>
+            <SelectItem value="Waxing">Waxing</SelectItem>
+            <SelectItem value="Threading & face waxing">
+              Threading & face waxing
+            </SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -106,13 +114,15 @@ const ServiceCard = ({
       </CardHeader>
       <CardContent>
         <div className="flex items-center space-x-4">
-          <Image
-            src={service.img[0]}
-            alt={service.servicename || "Service image"}
-            width={100}
-            height={100}
-            className="rounded-md"
-          />
+          {service.img?.length > 0 && (
+            <Image
+              src={service.img[0]} // Show only the first image
+              alt={service.servicename}
+              width={150}
+              height={150}
+              className="rounded-lg mt-2"
+            />
+          )}
           <div>
             <p className="font-semibold">{service.servicename}</p>
             <p className="font-semibold">₹{service.price}</p>

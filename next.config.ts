@@ -7,8 +7,13 @@ const nextConfig: NextConfig = {
     AWS_ACCESS_KEY: process.env.AWS_ACCESS_KEY,
     AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
   },
-  reactStrictMode: true,
-  experimental: {
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "mysalonsassbucket.s3.eu-north-1.amazonaws.com",
+      },
+    ],
   },
 };
 

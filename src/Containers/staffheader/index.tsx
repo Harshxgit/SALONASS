@@ -11,7 +11,7 @@ import NavMenuToggle from "./NavMenuToggle";
 export default function Headerr() {
   const mounted = useGetMountStatus();
   return (
-    <header className="sticky top-0 left-0 w-full bg-popover py-4 shadow-sm z-40">
+    <header className="sticky backdrop-blur-lg top-0 left-0 w-full bg-popover py-4 shadow-sm z-40">
       <Container>
         <div className="flex justify-between">
           {mounted ? (

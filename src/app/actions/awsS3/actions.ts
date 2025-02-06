@@ -5,6 +5,7 @@ import crypto from "crypto";
 import prisma from "@/db";
 import dotenv from "dotenv";
 import { Prisma } from "@prisma/client";
+import { Json } from "twilio/lib/interfaces";
 dotenv.config();
 
 //all types
@@ -38,9 +39,7 @@ const s3Client =  new S3Client({
 //extract object key
 const getobject = async (url: string) => {
   const object = new URL(url);
-
   const objectKey = object.pathname.substring(1); //Remove leading
-  // console.log(objectKey);
   return objectKey;
 };
 //get signedURL function , with the help of we will taking signed url
@@ -80,7 +79,7 @@ export async function getSignedURL(
     const objectkey = await getobject(uploadUrl); //extract object key
     
     const permanentURL = `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_BUCKET_REGION}.amazonaws.com/${objectkey}`;
-    console.log(permanentURL)
+
      const service = await prisma.services.findUnique({
       where: {
         id: serviceid,
@@ -92,15 +91,14 @@ export async function getSignedURL(
     if (!service) {
       throw new Error(`Service with ID ${serviceid} not found`);
     }
-    const existingImages = [...(service.img as string[]), permanentURL]
-   
+    const existingImages = [...(service.img as String), permanentURL]
     //update DB
     await prisma.services.update({
       where: {
         id: serviceid,
       },
       data: {
-        img: JSON.stringify(existingImages),
+        img: existingImages,
       },
     });
    
