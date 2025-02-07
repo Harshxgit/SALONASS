@@ -1,148 +1,196 @@
 "use client"
-import React, { Suspense, useEffect, useState } from 'react'
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { useRouter, useSearchParams } from "next/navigation";
-import Script from "next/script";
-import { Currency, LoaderCircle } from "lucide-react";
+import { useState } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Tag } from 'lucide-react';
 
+const BookingInterface = () => {
+  const [quantity, setQuantity] = useState(1);
+  const [avoid_calling, setAvoidCalling] = useState(false);
 
-declare global {
-  interface Window {
-    Razorpay: any;
-  }
-}
+  const serviceDetails = {
+    title: "Complete honey waxing",
+    originalPrice: 736,
+    discountedPrice: 626,
+    savings: 110,
+    items: [
+      "Full arms + underarms (Honey) x1",
+      "Full legs (Honey) x1",
+      "Threading: Eyebrow x1",
+      "Threading: Upper lip x1"
+    ]
+  };
 
- function Paymentpagecontent() {
-    const router = useRouter()
-    const params = useSearchParams()
-    const amount = params.get("amount")
-    const [loading , setLoading] = useState(false)
-    const idRef = React.useRef<string | null>(null)
-    console.log(amount)
-    useEffect(()=>{
-        if(!amount){
-            router.replace('/')
-        }
-        createrOrderId()
-    },[])
-    const createrOrderId = async()=>{
-        try{
-            const response = await fetch("api/razorpay",{
-                method : "POST",
-                headers:{
-                    "content-Type" : "application/json"
-                },
-                body :JSON.stringify({
-                    amount : parseInt(amount!) *100
-                })
-            })
-            if(!response.ok){
-                throw new Error("Network response was not ok")
-            }
-            const data = await response.json();
-            // console.log(data)
-            const id = data.orderID
-            console.log(id)
-            idRef.current  = id
-            return 
-        }catch(error){
-            console.error("There was a problem with your fetch operation:", error);
-        }
+  const frequentlyAdded = [
+    {
+      title: "Hair colour/mehendi (only application)",
+      price: 249,
+      image: "/api/placeholder/100/100"
+    },
+    {
+      title: "Sara fruit clear",
+      price: 699,
+      image: "/api/placeholder/100/100"
     }
-    const processPayment = async(e:React.FormEvent<HTMLFormElement>)=>{
-            e.preventDefault()
-            setLoading(true)
-            const orderId = idRef.current
-            console.log(orderId)
-            try{
-                const options = {
-                    key : process.env.RAZORPAY_KEY_ID ,
-                    amount : parseFloat(amount!) * 100,
-                    currency : "INR",
-                    name :"ClassOne" ,
-                    description : "classonepayment",
-                    order_id:orderId, 
-                    handler : async function (response:any){
-                        const data ={
-                            orderCreationId: orderId,
-                            razorpayPaymentId : response.razorpay_payment_id,
-                            razorpayOrderId  :response.razorpay_order_id,
-                            razorpaySignature :response.razorpay_signature,
-                        }
-                        const result = await fetch("/api/razorpayverify",{
-                            method : "POST",
-                            body : JSON.stringify(data),
-                            headers : {"Content-Type":"application/json",}
-                        })
-                        const res =await result.json();
-                        if(res.isOk) router.push("/")
-                            else{
-                                alert(res.message)
-                        }
-                    },
-                    theme :{
-                        color :"#3399cc"
-                    },
-                }
-                console.log("clicking")
-                const paymentObject = new window.Razorpay(options)
-                paymentObject.on("payment.failed",function(response:any){
-                    alert(response.error.description)
-                })
-                setLoading(false)
-                paymentObject.open()
-            }catch(error){
-                console.log(error)
-            }
-    };
-  return (
-    <>
-    
-     <section className="container h-screen flex flex-col justify-center items-center gap-10">
-        <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight">
-          Checkout
-        </h1>
-        <Card className="max-w-[25rem] space-y-8">
-          <CardHeader>
-            <CardTitle className="my-4">Continue</CardTitle>
-            <CardDescription>
-              By clicking on pay you'll purchase your plan subscription of Rs{" "}
-              {amount}/month
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={processPayment}>
-              <Button className="w-full" type="submit">{loading?"...loading":"Pay"}</Button>
-            </form>
-          </CardContent>
-          <CardFooter className="flex">
-            <p className="text-sm text-muted-foreground underline underline-offset-4">
-              Please read the terms and conditions.
-            </p>
-          </CardFooter>
-        </Card>
-      </section>
-    </>
-  )
-}
+  ];
 
-export default function page (){
-  return <>
-   <Script
-        id="razorpay-checkout-js"
-        src="https://checkout.razorpay.com/v1/checkout.js"
-     
-      />
-      <Suspense fallback={<div>Loading payment page...</div>}>
-          <Paymentpagecontent />
-      </Suspense>
-  </>
-}
+  return (
+    <div className="max-w-3xl mx-auto p-4 space-y-6">
+      {/* Savings Banner */}
+      <div className="flex items-center gap-2 text-green-700">
+        <Tag size={16} />
+        <span>Saving ₹{serviceDetails.savings} on this order</span>
+      </div>
+
+      {/* Main Content */}
+      <div className="grid md:grid-cols-2 gap-6">
+        {/* Left Column - Booking Details */}
+        <div className="space-y-4">
+          {/* Phone Number Section */}
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center gap-2">
+                <span className="text-gray-600">Send booking details to</span>
+                <span>+91 9617470129</span>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Address Section */}
+          <Card>
+            <CardContent className="p-4">
+              <div className="space-y-3">
+                <div className="font-medium">Address</div>
+                <Button className="w-full bg-purple-600 hover:bg-purple-700">
+                  Select an address
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Slot Section */}
+          <Card>
+            <CardContent className="p-4">
+              <div className="text-gray-600">Slot</div>
+            </CardContent>
+          </Card>
+
+          {/* Payment Method Section */}
+          <Card>
+            <CardContent className="p-4">
+              <div className="text-gray-600">Payment Method</div>
+            </CardContent>
+          </Card>
+
+          {/* Cancellation Policy */}
+          <div className="space-y-2">
+            <h3 className="font-medium text-lg">Cancellation policy</h3>
+            <p className="text-sm text-gray-600">
+              Free cancellations if done more than 12 hrs before the service or if a professional isn't assigned. A fee will be charged otherwise.
+            </p>
+            <Button variant="link" className="p-0 h-auto text-purple-600">
+              Read full policy
+            </Button>
+          </div>
+        </div>
+
+        {/* Right Column - Service Details */}
+        <div className="space-y-6">
+          <Card>
+            <CardContent className="p-4">
+              {/* Service Title and Price */}
+              <div className="flex justify-between items-start mb-4">
+                <h2 className="font-medium">{serviceDetails.title}</h2>
+                <div className="text-right">
+                  <div className="font-medium">₹{serviceDetails.discountedPrice}</div>
+                  <div className="text-sm text-gray-500 line-through">₹{serviceDetails.originalPrice}</div>
+                </div>
+              </div>
+
+              {/* Service Items */}
+              <ul className="list-disc pl-5 space-y-2 mb-4">
+                {serviceDetails.items.map((item, index) => (
+                  <li key={index} className="text-sm text-gray-600">{item}</li>
+                ))}
+              </ul>
+
+              {/* Quantity Controls */}
+              <div className="flex items-center gap-2 mb-4">
+                <Button 
+                  variant="outline"
+                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                  className="px-3"
+                >
+                  -
+                </Button>
+                <span className="w-8 text-center">{quantity}</span>
+                <Button 
+                  variant="outline"
+                  onClick={() => setQuantity(quantity + 1)}
+                  className="px-3"
+                >
+                  +
+                </Button>
+              </div>
+
+              <Button variant="link" className="p-0 h-auto text-purple-600">
+                Edit package
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* Frequently Added Together */}
+          <div>
+            <h3 className="font-medium mb-4">Frequently added together</h3>
+            <div className="grid grid-cols-2 gap-4">
+              {frequentlyAdded.map((item, index) => (
+                <Card key={index}>
+                  <CardContent className="p-4">
+                    <div className="flex gap-3">
+                      <img 
+                        src={item.image} 
+                        alt={item.title} 
+                        className="w-16 h-16 object-cover rounded"
+                      />
+                      <div className="flex-1">
+                        <div className="text-sm">{item.title}</div>
+                        <div className="font-medium">₹{item.price}</div>
+                        <Button variant="link" className="p-0 h-auto text-purple-600">
+                          Add
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+
+          {/* Avoid Calling Checkbox */}
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              checked={avoid_calling}
+              onChange={(e) => setAvoidCalling(e.target.checked)}
+              className="rounded border-gray-300"
+            />
+            <label className="text-sm">Avoid calling before reaching the location</label>
+          </div>
+
+          {/* Amount to Pay */}
+          <div className="flex justify-between items-center">
+            <div className="font-medium">Amount to pay</div>
+            <div>
+              <span className="font-medium text-lg">₹675</span>
+              <Button variant="link" className="text-purple-600 text-sm ml-2">
+                View breakup
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default BookingInterface;

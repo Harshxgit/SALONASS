@@ -2,35 +2,49 @@
 import { Service } from "@/types/packages";
 import React from "react";
 import useSWR from "swr";
+import { Card } from "./ui/card";
 
 export default function Services({
   category,
   onshowfunction,
-  ref,
+  ref
 }: {
   category: any;
   onshowfunction: any;
   ref: any;
-}) {
+ }) {
   return (
-    <div className=" top-36  sticky border-2 ">
+    <div className="md:top-40 md:sticky border-2 rounded-lg">
       <div className="text-3xl relative mt-2 p-2">
-        <h1>Select a Service</h1>
+        <h1 className="text-md">Select a Service</h1>
         {/* <div className=" absolute top-2 right-4 text-white h-2 w-80"/> */}
       </div>
 
       {/* service container  */}
-      <div className=" md:gap-12 grid grid-cols-4 gap-8  textarea-sm  ">
-        {category.map((item: any) => (
-          <div
-            className="md:w-20 md:h-20 h-14 w-14 border-2 rounded-lg   "
-            key={item}
-          >
-            <div>{/* <img src="" alt="" /> */} img</div>
-            <div className="">{item}</div>
-          </div>
+    
+      <div className="grid grid-cols-3 md:grid-cols-3 gap-4">
+        {category.map((item:any) => (
+          // <Link key={service.name} href={service.href}>
+            <div className="p-4 hover:shadow-lg transition-shadow cursor-pointer" key={item} onClick={()=>onshowfunction(ref[item])}>
+              <div className="flex flex-col items-center justify-center text-center space-y-3">
+                {
+                  <div className="relative w-16 h-16 border-2 rounded-lg">
+                    {/* <Image
+                      src={}
+                      alt={service.name}
+                      fill
+                      className="object-cover rounded-md"
+                    /> */} 
+                  </div>
+                }
+                <span className="text-sm font-medium mt-2">{item}</span>
+              </div>
+            
+            </div>
+          // </Link>
         ))}
       </div>
+      
     </div>
   );
 }

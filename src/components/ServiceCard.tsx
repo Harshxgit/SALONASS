@@ -5,10 +5,14 @@ import MyDrawer from "./MyDrawer";
 import { create } from "zustand";
 import useServicecart from "../app/store/ServiceCart";
 import { Service } from "@/types/packages";
+import toast from "react-hot-toast";
+import { useState } from "react";
+import { resolve } from "path";
 //ServiceCard component
 export default function ServiceCard({service}:{service : Service}) {
  
   const { additems } = useServicecart();
+  const [isLoading , setLoading] = useState(false)
   return (
     <div className=" p-4 ">
       <MyDrawer>
@@ -44,24 +48,26 @@ export default function ServiceCard({service}:{service : Service}) {
                 alt="Service preview"
                 className="rounded-lg object-cover  w-fit h-[150px]"
               />
-              <div className="absolute -bottom-14 right-2 flex flex-col items-center">
+              <div className="absolute justify-center m-auto -mt-3  w-full flex flex-col items-center">
                 <span
-                  className="w-16 h-8  text-sm border-2 rounded-md hover:bg-black"
-                  onClick={(e) => {
+                  className="w-16 h-8  text-sm border-2 rounded-md hover:bg-black backdrop-blur-md font-bold"
+                  onClick={async (e) => {
+                    setLoading(true)
+                    await new Promise((resolve) => setTimeout(resolve, 1000))
                     e.stopPropagation();
                     additems({
-                      id: 4,
-                      name: "Bikini waxing",
-                      price: 949,
-                      image: "/placeholder.svg?height=150&width=150",
+                      id: service.id,
+                      name: service.servicename,
+                      price: service.price,
+                      image: service.img[0],
                       quantity: 1,
                     });
-                    console.log("clicked")
+                    toast.success("Your services added to Cart")
+                    setLoading(false)
                   }}
                 >
-                  Add
+                 <div className="mt-1">{isLoading?<span className="loading loading-dots loading-xs"></span>:<span>Add</span>}</div> 
                 </span>
-                <p className="text-xs text-white mt-1">2 options</p>
               </div>
             </div>
           </div>

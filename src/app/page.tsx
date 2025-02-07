@@ -13,13 +13,13 @@ export default function Home() {
   const { data: services } = useSWR("/service", getServices);
   const { data: packages } = useSWR("/package", getServices);
 
-  const category = useMemo(() => {
+  const categories = useMemo(() => {
     const catg = Array.from(new Set(services?.map((service) => service.type)));
     return [...catg, "packages"];
   }, [services]);
 
   const catService = useMemo(() => {
-    services?.reduce((acc: { [key: string]: typeof services }, item) => {
+    return services?.reduce((acc: { [key: string]: typeof services }, item) => {
       if (!acc[item.type]) {
         acc[item.type] = [];
       }
@@ -29,14 +29,14 @@ export default function Home() {
   }, [services]);
 
   const onshowfunc = (ref: any) => {
-    ref.current?.scrollInView({ behaviour: "smooth" });
+    ref.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   const ref = useMemo(() => {
     return Object.fromEntries(
-      category.map((type: any) => [type, React.createRef()])
+      categories.map((type: any) => [type, React.createRef()])
     );
-  }, [category]);
+  }, [categories]);
 
   console.log(services);
   return (
@@ -50,20 +50,28 @@ export default function Home() {
           scrollbar-width: none;
         }
       `}</style>
-      <div className=" text-7xl grid grid-rows-3 md:grid-cols-3 grid-flow-col md:grid-flow-row gap-4 h-screen">
-        {/* left grid */}
-        <div className=" md:row-span-3  md:max-w-[400px] ">
-          <Services category={category} onshowfunction={onshowfunc} ref={ref} />
+      <div className="grid md:grid-rows-3 md:grid-cols-3  md:grid-flow-row gap-4 h-full  md:h-screen text-sm">
+        {/* left grid  services category section*/}
+        <div className=" md:row-span-6 h-fit md:h-[110%]   md:max-w-[400px] mx-8 ">
+          <Services category={categories} onshowfunction={onshowfunc} ref={ref}  />
         </div>
 
         {/* right grid */}
-        <div className=" md:col-span-2  border-2 ">1</div>
+        <div className=" md:col-span-2 h-fit border-2 ">1</div>
+
+        {/* All services List */}
         <div className=" border-l-orange-950 grid md:grid-flow-col md:grid-cols-2 md:row-span-2 md:col-span-2  gap-4">
           <div className="h-[calc(110vh-100px)] border-2   overflow-y-scroll scrollbar-hide">
-            {services?.map((service) => {
-              return <ServiceCard service={service} key={service.id} />;
-            })}
+            {categories?.map((category: any) => (
+              <div key={category} ref={ref[category]}>
+                <h1 className="text-4xl font-bold mb-4 text-gray-700 "> {category.charAt(0).toUpperCase() + category.slice(1)}</h1>
+                {catService?.[category]?.map((service: any) => (
+                  <ServiceCard service={service} key={service.id} />
+                ))}
+              </div>
+            ))}
           </div>
+
           <div className="border-2  md:h-[calc(110vh-100px)]  scrollbar-hide overflow-y-scroll overflow-x-hidden ">
             <Aboutservice />
           </div>
