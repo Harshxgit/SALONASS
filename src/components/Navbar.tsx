@@ -2,9 +2,11 @@
 import React from "react";
 import Toggle from "./Toggle";
 import useServicecart from "@/app/store/ServiceCart";
+import Link from "next/link";
 
 export default function Navbar() {
   const items = useServicecart(state=>state.items)
+  const getSubtotal = useServicecart(state=>state.getSubtotal)
   return (
     <div className="navbar bg-transparent backdrop-blur-md sticky top-0 z-50  pr-5">
       <div className="flex-1">
@@ -22,7 +24,9 @@ export default function Navbar() {
       <Toggle/>
       <div className="flex-none">
         {/* cart */}
+        <Link href="/cart">
         <div className="dropdown dropdown-end hidden md:block">
+      
           <div tabIndex={0} role="button" className="btn btn-ghost btn-circle">
             <div className="indicator">
               <svg
@@ -42,19 +46,13 @@ export default function Navbar() {
               <span className="badge badge-sm indicator-item">{items.length}</span>
             </div>
           </div>
-          <div
-            tabIndex={0}
-            className="card card-compact dropdown-content bg-base-100 z-[1] mt-3 w-52 shadow"
-          >
-            <div className="card-body">
-              <span className="text-lg font-bold">8 Items</span>
-              <span className="text-info">Subtotal: $999</span>
-              <div className="card-actions">
-                <button className="btn btn-primary btn-block">View cart</button>
-              </div>
-            </div>
-          </div>
+         
         </div>
+        </Link>
+
+
+
+
         <div className="dropdown dropdown-end">
           <div
             tabIndex={0}

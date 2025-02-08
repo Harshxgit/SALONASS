@@ -15,32 +15,20 @@ type Servicecart = {
   increaseqty: (id: number) => void;
   decreaseqty: (id: number) => void;
   removeService: (id: number) => void;
+  getSubtotal: () => number;
+  reset :()=>void
 };
 
 const useServicecart = create<Servicecart>()(
   persist(
-    (set) => ({
-      items: [
-        {
-          id: 1,
-          name: "Bikini waxing",
-          price: 949,
-          image: "/placeholder.svg?height=150&width=150",
-          quantity: 1,
-        },
-        {
-          id: 2,
-          name: "Bikini waxing",
-          price: 500,
-          image: "/placeholder.svg?height=150&width=150",
-          quantity: 1,
-        },
-      ],
+    (set,get) => ({
+      items: [],
       additems: (item: Item) => {
         set((state: { items: Item[] }) => ({
           items: [...state.items, item],
         }));
       },
+
       increaseqty: (id: number) => {
         set((state: { items: Item[] }) => ({
           items: state.items.map((item) => {
@@ -66,6 +54,14 @@ const useServicecart = create<Servicecart>()(
           items: state.items.filter((item) => item.id !== id),
         }));
       },
+      getSubtotal :()=>{
+            return get().items.reduce((acc, item) =>acc+item.price * item.quantity,0 );
+      },
+      reset :()=>{
+            set(()=>({
+              items:[]
+            }))
+      }
     }),
     { name: "service store",
       // storage: sessionStorage

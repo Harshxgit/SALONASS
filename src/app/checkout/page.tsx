@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tag } from 'lucide-react';
+import Razorpay from './paymentgateway/page';
 
 const BookingInterface = () => {
   const [quantity, setQuantity] = useState(1);
@@ -178,7 +179,7 @@ const BookingInterface = () => {
           </div>
 
           {/* Amount to Pay */}
-          <div className="flex justify-between items-center">
+          {/* <div className="flex justify-between items-center">
             <div className="font-medium">Amount to pay</div>
             <div>
               <span className="font-medium text-lg">₹675</span>
@@ -186,7 +187,8 @@ const BookingInterface = () => {
                 View breakup
               </Button>
             </div>
-          </div>
+          </div> */}
+          <Razorpay/>
         </div>
       </div>
     </div>

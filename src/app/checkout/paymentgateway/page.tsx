@@ -12,6 +12,8 @@ import {
 import { useRouter, useSearchParams } from "next/navigation";
 import Script from "next/script";
 import { Currency, LoaderCircle } from "lucide-react";
+import useAdminService from '@/app/store/adminservice';
+import useServicecart from '@/app/store/ServiceCart';
 
 
 declare global {
@@ -26,10 +28,10 @@ declare global {
     const amount = params.get("amount")
     const [loading , setLoading] = useState(false)
     const idRef = React.useRef<string | null>(null)
-    console.log(amount)
+    const reset = useServicecart(state=>state.reset)
     useEffect(()=>{
         if(!amount){
-            router.replace('/')
+            router.replace('/cart')
         }
         createrOrderId()
     },[])
@@ -83,7 +85,10 @@ declare global {
                             headers : {"Content-Type":"application/json",}
                         })
                         const res =await result.json();
-                        if(res.isOk) router.push("/")
+                        if(res.isOk) 
+                          {router.push("/")
+                            reset()
+                          }
                             else{
                                 alert(res.message)
                         }
@@ -120,7 +125,7 @@ declare global {
           </CardHeader>
           <CardContent>
             <form onSubmit={processPayment}>
-              <Button className="w-full" type="submit">{loading?"...loading":"Pay"}</Button>
+              <Button className="w-full" type="submit">{loading?<span className="loading loading-dots loading-lg"></span>:`Pay${amount} `}</Button>
             </form>
           </CardContent>
           <CardFooter className="flex">
@@ -134,7 +139,7 @@ declare global {
   )
 }
 
-export default function page (){
+export default function Razorpay (){
   return <>
    <Script
         id="razorpay-checkout-js"
