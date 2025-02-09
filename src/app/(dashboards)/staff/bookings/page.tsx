@@ -1,4 +1,3 @@
-"use client"
 import BookingsPage from '@/Containers/Staffbookings/page'
 import React from 'react'
 import { Suspense } from 'react'

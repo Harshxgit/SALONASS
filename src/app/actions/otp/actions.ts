@@ -20,6 +20,7 @@ function deleteOtp(number: string) {
 
 export async function sendOTP(to: string,token:string) {
   //cloud flare captach
+  
   let formdata = new FormData();
   formdata.append("secret", SECRET_KEY??"");
   formdata.append("response", token);

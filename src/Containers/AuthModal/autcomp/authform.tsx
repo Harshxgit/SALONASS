@@ -21,7 +21,7 @@ import { findUser } from "@/app/actions/user/actions";
 import { Turnstile } from "@marsidev/react-turnstile"; // Adjust the import path as necessary
 import toast from "react-hot-toast";
 type SignInData = {
-  number : number;
+  number: number;
   password?: string;
   otp?: string;
 };
@@ -53,78 +53,84 @@ export function ModernAuthForm({ onAuthSuccess, type }: ModernAuthFormProps) {
   const [signInMethod, setSignInMethod] = useState<"password" | "otp">(
     "password"
   );
-  
+
   const [signUpStep, setSignUpStep] = useState(1);
   const [isOtpSent, setIsOtpSent] = useState(false);
-  const[token , setToken] = useState("");
+  const [token, setToken] = useState("");
   const { register, watch } = useForm();
-  const phoneNumber = watch("phoneNumber");
-  const otp = watch("otp");
-  const [isotpverfied, setOtpverified] = useState(false);
-  const { register: registerSignIn, handleSubmit: handleSubmitSignIn } =
-    useForm<SignInData>();
-  const { register: registerSignUp, handleSubmit: handleSubmitSignUp } =
-    useForm<SignUpData>();
-  const onSignIn = async(data: SignInData) => {
 
-      const response = await signIn("credentials", {
-        mode: "signin",
-        number: data.number,
-        type : type,
-        password: data.password,
-        step : signInMethod,
-        otp: data.otp
-      });
-      if (response)  toast.success("signin-successfully" );
-   
+  const [isotpverfied, setOtpverified] = useState(false);
+  const {
+    register: registerSignIn,
+    handleSubmit: handleSubmitSignIn,
+    watch: signINwatch,
+  } = useForm<SignInData>();
+  const {
+    register: registerSignUp,
+    handleSubmit: handleSubmitSignUp,
+    watch: signupWatch,
+  } = useForm<SignUpData>();
+  const phoneNumber = signupWatch("phoneNumber");
+  const otp = signupWatch("otp");
+  const onSignIn = async (data: SignInData) => {
+    const response = await signIn("credentials", {
+      mode: "signin",
+      number: data.number,
+      type: type,
+      password: data.password,
+      step: signInMethod,
+      otp: data.otp,
+      redirect: false,
+    });
+    console.log(response)
+    if (response) toast.success("signin-successfully");
+
     onAuthSuccess();
   };
 
   //Sign-up function
   const onSignUp = async (data: SignUpData) => {
+    console.log(data);
     const response = await signIn("credentials", {
-      number: data.number,
+      number: data.phoneNumber,
       name: data.name,
       password: data.password,
       mode: "signup",
       type: type,
       isAdmin: type === "ADMIN" ? true : false,
+      redirect: false,
     });
-    if (response) toast.success( "signup successfully" );
-    toast.error("signup failed" );
+    if (response) toast.success("signup successfully");
+    toast.error("signup failed");
     onAuthSuccess();
   };
 
-  const sendOtp = async(e:any) => {
+  const sendOtp = async (e: any) => {
     // Implement OTP sending logic here
- 
-      const existuser = await findUser(phoneNumber);
-
-      //check user exist or not
-      if (!existuser) {
-        toast.error("user not found");
-        setFormType("signup");
-      }
-
+    try {
+      console.log("number" + phoneNumber);
       await sendOTP(phoneNumber, token);
-     toast.success("OTP SENT");
+      toast.success("OTP SENT");
       e.preventDefault();
+    } catch (error) {
+      console.log("not sent", error);
+    }
 
     setIsOtpSent(true);
   };
   useEffect(() => {
     const verify = async () => {
-      if (otp.length == 6) {
-        const verify = await verifyOtp(phoneNumber, otp);
+      // if (otp.length === 6) {
+      const verify = await verifyOtp(phoneNumber, otp);
 
-        if (verify) {
-          setOtpverified(true);
-          toast.success("OTP VERIFIED");
-        } else {
-          toast.error("PLEASE ENTER VALID OTP");
-          setOtpverified(false);
-        }
+      if (verify) {
+        setOtpverified(true);
+        toast.success("OTP VERIFIED");
+      } else {
+        toast.error("PLEASE ENTER VALID OTP");
+        setOtpverified(false);
       }
+      // }
     };
     verify();
   }, [otp]);
@@ -163,10 +169,14 @@ export function ModernAuthForm({ onAuthSuccess, type }: ModernAuthFormProps) {
                           id="phoneNumber"
                           type="tel"
                           className="pl-10"
-                          {...registerSignUp("phoneNumber", { required: true , pattern: {
-                            value: /^\d{10}$/, // Validate 10-digit phone number
-                            message: "Please enter a valid 10-digit phone number.",
-                          },})}
+                          {...registerSignUp("phoneNumber", {
+                            required: true,
+                            pattern: {
+                              value: /^\d{10}$/, // Validate 10-digit phone number
+                              message:
+                                "Please enter a valid 10-digit phone number.",
+                            },
+                          })}
                         />
                         <Phone className="absolute left-3 top-8 h-5 w-5 text-white-400" />
                       </div>
@@ -353,18 +363,17 @@ export function ModernAuthForm({ onAuthSuccess, type }: ModernAuthFormProps) {
               >
                 Sign up
               </Button>
-
             </>
           )}
         </p>
       </div>
       <Turnstile
-            className="my-4 mx-1"
-            onSuccess={(token) => {
-              setToken(token);
-            }}
-            siteKey="0x4AAAAAAAwsPtO1RkLb-vFz"
-          />
+        className="my-4 mx-1"
+        onSuccess={(token) => {
+          setToken(token);
+        }}
+        siteKey="0x4AAAAAAAwsPtO1RkLb-vFz"
+      />
     </div>
   );
 }

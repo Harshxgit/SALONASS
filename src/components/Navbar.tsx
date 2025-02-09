@@ -3,10 +3,18 @@ import React from "react";
 import Toggle from "./Toggle";
 import useServicecart from "@/app/store/ServiceCart";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 
 export default function Navbar() {
   const items = useServicecart(state=>state.items)
   const getSubtotal = useServicecart(state=>state.getSubtotal)
+  const {data:session} = useSession()
+  const handleLogout = () => {
+    if (window.confirm("Are you sure you want to sign out?")) {
+      signOut({ callbackUrl: "/" });
+    }
+  };
   return (
     <div className="navbar bg-transparent backdrop-blur-md sticky top-0 z-50  pr-5">
       <div className="flex-1">
@@ -60,10 +68,7 @@ export default function Navbar() {
             className="btn btn-ghost btn-circle avatar"
           >
             <div className="w-10 rounded-full">
-              <img
-                alt="Tailwind CSS Navbar component"
-                src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-              />
+           <div className="text-2xl backdrop-blur-sm"> {session?.user?.name?.charAt(0).toUpperCase() || "H"}</div>
             </div>
           </div>
           <ul
@@ -80,7 +85,7 @@ export default function Navbar() {
               <a>Settings</a>
             </li>
             <li>
-              <a>Logout</a>
+              <a onClick={handleLogout}>Logout</a>
             </li>
           </ul>
         </div>

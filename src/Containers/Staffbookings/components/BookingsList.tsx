@@ -1,5 +1,4 @@
 'use client'
-
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { Booking, Service } from '@/types/packages'
@@ -32,13 +31,13 @@ function ServiceCard({ service }: { service: Service }) {
   )
 }
 
-export default async function BookingsList({ initialBookings }: { initialBookings: Booking[] }) {
+export default  function BookingsList({ initialBookings }: { initialBookings: Booking[] }) {
   const [bookings, setBookings] = useState(initialBookings)
   const searchParams = useSearchParams()
 
   useEffect(() => {
     const status = searchParams.get('status')
-    fetchBookings(status || undefined).then(setBookings)
+    // fetchBookings(status || undefined).then(setBookings)
   }, [searchParams])
 
   return (
@@ -53,7 +52,7 @@ export default async function BookingsList({ initialBookings }: { initialBooking
           <TableHead>Services</TableHead>
         </TableRow>
       </TableHeader>
-      <TableBody>
+      {/* <TableBody>
         {bookings.map((booking) => (
           <TableRow key={booking.id}>
             <TableCell>{booking.username}</TableCell>
@@ -87,7 +86,7 @@ export default async function BookingsList({ initialBookings }: { initialBooking
             </TableCell>
           </TableRow>
         ))}
-      </TableBody>
+      </TableBody> */}
     </Table>
   )
 }

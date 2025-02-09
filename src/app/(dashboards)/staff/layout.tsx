@@ -32,7 +32,7 @@ export default function RootLayout({
           </main>
         </div>
       </div>
-        {/* <AUTHCOMP type="STAFF"/> */}
+        <AUTHCOMP type="STAFF"/>
     </QueryClientProvider>
   );
 }

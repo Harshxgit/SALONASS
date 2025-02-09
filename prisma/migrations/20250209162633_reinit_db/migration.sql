@@ -103,7 +103,7 @@ CREATE TABLE "Packages" (
     "name" TEXT NOT NULL,
     "price" INTEGER NOT NULL,
     "description" TEXT NOT NULL,
-    "img" TEXT[] DEFAULT ARRAY[]::TEXT[],
+    "img" JSONB NOT NULL DEFAULT '[]',
 
     CONSTRAINT "Packages_pkey" PRIMARY KEY ("id")
 );

@@ -1,5 +1,6 @@
 "use client";
 
+import AUTHCOMP from "@/Containers/AuthModal/page";
 import Header from "@/Containers/header";
 import Sidebar from "@/Containers/sidebar";
 import Container from "@/components/ui/container";
@@ -22,7 +23,7 @@ export default function RootLayout({
           </main>
         </div>
       </div>
-       {/* <AUTHCOMP type="ADMIN"/> */}
+       <AUTHCOMP type="ADMIN"/>
     </QueryClientProvider>
   );
 }

@@ -15,10 +15,10 @@ import bcrypt from "bcryptjs";
 import { sendOTP, verifyOtp } from "@/app/actions/otp/actions";
 import {
   findUser,
-  setUser,
   findStaff,
   checkAdmin,
-  setAdmin,
+    setUser,
+    setAdmin,
 } from "@/app/actions/user/actions";
 
 export const authOptions: NextAuthOptions = {
@@ -32,23 +32,22 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
         step: { label: "Step", type: "hidden" },
         token: { label: "token", type: "hidden" },
-        firstname: { label: "Firstname", type: "text" },
-        lastname: { label: "Lastname", type: "text" },
+        name: { label: "name", type: "text" },
         mode: { label: "mode", type: "hidden" },
         type: { label: "type", type: "hidden" },
         isAdmin: { label: "isAdmin", type: "hidden" },
       },
       async authorize(credentials: any): Promise<any> {
         if (!credentials) throw new Error("No credentials");
-
+        console.log(credentials)
+        console.log("in credentials")
         const {
           number,
           otp,
           password,
           step,
           mode,
-          firstname,
-          lastname,
+          name,
           type,
           isAdmin,
         } = credentials;
@@ -111,16 +110,13 @@ export const authOptions: NextAuthOptions = {
               //first check if user existed
 
               const user = await findUser(number);
+              console.log("after user")
               if (user) {
                 return user;
               } else {
-                const createUser = await setUser(
-                  firstname,
-                  lastname,
-                  number,
-                  password,
-                  type
-                );
+                const createUser = await setUser({name : name, number : number , password :password , role : type})
+                console.log("before creating user")
+                console.log(createUser)
                 if (createUser) {
                   const newuser = await findUser(number);
                   return newuser;
@@ -131,16 +127,18 @@ export const authOptions: NextAuthOptions = {
             //admin signup method
             else if (type === "STAFF" ||"ADMIN") {
               //sign-up for admin
-              const admin = await checkAdmin();
-              if (admin) return { error: "admin already exist" };
-              const createAdmin = await setAdmin(
-                firstname,
-                lastname,
-                number,
-                password,
-                isAdmin,
-                type
+              const admin = type==='ADMIN'? await checkAdmin():findStaff(number);
+              if (admin) return { error: "admin/staff already exist" };
+              const createAdmin = await setAdmin ({
+                name : name,
+                number:number,
+                password:password,
+                isAdmin:isAdmin,
+                role:type
+              }
+                
               );
+              console.log(createAdmin)
               if (createAdmin) {
                 const newadmin = await findStaff(number);
                 return newadmin;

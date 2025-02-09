@@ -11,15 +11,18 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import { Settings, LogOut, LayoutGrid } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { Session } from "inspector/promises";
 
 export default function Profile() {
+  const { data: session } = useSession()
   return (
     <div className="flex ml-2">
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger className="rounded-full ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
           <Avatar>
-            <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>CN</AvatarFallback>
+            {/* <AvatarImage src="https://github.com/shadcn.png" /> */}
+            <AvatarFallback>{session?.user?.name?.charAt(0) || "H"}</AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>
 

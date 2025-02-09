@@ -202,7 +202,7 @@ export function TimeRangeSelector() {
           >
             <div className="grid gap-2 p-2">
               {Array.from({ length: 12 * 4 + 1 }, (_, i) => i).map((index) => {
-                const hour = 9 + Math.floor(index / 4);
+                const hour = 10 + Math.floor(index / 4);
                 const minute = (index % 4) * 15;
 
                 // Formate the time for display
