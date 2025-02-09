@@ -13,7 +13,45 @@ const initSocket = (server) => {
 
     //all user logic are here
     userNamespace.on("connection", (socket) => {
-      socket.on("filtertable", (arg) => {});
+      
+      console.log("socket id na bhai"+socket.id);
+      socket.on(
+        "newBooking",
+        async ({
+          userid,
+          price,
+          services,
+          address,
+          bookingtype,
+          date,
+          time,
+          duration,
+          staffid,
+        }) => {
+          const isBook = await addBooking({
+            userid: userid,
+            price: price,
+            services: services,
+            address: address,
+            bookingtype: bookingtype,
+            date: date,
+            time: time,
+            duration: duration,
+            staffid: staffid,
+          });
+          if (!isBook) toast.error("faild to book");
+          adminNamespace.emit("newBooking", isBook);
+        }
+      );
+
+      socket.on("booking", (data)=>{
+        console.log(data)
+        io.of('/user').emit("new_booking", data);
+      });
+
+      socket.on("disconnect", () => {
+        console.log(`User disconnected: ${socket.id}`);
+      });
     });
 
     //all staff logics are here+

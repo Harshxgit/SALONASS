@@ -40,6 +40,8 @@
     "react-responsive": "^10.0.0",
     "react-table": "^7.8.0",
     "recoil": "^0.7.7",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1",
     "swr": "^2.3.0",
     "tailwind-merge": "^2.6.0",
     "twilio": "^5.4.2",
@@ -48,14 +50,15 @@
     "zustand": "^5.0.3"
   },
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start"
-  },
+  "dev": "node server/index.js",
+  "build": "next build",
+  "start": "NODE_ENV=production node server.js"
+},
   "devDependencies": {
     "@types/node": "22.10.7",
     "@types/node-schedule": "^2.1.7",
     "@types/react": "19.0.7",
+    "@types/socket.io-client": "^1.4.36",
     "autoprefixer": "^10.4.20",
     "daisyui": "^4.12.23",
     "postcss": "^8.5.1",

@@ -17,23 +17,23 @@ interface Booking {
   duration: number;
   staffid: number;
 }
+
 interface updatebookingstatus {
- 
-  bookingid: number;
+   bookingid: number;
   status: string;
 }
 
 //service booking function
-export default function addBooking({
+export default async function addBooking({
   userid,
   price,
-  services,
   address,
   bookingtype,
   date,
   time,
   duration,
   staffid,
+  services
 }: Booking) {
   try {
     const isbooking = prisma.$transaction(async (tx) => {

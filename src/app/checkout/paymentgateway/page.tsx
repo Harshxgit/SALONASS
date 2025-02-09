@@ -63,7 +63,6 @@ declare global {
             e.preventDefault()
             setLoading(true)
             const orderId = idRef.current
-            console.log(orderId)
             try{
                 const options = {
                     key : process.env.RAZORPAY_KEY_ID ,
@@ -79,6 +78,8 @@ declare global {
                             razorpayOrderId  :response.razorpay_order_id,
                             razorpaySignature :response.razorpay_signature,
                         }
+                        //verify data
+
                         const result = await fetch("/api/razorpayverify",{
                             method : "POST",
                             body : JSON.stringify(data),
@@ -88,6 +89,7 @@ declare global {
                         if(res.isOk) 
                           {router.push("/")
                             reset()
+                            //emit data to 
                           }
                             else{
                                 alert(res.message)

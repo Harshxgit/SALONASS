@@ -1,10 +1,12 @@
 "use client"
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tag } from 'lucide-react';
 import Razorpay from './paymentgateway/page';
-
+import io from 'socket.io-client';
+import toast from 'react-hot-toast';
+const socket = io("/user")
 const BookingInterface = () => {
   const [quantity, setQuantity] = useState(1);
   const [avoid_calling, setAvoidCalling] = useState(false);
@@ -34,7 +36,21 @@ const BookingInterface = () => {
       image: "/api/placeholder/100/100"
     }
   ];
+  useEffect(()=>{
+    console.log("connected")
+    socket.on("new_booking",(arg: any)=>{
+      console.log(arg)
+        toast.success(arg)
+    })
+    return ()=>{
+      socket.off('new_booking')
+    }
+  },[])
 
+  const click = ()=>{
+    console.log("first")
+    socket.emit("booking","hiii harshu")
+  }
   return (
     <div className="max-w-3xl mx-auto p-4 space-y-6">
       {/* Savings Banner */}
@@ -42,7 +58,7 @@ const BookingInterface = () => {
         <Tag size={16} />
         <span>Saving ₹{serviceDetails.savings} on this order</span>
       </div>
-
+      <div onClick={()=>click()}>click</div>
       {/* Main Content */}
       <div className="grid md:grid-cols-2 gap-6">
         {/* Left Column - Booking Details */}
