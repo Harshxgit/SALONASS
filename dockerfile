@@ -2,8 +2,6 @@ FROM node:20.12.0-alpine3.19
 
 WORKDIR /usr/src/app
 
-#copy server.js filer
-COPY server/ /usr/src/app/
 
 COPY package*.json ./
 COPY tsconfig.json ./
@@ -23,6 +21,7 @@ COPY server ./server
 # Can you add a script to the global package.json that does this?
 RUN  npx prisma generate
 
+COPY . /usr/src/app/
 
 COPY . .
 
