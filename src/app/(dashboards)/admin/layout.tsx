@@ -11,8 +11,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
     return (
-    <QueryClientProvider client={new QueryClient()}>
-      <div className="flex h-dvh overflow-hidden">
+      <div>
+         <div className="flex h-dvh overflow-hidden">
         <Sidebar />
 
         <div className="w-full relative overflow-y-auto">
@@ -24,6 +24,6 @@ export default function RootLayout({
         </div>
       </div>
        <AUTHCOMP type="ADMIN"/>
-    </QueryClientProvider>
+   </div>
   );
 }

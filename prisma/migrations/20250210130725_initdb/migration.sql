@@ -32,8 +32,8 @@ CREATE TABLE "Address" (
 CREATE TABLE "Staff" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
-    "password" TEXT,
     "number" TEXT NOT NULL,
+    "password" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3),
     "isAdmin" BOOLEAN NOT NULL DEFAULT false,

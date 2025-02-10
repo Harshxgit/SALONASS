@@ -62,7 +62,11 @@ export default function Home() {
         </div>
 
         {/* right grid */}
-        <div className=" md:col-span-2 h-fit border-2 ">1</div>
+        <div className=" md:col-span-2 h-full  w-full "> 
+          <Image src={"https://mysalonsassbucket.s3.eu-north-1.amazonaws.com/DALL%C2%B7E+2025-02-10+21.47.13+-+A+stylish+and+modern+wide+banner+for+'ClassOne+UNISEX+SALON'.+The+design+features+a+sleek+black+and+gold+color+scheme+with+a+luxurious+feel.+The+text+.webp"} alt={""} height={100}
+                width={300}
+                quality={100} className="object-cover h-fit w-fit " />
+        </div>
 
         {/* All services List */}
         <div className=" border-l-orange-950 grid md:grid-flow-col md:grid-cols-2 md:row-span-2 md:col-span-2  gap-4">

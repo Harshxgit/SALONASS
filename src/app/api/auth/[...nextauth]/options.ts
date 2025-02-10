@@ -143,7 +143,7 @@ export const authOptions: NextAuthOptions = {
               console.log(createAdmin)
               if (createAdmin) {
                 const user = await findStaff(number);
-                console.log(user)
+                console.log("findstaff"+user)
                 return user;
               }
               throw new Error("staff not signed-Up");
@@ -173,7 +173,6 @@ export const authOptions: NextAuthOptions = {
           session.user._id = token._id;
           session.user.name = token.name;
           session.user.number = token.number;
-
           session.user.role = token.role;
         }
       }

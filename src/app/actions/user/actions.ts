@@ -4,17 +4,17 @@ import { redirect } from "next/navigation";
 import bcrypt from "bcryptjs";
 import { promises } from "dns";
 export async function findUser(number: string) {
-  const user = await prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
     where: { number: number },
   });
   return user;
 }
 export async function findStaff(number: string) {
   if(!number) throw new Error("number is not existed")
-  const user = await prisma.staff.findUnique({
+  const staff = await prisma.staff.findUnique({
     where: { number: number },
   });
-  return user;
+  return staff;
 }
 import { ROLE } from "@prisma/client"; // Import the ROLE type from Prisma client
 import prisma from "@/db";
@@ -72,7 +72,7 @@ export async function setAdmin({name , password , number , isAdmin , role }:{
         name: name,
         number: number,
         password: hashpassword,
-        Role: role,
+        role: role,
         isAdmin: isAdmin
       }
     })

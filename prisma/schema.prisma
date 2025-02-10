@@ -38,7 +38,7 @@ model Staff {
   isAdmin   Boolean   @default(false)
   booking   Booking[]
   StaffAvailability StaffAvailability[]
-  Role ROLE
+  role ROLE
 }
 
 model StaffAvailability {
