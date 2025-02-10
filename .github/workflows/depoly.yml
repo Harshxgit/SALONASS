@@ -57,4 +57,4 @@ jobs:
                 -e AWS_BUCKET_REGION=${{secrets.AWS_BUCKET_REGION}} \
                 -e RAZORPAY_KEY_ID=${{secrets.RAZORPAY_KEY_ID}} \
                 -e RAZORPAY_KEY_SECRET=${{secrets.RAZORPAY_KEY_SECRET}} \
-                -d --name salonaas -p 3004:3000 harshuuu/salonaas:latest
+                -d --name salonaas -p 3004:3000 harshuuu/salonaas:latest dgdf
