@@ -1,6 +1,4 @@
 "use server";
-
-import prisma from "@/db";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import bcrypt from "bcryptjs";
@@ -19,6 +17,7 @@ export async function findStaff(number: string) {
   return user;
 }
 import { ROLE } from "@prisma/client"; // Import the ROLE type from Prisma client
+import prisma from "@/db";
 
 export async function checkAdmin(){
   const isAdminexist = await prisma.staff.findFirst({
@@ -59,21 +58,22 @@ export async function setAdmin({name , password , number , isAdmin , role }:{
   name : string,
   number: string,
   password: string,
-  isAdmin:boolean,
   role : ROLE
+  isAdmin:boolean,
 }
 ) {
-  console.log(name , password , number , isAdmin , role)
   const hashpassword = await bcrypt.hash(password, 10);
+  
   try {
+    console.log(typeof( name) , typeof( number), typeof( password),typeof( role) , typeof( isAdmin))
     console.log("inadmin")
     const usercreate = await prisma.staff.create({
       data: {
         name: name,
         number: number,
         password: hashpassword,
-        isAdmin: isAdmin,
-        Role: role
+        Role: role,
+        isAdmin: isAdmin
       }
     })
     console.log(usercreate)

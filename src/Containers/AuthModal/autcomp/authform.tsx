@@ -60,6 +60,7 @@ export function ModernAuthForm({ onAuthSuccess, type }: ModernAuthFormProps) {
   const { register, watch } = useForm();
 
   const [isotpverfied, setOtpverified] = useState(false);
+  console.log(type)
   const {
     register: registerSignIn,
     handleSubmit: handleSubmitSignIn,

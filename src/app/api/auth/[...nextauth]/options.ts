@@ -35,7 +35,7 @@ export const authOptions: NextAuthOptions = {
         name: { label: "name", type: "text" },
         mode: { label: "mode", type: "hidden" },
         type: { label: "type", type: "hidden" },
-        isAdmin: { label: "isAdmin", type: "hidden" },
+        isAdmin: { label: "isAdmin", type: "hidden" , },
       },
       async authorize(credentials: any): Promise<any> {
         if (!credentials) throw new Error("No credentials");
@@ -118,8 +118,8 @@ export const authOptions: NextAuthOptions = {
                 console.log("before creating user")
                 console.log(createUser)
                 if (createUser) {
-                  const newuser = await findUser(number);
-                  return newuser;
+                  const user = await findUser(number);
+                  return user;
                 }
               }
               throw new Error("user not signed-Up");
@@ -127,22 +127,26 @@ export const authOptions: NextAuthOptions = {
             //admin signup method
             else if (type === "STAFF" ||"ADMIN") {
               //sign-up for admin
-              const admin = type==='ADMIN'? await checkAdmin():findStaff(number);
-              if (admin) return { error: "admin/staff already exist" };
+              // const admin = type==='ADMIN'? await checkAdmin():findStaff(number);
+              // if (admin) throw new Error("admin/staff already exist");
+              console.log(name , number , password , isAdmin , type)
               const createAdmin = await setAdmin ({
                 name : name,
                 number:number,
                 password:password,
-                isAdmin:isAdmin,
+                isAdmin: Boolean(isAdmin),
                 role:type
               }
                 
               );
+              console.log(number)
               console.log(createAdmin)
               if (createAdmin) {
-                const newadmin = await findStaff(number);
-                return newadmin;
+                const user = await findStaff(number);
+                console.log(user)
+                return user;
               }
+              throw new Error("staff not signed-Up");
             }
           }
         } catch (err: any) {

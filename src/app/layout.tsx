@@ -40,7 +40,7 @@ export default function RootLayout({
           )}
           {children}
 
-          <AUTHCOMP type="USER" />
+          {!pathname.includes("/admin")&&  !pathname.includes("/staff") &&( <AUTHCOMP type="USER" />)}
         </body>
       </Providers>
     </html>
