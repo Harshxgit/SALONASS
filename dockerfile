@@ -15,7 +15,7 @@ RUN npm install
 
 COPY src ./src 
 COPY prisma ./prisma 
-COPY server ./server 
+COPY server/ ./server 
 
 
 # Can you add a script to the global package.json that does this?
