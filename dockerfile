@@ -3,7 +3,7 @@ FROM node:20.12.0-alpine3.19
 WORKDIR /usr/src/app
 
 # Copy package.json and package-lock.json to install dependencies
-COPY package*.json package-lock.json /usr/src/app/
+COPY package.json package-lock.json /usr/src/app/
 COPY tsconfig.json ./
 
 
