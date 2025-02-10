@@ -3,9 +3,8 @@ FROM node:20.12.0-alpine3.19
 WORKDIR /usr/src/app
 
 
-COPY package*.json ./
+COPY package.json ./
 COPY tsconfig.json ./
-
 
 
 # Install dependencies
