@@ -44,7 +44,7 @@ jobs:
             sudo docker stop salonaas || true
             sudo docker rm salonaas || true
             sudo docker run --name salonaas \
-            -p 3000:3000 \
+            -p 4000:3000 \
             -e DATABASE_URL="${{ secrets.DATABASE_URL }}" \
             -e NEXTAUTH_URL="${{ secrets.NEXTAUTH_URL }}" \
             -e NEXTAUTH_SECRET="${{ secrets.NEXTAUTH_SECRET }}" \
