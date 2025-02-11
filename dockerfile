@@ -17,6 +17,7 @@ COPY prisma ./prisma
 COPY server/ ./server 
 
 
+
 # Can you add a script to the global package.json that does this?
 RUN  npx prisma generate
 
