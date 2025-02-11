@@ -28,10 +28,10 @@ jobs:
           file: ./Dockerfile
           push: true
 
-          tags: harshuuu/salonaas:latest
+          tags: harshuuu/salonsaas:latest
 
       - name: Verify Pushed Image
-        run: docker pull harshuuu/salonaas:latest
+        run: docker pull harshuuu/salonsaas:latest
 
       - name: Deploy to EC2
         uses: appleboy/ssh-action@master
@@ -40,9 +40,9 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            sudo docker pull harshuuu/salonaas:latest
-            sudo docker stop salonaas || true
-            sudo docker rm salonaas || true
+            sudo docker pull harshuuu/salonsaas:latest
+            sudo docker stop salonsaas || true
+            sudo docker rm salonsaas || true
             sudo docker run \
             -e DATABASE_URL="${{ secrets.DATABASE_URL }}" \
             -e NEXTAUTH_URL="${{ secrets.NEXTAUTH_URL }}" \
@@ -57,6 +57,6 @@ jobs:
             -e AWS_BUCKET_REGION="${{ secrets.AWS_BUCKET_REGION }}" \
             -e RAZORPAY_KEY_ID="${{ secrets.RAZORPAY_KEY_ID }}" \
             -e RAZORPAY_KEY_SECRET="${{ secrets.RAZORPAY_KEY_SECRET }}" \
-            -d --name salonaas -p 4000:3000 harshuuu/salonaas:latest
+            -d --name salonsaas -p 4000:3000 harshuuu/salonsaas:latest
           
     
