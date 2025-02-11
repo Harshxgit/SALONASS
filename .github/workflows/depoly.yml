@@ -43,7 +43,7 @@ jobs:
             sudo docker pull harshuuu/salonaas:latest
             sudo docker stop salonaas || true
             sudo docker rm salonaas || true
-            sudo docker run --name salonaas \
+            sudo docker run --name salon \
             -p 3000:3000 \
             -e DATABASE_URL="${{ secrets.DATABASE_URL }}" \
             -e NEXTAUTH_URL="${{ secrets.NEXTAUTH_URL }}" \
