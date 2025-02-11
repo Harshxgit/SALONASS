@@ -14,7 +14,7 @@ RUN npm install
 
 COPY src ./src 
 COPY prisma ./prisma 
-COPY server /usr/src/app/server
+COPY server /usr/src/app/
 
 
 
