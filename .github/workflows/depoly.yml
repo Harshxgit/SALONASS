@@ -41,8 +41,8 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             sudo docker pull harshuuu/salonaas:latest
-            sudo docker stop salonaas || true
-            sudo docker rm salonaas || true
+            sudo docker stop salon || true
+            sudo docker rm salon || true
             sudo docker run --name salon \
             -p 3000:3000 \
             -e DATABASE_URL="${{ secrets.DATABASE_URL }}" \
