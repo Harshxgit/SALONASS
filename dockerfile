@@ -28,4 +28,4 @@ RUN npm run build
 
 # Expose the port your application will run on
 EXPOSE 3000
-CMD ["node", "server/index.js"]
+CMD ["npm", "run", "start"]

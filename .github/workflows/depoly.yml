@@ -44,17 +44,22 @@ jobs:
             sudo docker stop salonaas || true
             sudo docker rm salonaas || true
             sudo docker run \
-                -e DATABASE_URL=${{ secrets.DATABASE_URL }} \
-                -e NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }} \
-                -e NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }} \
-                -e TWILIO_ACCOUNT_SID=${{ secrets.TWILIO_ACCOUNT_SID }} \
-                -e TWILIO_AUTH_TOKEN=${{ secrets.TWILIO_AUTH_TOKEN }} \
-                -e TWILIO_PHONE_NUMBER=${{ secrets.TWILIO_PHONE_NUMBER }} \
-                -e CLOUDFLARE=${{ secrets.CLOUDFLARE }} \
-                -e AWS_BUCKET_NAME=${{secrets.AWS_BUCKET_NAME}} \
-                -e AWS_ACCESS_KEY=${{secrets.AWS_ACCESS_KEY}} \
-                -e AWS_SECRET_ACCESS_KEY=${{secrets.AWS_SECRET_ACCESS_KEY}} \
-                -e AWS_BUCKET_REGION=${{secrets.AWS_BUCKET_REGION}} \
-                -e RAZORPAY_KEY_ID=${{secrets.RAZORPAY_KEY_ID}} \
-                -e RAZORPAY_KEY_SECRET=${{secrets.RAZORPAY_KEY_SECRET}} \
-                -d --name salonaas -p 3000:3000 harshuuu/salonaas:latest 
+            --restart unless-stopped \
+            --name salonaas \
+            -p 3000:3000 \
+            -e DATABASE_URL="${{ secrets.DATABASE_URL }}" \
+            -e NEXTAUTH_URL="${{ secrets.NEXTAUTH_URL }}" \
+            -e NEXTAUTH_SECRET="${{ secrets.NEXTAUTH_SECRET }}" \
+            -e TWILIO_ACCOUNT_SID="${{ secrets.TWILIO_ACCOUNT_SID }}" \
+            -e TWILIO_AUTH_TOKEN="${{ secrets.TWILIO_AUTH_TOKEN }}" \
+            -e TWILIO_PHONE_NUMBER="${{ secrets.TWILIO_PHONE_NUMBER }}" \
+            -e CLOUDFLARE="${{ secrets.CLOUDFLARE }}" \
+            -e AWS_BUCKET_NAME="${{ secrets.AWS_BUCKET_NAME }}" \
+            -e AWS_ACCESS_KEY="${{ secrets.AWS_ACCESS_KEY }}" \
+            -e AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
+            -e AWS_BUCKET_REGION="${{ secrets.AWS_BUCKET_REGION }}" \
+            -e RAZORPAY_KEY_ID="${{ secrets.RAZORPAY_KEY_ID }}" \
+            -e RAZORPAY_KEY_SECRET="${{ secrets.RAZORPAY_KEY_SECRET }}" \
+            -d \
+            harshuuu/salonaas:latest
+    
