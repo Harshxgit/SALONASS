@@ -12,8 +12,8 @@ RUN npm install
 
 
 
-COPY src ./src 
-COPY prisma ./prisma 
+COPY src ./src
+COPY prisma ./prisma
 COPY server /usr/src/app/server
 
 
@@ -24,8 +24,8 @@ RUN  npx prisma generate
 
 COPY . .
 
-RUN npm run build 
+RUN npm run build
 
 # Expose the port your application will run on
 EXPOSE 3000
-CMD ["npm", "run" ,"start"]
+CMD ["npm", "run", "start"]
