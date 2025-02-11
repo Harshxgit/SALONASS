@@ -46,7 +46,7 @@ const BookingInterface = () => {
       socket.off('new_booking')
     }
   },[])
-
+//
   const click = ()=>{
     console.log("first")
     socket.emit("booking","hiii harshu")
