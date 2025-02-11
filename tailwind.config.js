@@ -11,7 +11,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        geist: ['Geist Mono', 'monospace'],
+        geist: ['monospace'],
       },
     },
   },
