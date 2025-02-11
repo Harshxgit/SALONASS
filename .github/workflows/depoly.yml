@@ -43,8 +43,7 @@ jobs:
             sudo docker pull harshuuu/salonaas:latest
             sudo docker stop salonaas || true
             sudo docker rm salonaas || true
-            sudo docker run --name salonaas \
-            -p 4000:3000 \
+            sudo docker run \
             -e DATABASE_URL="${{ secrets.DATABASE_URL }}" \
             -e NEXTAUTH_URL="${{ secrets.NEXTAUTH_URL }}" \
             -e NEXTAUTH_SECRET="${{ secrets.NEXTAUTH_SECRET }}" \
@@ -58,6 +57,6 @@ jobs:
             -e AWS_BUCKET_REGION="${{ secrets.AWS_BUCKET_REGION }}" \
             -e RAZORPAY_KEY_ID="${{ secrets.RAZORPAY_KEY_ID }}" \
             -e RAZORPAY_KEY_SECRET="${{ secrets.RAZORPAY_KEY_SECRET }}" \
-            -d \
-            harshuuu/salonaas:latest
+            -d --name salonaas -p 4000:3000 harshuuu/salonaas:latest
+          
     
