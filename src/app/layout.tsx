@@ -7,6 +7,7 @@ import { Providers } from "./providers";
 import { usePathname } from "next/navigation";
 import AUTHCOMP from "@/Containers/AuthModal/page";
 import {Toaster} from "react-hot-toast";
+import { NavBottom } from "@/components/NavBottom";
 // import { useCheckAuth } from "./checkauth/checkauth";
 
 
@@ -31,6 +32,7 @@ export default function RootLayout({
           {children}
 
           {!pathname.includes("/admin")&&  !pathname.includes("/staff") &&( <AUTHCOMP type="USER" />)}
+          <NavBottom/>
         </body>
       </Providers>
     </html>

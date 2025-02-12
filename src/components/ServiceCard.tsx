@@ -18,7 +18,7 @@ export default function ServiceCard({service}:{service : Service}) {
       <MyDrawer>
         <div className="p-4">
           <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2 mt-8 text-left">
+            <div className="space-y-2 mt-2 text-left">
               <h3 className="font-semibold text-sm ">{service.servicename}</h3>
               <div className="flex items-center gap-1">
                 <Star className="h-4 w-4 fill-primary text-primary" />

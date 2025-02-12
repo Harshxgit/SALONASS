@@ -121,7 +121,7 @@ export function ModernAuthForm({ onAuthSuccess, type }: ModernAuthFormProps) {
   };
   useEffect(() => {
     const verify = async () => {
-      // if (otp.length === 6) {
+      if (otp.length === 6) {
       const verify = await verifyOtp(phoneNumber, otp);
 
       if (verify) {
@@ -131,7 +131,7 @@ export function ModernAuthForm({ onAuthSuccess, type }: ModernAuthFormProps) {
         toast.error("PLEASE ENTER VALID OTP");
         setOtpverified(false);
       }
-      // }
+      }
     };
     verify();
   }, [otp]);

@@ -52,6 +52,12 @@ export default function Home() {
       `}</style>
       <div className="grid md:grid-rows-3 md:grid-cols-3  md:grid-flow-row gap-4 h-full  md:h-screen text-sm">
         {/* left grid  services category section*/}
+        <div className="md:hidden   w-fit"> 
+          <Image src={"https://mysalonsassbucket.s3.eu-north-1.amazonaws.com/DALL%C2%B7E+2025-02-10+21.47.13+-+A+stylish+and+modern+wide+banner+for+'ClassOne+UNISEX+SALON'.+The+design+features+a+sleek+black+and+gold+color+scheme+with+a+luxurious+feel.+The+text+.webp"} alt={""} height={9} layout="responsive"
+                width={16}
+                quality={100} className="object-cover p-4 " />
+        </div>
+
         <div className=" md:row-span-6 h-fit md:h-[110%]   md:max-w-[400px] mx-8 ">
           <Services
             category={categories}
@@ -62,10 +68,10 @@ export default function Home() {
         </div>
 
         {/* right grid */}
-        <div className=" md:col-span-2 h-full  w-full "> 
-          <Image src={"https://mysalonsassbucket.s3.eu-north-1.amazonaws.com/DALL%C2%B7E+2025-02-10+21.47.13+-+A+stylish+and+modern+wide+banner+for+'ClassOne+UNISEX+SALON'.+The+design+features+a+sleek+black+and+gold+color+scheme+with+a+luxurious+feel.+The+text+.webp"} alt={""} height={100}
-                width={300}
-                quality={100} className="object-cover h-fit w-fit " />
+        <div className="hidden md:block md:col-span-2 md:row-span-2 w-full overflow-hidden "> 
+          <Image src={"https://mysalonsassbucket.s3.eu-north-1.amazonaws.com/DALL%C2%B7E+2025-02-10+21.47.13+-+A+stylish+and+modern+wide+banner+for+'ClassOne+UNISEX+SALON'.+The+design+features+a+sleek+black+and+gold+color+scheme+with+a+luxurious+feel.+The+text+.webp"} alt={""} height={9} layout="responsive"
+                width={16} 
+                quality={100} className="object-fill  " />
         </div>
 
         {/* All services List */}
@@ -88,7 +94,7 @@ export default function Home() {
             )}
           </div>
 
-          <div className="border-2  md:h-[calc(110vh-100px)]  scrollbar-hide overflow-y-scroll overflow-x-hidden ">
+          <div className=" hidden md:block border-2  md:h-[calc(110vh-100px)]  scrollbar-hide overflow-y-scroll overflow-x-hidden ">
             <Aboutservice />
           </div>
         </div>
