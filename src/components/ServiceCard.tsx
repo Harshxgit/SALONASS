@@ -18,21 +18,22 @@ export default function ServiceCard({service}:{service : Service}) {
       <MyDrawer>
         <div className="p-4">
           <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2 mt-2 text-left">
-              <h3 className="font-semibold text-sm ">{service.servicename}</h3>
+            <div className="space-y-2  text-left">
+              <h3 className=" text-base font-bold font-sans ">{service.servicename}</h3>
               <div className="flex items-center gap-1">
-                <Star className="h-4 w-4 fill-primary text-primary" />
-                <span className="text-sm font-medium">4.99</span>
-                <span className="text-sm text-muted-foreground">
+                {/* <Star className="h-4 w-4 fill-primary text-primary" /> */}
+                {/* <span className="text-sm font-medium">4.99</span> */}
+                {/* <span className="text-sm text-muted-foreground">
                   (47K reviews)
-                </span>
+                </span> */}
               </div>
               <div className="space-y-1">
                 <p className="font-medium text-sm">
+              
                   Starts at <span className="text-sm">₹{service.price}</span>
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  Waxing covers the entire pelvis area
+                 {service.description.substring(0 ,33)}
                 </p>
                 <div className="text-sm text-primary hover:underline">
                   View details
@@ -50,7 +51,7 @@ export default function ServiceCard({service}:{service : Service}) {
               />
               <div className="absolute justify-center m-auto -mt-3  w-full flex flex-col items-center">
                 <span
-                  className="w-16 h-8  text-sm border-2 rounded-md hover:bg-black backdrop-blur-md font-bold"
+                  className="w-16 h-8  text-sm border border-base-300 rounded-md hover:bg-black backdrop-blur-md font-bold"
                   onClick={async (e) => {
                     setLoading(true)
                     await new Promise((resolve) => setTimeout(resolve, 1000))

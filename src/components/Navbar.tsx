@@ -20,7 +20,7 @@ export default function Navbar() {
       <div className="flex-1">
         <a className="btn btn-ghost text-xl">daisyUI</a>
       </div>
-      <div className="form-control">
+      <div className="form-control mx-4">
         <input
           type="text"
           placeholder="Search"
@@ -60,8 +60,8 @@ export default function Navbar() {
 
 
 
-
-        <div className="dropdown dropdown-end">
+        {/* profile */}
+         <div className="dropdown dropdown-end hidden md:block">
           <div
             tabIndex={0}
             role="button"

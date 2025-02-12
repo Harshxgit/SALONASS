@@ -1,234 +1,143 @@
-import React, {
-    createContext,
-    useContext,
-    useState,
-    useEffect,
-    useRef,
-    ReactNode,
-    FC,
-  } from 'react';
-  import { motion, AnimatePresence } from 'framer-motion';
-  import { cn } from '@/lib/util';
-  
-  // Define the type for the context value
-  interface ProgressSliderContextType {
-    active: string;
-    progress: number;
-    handleButtonClick: (value: string) => void;
-    vertical: boolean;
-  }
-  
-  // Define the type for the component props
-  interface ProgressSliderProps {
-    children: ReactNode;
-    duration?: number;
-    fastDuration?: number;
-    vertical?: boolean;
-    activeSlider: string;
-    className?: string;
-  }
-  
-  interface SliderContentProps {
-    children: ReactNode;
-    className?: string;
-  }
-  
-  interface SliderWrapperProps {
-    children: ReactNode;
-    value: string;
-    className?: string;
-  }
-  
-  interface ProgressBarProps {
-    children: ReactNode;
-    className?: string;
-  }
-  
-  interface SliderBtnProps {
-    children: ReactNode;
-    value: string;
-    className?: string;
-    progressBarClass?: string;
-  }
-  
-  // Create the context with an undefined initial value
-  const ProgressSliderContext = createContext<
-    ProgressSliderContextType | undefined
-  >(undefined);
-  
-  export const useProgressSliderContext = (): ProgressSliderContextType => {
-    const context = useContext(ProgressSliderContext);
-    if (!context) {
-      throw new Error(
-        'useProgressSliderContext must be used within a ProgressSlider'
-      );
-    }
-    return context;
-  };
-  
-  export const ProgressSlider: FC<ProgressSliderProps> = ({
-    children,
-    duration = 5000,
-    fastDuration = 400,
-    vertical = false,
-    activeSlider,
-    className,
-  }) => {
-    const [active, setActive] = useState<string>(activeSlider);
-    const [progress, setProgress] = useState<number>(0);
-    const [isFastForward, setIsFastForward] = useState<boolean>(false);
-    const frame = useRef<number>(0);
-    const firstFrameTime = useRef<number>(performance.now());
-    const targetValue = useRef<string | null>(null);
-    const [sliderValues, setSliderValues] = useState<string[]>([]);
-  
-    useEffect(() => {
-      const getChildren = React.Children.toArray(children).find(
-        (child) => (child as React.ReactElement).type === SliderContent
-      ) as React.ReactElement<SliderContentProps> | undefined;
-  
-      if (getChildren) {
-        const values = React.Children.toArray((getChildren.props.children as React.ReactElement[])).map(
-          (child) => {
-            if (React.isValidElement<{ value: string }>(child) && 'value' in child.props) {
-              return child.props.value as string;
-            }
-            return '';
-          }
-        );
-        setSliderValues(values);
-      }
-    }, [children]);
-  
-    useEffect(() => {
-      if (sliderValues.length > 0) {
-        firstFrameTime.current = performance.now();
-        frame.current = requestAnimationFrame(animate);
-      }
-      return () => {
-        cancelAnimationFrame(frame.current);
-      };
-    }, [sliderValues, active, isFastForward]);
-  
-    const animate = (now: number) => {
-      const currentDuration = isFastForward ? fastDuration : duration;
-      const elapsedTime = now - firstFrameTime.current;
-      const timeFraction = elapsedTime / currentDuration;
-  
-      if (timeFraction <= 1) {
-        setProgress(
-          isFastForward
-            ? progress + (100 - progress) * timeFraction
-            : timeFraction * 100
-        );
-        frame.current = requestAnimationFrame(animate);
-      } else {
-        if (isFastForward) {
-          setIsFastForward(false);
-          if (targetValue.current !== null) {
-            setActive(targetValue.current);
-            targetValue.current = null;
-          }
-        } else {
-          // Move to the next slide
-          const currentIndex = sliderValues.indexOf(active);
-          const nextIndex = (currentIndex + 1) % sliderValues.length;
-          setActive(sliderValues[nextIndex]);
-        }
-        setProgress(0);
-        firstFrameTime.current = performance.now();
-      }
-    };
-  
-    const handleButtonClick = (value: string) => {
-      if (value !== active) {
-        const elapsedTime = performance.now() - firstFrameTime.current;
-        const currentProgress = (elapsedTime / duration) * 100;
-        setProgress(currentProgress);
-        targetValue.current = value;
-        setIsFastForward(true);
-        firstFrameTime.current = performance.now();
-      }
-    };
-  
-    return (
-      <ProgressSliderContext.Provider
-        value={{ active, progress, handleButtonClick, vertical }}
+"use client"
+import React from "react";
+
+export default function Carousel() {
+  return (
+    <div>
+      <div
+        id="default-carousel"
+        className="relative w-full"
+        data-carousel="slide"
       >
-        <div className={cn('relative', className)}>{children}</div>
-      </ProgressSliderContext.Provider>
-    );
-  };
-  
-  export const SliderContent: FC<SliderContentProps> = ({
-    children,
-    className,
-  }) => {
-    return <div className={cn('', className)}>{children}</div>;
-  };
-  
-  export const SliderWrapper: FC<SliderWrapperProps> = ({
-    children,
-    value,
-    className,
-  }) => {
-    const { active } = useProgressSliderContext();
-  
-    return (
-      <AnimatePresence mode='popLayout'>
-        {active === value && (
-          <motion.div
-            key={value}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className={cn('', className)}
-          >
-            {children}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    );
-  };
-  
-  export const SliderBtnGroup: FC<ProgressBarProps> = ({
-    children,
-    className,
-  }) => {
-    return <div className={cn('', className)}>{children}</div>;
-  };
-  
-  export const SliderBtn: FC<SliderBtnProps> = ({
-    children,
-    value,
-    className,
-    progressBarClass,
-  }) => {
-    const { active, progress, handleButtonClick, vertical } =
-      useProgressSliderContext();
-  
-    return (
-      <button
-        className={cn(
-          `relative ${active === value ? 'opacity-100' : 'opacity-50'}`,
-          className
-        )}
-        onClick={() => handleButtonClick(value)}
-      >
-        {children}
-        <div
-          className='absolute inset-0 overflow-hidden -z-10 max-h-full max-w-full '
-          role='progressbar'
-          aria-valuenow={active === value ? progress : 0}
-        >
-          <span
-            className={cn('absolute left-0 ', progressBarClass)}
-            style={{
-              [vertical ? 'height' : 'width']:
-                active === value ? `${progress}%` : '0%',
-            }}
-          />
+           <div className="relative h-56 overflow-hidden rounded-lg md:h-96 border border-base-300">
+          <div className="hidden duration-700 ease-in-out" data-carousel-item>
+            <img
+              src="/docs/images/carousel/carousel-1.svg"
+              className="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
+              alt="..."
+            />
+          </div>
+
+          <div className="hidden duration-700 ease-in-out" data-carousel-item>
+            <img
+              src="/docs/images/carousel/carousel-2.svg"
+              className="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
+              alt="..."
+            />
+          </div>
+
+          <div className="hidden duration-700 ease-in-out" data-carousel-item>
+            <img
+              src="/docs/images/carousel/carousel-3.svg"
+              className="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
+              alt="..."
+            />
+          </div>
+
+          <div className="hidden duration-700 ease-in-out" data-carousel-item>
+            <img
+              src="/docs/images/carousel/carousel-4.svg"
+              className="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
+              alt="..."
+            />
+          </div>
+
+          <div className="hidden duration-700 ease-in-out" data-carousel-item>
+            <img
+              src="/docs/images/carousel/carousel-5.svg"
+              className="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
+              alt="..."
+            />
+          </div>
         </div>
-      </button>
-    );
-  };
+
+        <div className="absolute z-30 flex -translate-x-1/2 bottom-5 left-1/2 space-x-3 rtl:space-x-reverse">
+          <button
+            type="button"
+            className="w-3 h-3 rounded-full"
+            aria-current="true"
+            aria-label="Slide 1"
+            data-carousel-slide-to="0"
+          ></button>
+          <button
+            type="button"
+            className="w-3 h-3 rounded-full"
+            aria-current="false"
+            aria-label="Slide 2"
+            data-carousel-slide-to="1"
+          ></button>
+          <button
+            type="button"
+            className="w-3 h-3 rounded-full"
+            aria-current="false"
+            aria-label="Slide 3"
+            data-carousel-slide-to="2"
+          ></button>
+          <button
+            type="button"
+            className="w-3 h-3 rounded-full"
+            aria-current="false"
+            aria-label="Slide 4"
+            data-carousel-slide-to="3"
+          ></button>
+          <button
+            type="button"
+            className="w-3 h-3 rounded-full"
+            aria-current="false"
+            aria-label="Slide 5"
+            data-carousel-slide-to="4"
+          ></button>
+        </div>
+
+        <button
+          type="button"
+          className="absolute top-0 start-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none"
+          data-carousel-prev
+        >
+          <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
+            <svg
+              className="w-4 h-4 text-white dark:text-gray-800 rtl:rotate-180"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 6 10"
+            >
+              <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                stroke-width="2"
+                d="M5 1 1 5l4 4"
+              />
+            </svg>
+            <span className="sr-only">Previous</span>
+          </span>
+        </button>
+        <button
+          type="button"
+          className="absolute top-0 end-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none"
+          data-carousel-next
+        >
+          <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
+            <svg
+              className="w-4 h-4 text-white dark:text-gray-800 rtl:rotate-180"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 6 10"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="m1 9 4-4-4-4"
+              />
+            </svg>
+            <span className="sr-only">Next</span>
+          </span>
+        </button>
+      </div>
+    </div>
+  );
+}
