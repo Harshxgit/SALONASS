@@ -6,7 +6,6 @@ export const metadata: Metadata = {
     description: 'Add your address with location',
   };
 function page() {
-    
   return (
     <div>
         <AddressForm/>
