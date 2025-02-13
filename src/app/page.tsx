@@ -18,6 +18,7 @@ import {
 import { useState } from "react";
 import { MdOutlineWindow } from "react-icons/md";
 import { Metadata } from "next";
+import { useSession } from "next-auth/react";
 
 export default function Home() {
   
@@ -25,7 +26,7 @@ export default function Home() {
   const [modalOpen, setModalOpen] = useState(false);
   const { data: services, isLoading } = useSWR("/service", getServices);
   const { data: packages } = useSWR("/package", getServices);
-
+  const session = useSession()
   const categories = useMemo(() => {
     const catg = Array.from(new Set(services?.map((service) => service.type)));
     return [...catg, "packages"];
