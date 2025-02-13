@@ -12,15 +12,16 @@ const CartInterface = () => {
   const items = useServicecart((state) => state.items);
   const removeService = useServicecart((state) => state.removeService);
   const total = useServicecart((state) => state.getSubtotal);
+  
   return (
     <div className="max-w-md mx-auto p-4 space-y-4">
       <div className="flex justify-between">
-        <div className="flex items-center gap-2 text-purple-600 font-medium">
+        <div className="flex items-center gap-2 text-primary font-medium">
           <ShoppingCart size={24} />
           <h2>Your cart</h2>
         </div>
         <Link href="/">
-          <div className="flex items-center gap-2 cursor-pointer  text-purple-600 font-medium">
+          <div className="flex items-center gap-2 cursor-pointer  text-primary font-medium">
             <FaLongArrowAltLeft size={24} />
             <h2>Back to Service</h2>
           </div>
@@ -30,7 +31,7 @@ const CartInterface = () => {
         total() ===0 ? <div>Your Cart is Empty</div>  :
       
       <><div>{items.map((item, index) => (
-            <Card key={index}>
+            <Card key={index }>
               <CardContent className="p-4">
                 <div className="flex items-center gap-3 mb-3">
                   <img
@@ -53,20 +54,20 @@ const CartInterface = () => {
               ))}
             </div> */}
 
-                <div className="flex justify-between">
-                  <Button variant="outline" onClick={() => removeService(item.id)}>
+                <div className="flex justify-between bg-text-primary">
+                  <Button variant="outline"  onClick={() => removeService(item.id)}>
                     {" "}
                     Remove Services
                   </Button>
-                  <Button className="bg-purple-600 hover:bg-purple-700">
+                  {/* <Button className="bg-purple-600 hover:bg-purple-700">
                     Checkout
-                  </Button>
+                  </Button> */}
                 </div>
               </CardContent>
             </Card>
           ))}
           </div><div className="items-center justify-center flex">
-              <Card className="fixed  bottom-2 text-4xl text-center backdrop-blur-xl font-bold border-2 border-orange-700 cursor-pointer">
+              <Card className="fixed  bottom-2 text-4xl text-center backdrop-blur-xl font-bold border-2 border-primary hover:text-primary cursor-pointer">
                 <Link href={`/checkout?amount=${total()}`}>
                   {" "}
                   <div>Book Now ₹{total()}</div>{" "}

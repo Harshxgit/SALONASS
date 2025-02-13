@@ -21,7 +21,7 @@ export default function ServiceShowcase() {
       {/* Image Gallery Section */}
       <section>
         <h3 className="text-2xl font-semibold mb-6 text-center">What We Offer</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1  gap-6">
           {[1, 2, 3].map((index) => (
             <Card key={index} className="overflow-hidden">
               <Image
@@ -67,7 +67,7 @@ export default function ServiceShowcase() {
       {/* Written Reviews Section */}
       <section>
         <h3 className="text-2xl font-semibold mb-6 text-center">What Our Clients Say</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1  gap-6">
           {[
             {
               name: "Alex Johnson",
@@ -122,7 +122,7 @@ export default function ServiceShowcase() {
       {/* Video Reviews Section */}
       <section>
         <h3 className="text-2xl font-semibold mb-6 text-center">Client Success Stories</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 gap-6">
           {[1, 2, 3].map((index) => (
             <Card key={index} className="overflow-hidden">
               <div className="aspect-video relative">
@@ -160,8 +160,8 @@ export default function ServiceShowcase() {
         <Button size="lg">Get Started Today</Button>
       </section>
     </div>
-    <div className="fixed flex justify-center bg-base-300 w-full p-4 font-bold text-xl  bottom-0  ">
-      <button>ADD TO CART</button>
+    <div className="fixed flex justify-center md:justify-start backdrop-blur-lg border border-base-300 rounded w-full p-4 font-bold text-xl  bottom-0  ">
+      <button className="ml-32 text-primary backdrop-blur-sm">ADD TO CART</button>
     </div>
     </div>
   )

@@ -3,10 +3,9 @@ import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 
 export  function useCheckAuth(allowedRoles: string[]) {
-  console.log(allowedRoles)
+
   const { data: session, status } = useSession();
-  console.log(session?.user.name)
-  console.log(session?.user.role)
+ 
   const [showAuthModal, setShowAuthModal] = useState(false);
   useEffect(() => {
     if (status === "unauthenticated") {
