@@ -71,7 +71,7 @@ export default function Home() {
                 quality={100} className="object-cover p-4 " /> */}
           <Carousel />
         </div>
-
+                {/* dfs */}
         <div className=" md:row-span-6 h-fit md:h-[110%]   md:max-w-[400px] mx-8 backdrop-blur-sm ">
           <Services
             category={categories}
