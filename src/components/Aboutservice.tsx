@@ -161,7 +161,7 @@ export default function ServiceShowcase() {
       </section>
     </div>
     <div className="fixed flex justify-center md:justify-start backdrop-blur-lg border border-base-300 rounded w-full p-4 font-bold text-xl  bottom-0  ">
-      <button className="ml-32 text-primary backdrop-blur-sm">ADD TO CART</button>
+      <button className="md:ml-32 text-primary backdrop-blur-sm">ADD TO CART</button>
     </div>
     </div>
   )
