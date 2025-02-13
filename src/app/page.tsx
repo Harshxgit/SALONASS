@@ -17,8 +17,11 @@ import {
 } from "@/components/client-coponent/serviceDrawer";
 import { useState } from "react";
 import { MdOutlineWindow } from "react-icons/md";
+import { Metadata } from "next";
 
 export default function Home() {
+  
+
   const [modalOpen, setModalOpen] = useState(false);
   const { data: services, isLoading } = useSWR("/service", getServices);
   const { data: packages } = useSWR("/package", getServices);
