@@ -1,5 +1,4 @@
 "use client"
-
 import React, { useState, useEffect } from "react"
 
 export default function LiveClock() {
@@ -14,7 +13,7 @@ export default function LiveClock() {
       clearInterval(timer)
     }
   }, [])
-
+  
   const formatTime = (date: Date) => {
     return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" })
   }

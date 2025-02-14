@@ -24,9 +24,13 @@ const useServicecart = create<Servicecart>()(
     (set,get) => ({
       items: [],
       additems: (item: Item) => {
-        set((state: { items: Item[] }) => ({
-          items: [...state.items, item],
-        }));
+        set((state: { items: Item[] }) => {
+          const itemExists = state.items.some((i) => i.id === item.id);
+          if (!itemExists) {
+            return { items: [...state.items, item] };
+          } 
+          return state;
+        });
       },
 
       increaseqty: (id: number) => {
@@ -70,3 +74,7 @@ const useServicecart = create<Servicecart>()(
 );
 
 export default useServicecart;
+function increaseqty(id: number) {
+  throw new Error("Function not implemented.");
+}
+

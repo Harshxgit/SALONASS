@@ -66,8 +66,9 @@ const CartInterface = () => {
               </CardContent>
             </Card>
           ))}
-          </div><div className="items-center justify-center flex">
-              <Card className="fixed  bottom-2 text-4xl text-center backdrop-blur-xl font-bold border-2 border-primary hover:text-primary cursor-pointer">
+          </div>
+          <div className="items-center justify-center flex">
+              <Card className="fixed z-50   bottom-16 mb-8 text-4xl text-center backdrop-blur-xl font-bold border-2 border-primary hover:text-primary cursor-pointer">
                 <Link href={`/checkout?amount=${total()}`}>
                   {" "}
                   <div>Book Now ₹{total()}</div>{" "}

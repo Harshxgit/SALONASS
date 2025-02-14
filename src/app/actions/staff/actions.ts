@@ -128,16 +128,10 @@ export async function updatestaffavailability({
   startTime,
   endTime,
 }: updatestaffavailability) {
-  const isexsit = await prisma.staffAvailability.findFirst({
-    where: {
-      staffId: staffId,
-      date: datestr,
-    },
-  });
-  if (isexsit) {
+ 
     const isupdate = await prisma.staffAvailability.upsert({
       where: {
-        id: isexsit.id,
+        id: staffId
       },
       update: {
         isAvailable: isAvailable,
@@ -148,13 +142,25 @@ export async function updatestaffavailability({
         isAvailable: isAvailable,
         startTime: startTime,
         endTime: endTime,
-        day,
-        staffId,
+        day:day,
         date: datestr,
+        staff: {
+          connect: {
+            id: staffId,
+           },
+        },
       },
     });
     if(!isupdate) return {error:"staff availability not updated"}
-    return {success:true}
-  } 
+
 }
 
+export async function getTodayAvailabilty({datestr, staffId}:{datestr:Date , staffId : number}){
+    const isAvailable = await prisma.staffAvailability.findFirst({
+      where: {
+        staffId: staffId,
+        date: datestr,
+      },
+    })
+    if(isAvailable) return {isAvailable : isAvailable.isAvailable}
+}

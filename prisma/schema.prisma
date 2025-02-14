@@ -16,7 +16,7 @@ model User {
   updatedAt DateTime  @updatedAt
   address   Address[]
   booking   Booking[]
-  role ROLE
+  role      ROLE
 }
 
 model Address {
@@ -29,47 +29,47 @@ model Address {
 }
 
 model Staff {
-  id        Int       @id @default(autoincrement())
-  name      String
-  number    String    @unique
-  password  String?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @updatedAt
-  isAdmin   Boolean   @default(false)
-  booking   Booking[]
+  id                Int                 @id @default(autoincrement())
+  name              String
+  number            String              @unique
+  password          String?
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime?           @updatedAt
+  isAdmin           Boolean             @default(false)
+  booking           Booking[]
   StaffAvailability StaffAvailability[]
-  role ROLE
+  role              ROLE
 }
 
 model StaffAvailability {
-  id          Int       @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   date        DateTime
   timeGap     Int?
   day         String
   startTime   DateTime
   endTime     DateTime
-  isAvailable Boolean   @default(true)
-  updatedAt   DateTime  @updatedAt
-  cratedAt    DateTime  @default(now())
+  isAvailable Boolean  @default(true)
+  updatedAt   DateTime @updatedAt
+  cratedAt    DateTime @default(now())
   staffId     Int
-  staff       Staff     @relation(fields: [staffId], references: [id])
+  staff       Staff    @relation(fields: [staffId], references: [id])
 }
 
 model Booking {
-  id             Int             @id @default(autoincrement())
-  userId         Int
-  user           User            @relation(fields: [userId], references: [id])
-  staffId        Int?
-  staff          Staff?           @relation(fields: [staffId], references: [id])
-  bookingType    String
-  price          Int
-  address        String?
-  date           DateTime
-  starttime      DateTime
-  endtime        DateTime
-  bookedService  BookedService[]
-  status         bookingstatus
-  createdAt      DateTime        @default(now())
+  id            Int             @id @default(autoincrement())
+  userId        Int
+  user          User            @relation(fields: [userId], references: [id])
+  staffId       Int?
+  staff         Staff?          @relation(fields: [staffId], references: [id])
+  bookingType   String
+  price         Int
+  address       Json?
+  date          DateTime
+  starttime     DateTime
+  endtime       DateTime
+  bookedService BookedService[]
+  status        bookingstatus
+  createdAt     DateTime        @default(now())
 }
 
 model BookedService {
@@ -80,23 +80,23 @@ model BookedService {
 }
 
 model Services {
-  id          Int      @id @default(autoincrement())
-  servicename String   @unique
+  id          Int        @id @default(autoincrement())
+  servicename String     @unique
   price       Int
   duration    Int
   type        String
   description String
-  img         Json @default("[]") 
+  img         Json       @default("[]")
   packages    Packages[]
 }
 
 model Packages {
-  id       Int    @id @default(autoincrement())
-  name     String @unique
-  price    Int
+  id          Int        @id @default(autoincrement())
+  name        String     @unique
+  price       Int
   description String
-  img       Json @default("[]")
-  services Services[]
+  img         Json       @default("[]")
+  services    Services[]
 }
 
 enum bookingstatus {
@@ -105,7 +105,7 @@ enum bookingstatus {
   REJECTED
 }
 
-enum ROLE{
+enum ROLE {
   USER
   ADMIN
   STAFF

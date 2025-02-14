@@ -9,7 +9,7 @@ interface getBooking {
 interface Booking {
   userid: number;
   services: { name: string; price: number; quantity: number }[];
-  address: string;
+  address: object;
   bookingtype: string;
   price: number;
   date: Date;

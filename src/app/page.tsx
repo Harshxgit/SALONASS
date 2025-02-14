@@ -126,11 +126,7 @@ export default function Home() {
           />
             </ModalContent>
           </FramerModal>
-          <div className="md:hidden fixed left-[43%]  bottom-10 z-50 ">
-
-          
          
-          </div>
           <div className=" hidden md:block border border-base-300  md:h-[calc(110vh-100px)]  scrollbar-hide overflow-y-scroll overflow-x-hidden ">
             <ServiceShowcase />
           </div>
