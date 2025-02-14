@@ -44,6 +44,7 @@ export function TimeRangeSelector() {
     setSelectedDays(day);
   };
   const [getday, setGetday] = useState<{ isAvailable: boolean } | null>(null);
+
   useEffect(() => {
     const fetchAvailability = async () => {
       const today = new Date();
@@ -53,7 +54,7 @@ export function TimeRangeSelector() {
           datestr: today,
           staffId: Number(staffId),
         });
-        console.log(availability)
+
         setGetday(
           availability ? { isAvailable: availability.isAvailable } : null
         );
@@ -63,11 +64,8 @@ export function TimeRangeSelector() {
   }, [session]);
   const handleStartDateSelect = (date: Date | undefined) => {
     setStartDate(date);
-    setSelectedDays(date?.getDay()?.toString());
-    // if (date && (!endDate || date > endDate)) {
-    //   setEndDate(date);
-    // }
-  };
+    setSelectedDays(date ? date.toISOString() : undefined);
+    };
 
   //commenting for selected date
   // const handleEndDateSelect = (date: Date | undefined) => {
@@ -79,15 +77,15 @@ export function TimeRangeSelector() {
   //   }
   // };
   const setAvailability = async (e: any) => {
-    console.log(startDate);
+
     const loading = toast.loading("Updating....");
     e.preventDefault();
-    console.log("reaching here");
+ 
     setLoading(true);
     if (startDate && selectedDays) {
       await updatestaffavailability({
         datestr: startDate,
-        staffId: 1,
+        staffId: Number(session?.user?._id),
         day: selectedDays,
         isAvailable: true,
         startTime: new Date(startTime),
@@ -101,9 +99,9 @@ export function TimeRangeSelector() {
   };
   return (
     <div>
-      <div className="p-1 font-bold">
+      <div className="p-1 font-bold text-2xl flex  items-center gap-2">
         {session?.user?.name}{" "}
-        {getday?.isAvailable ? <li>green</li> : <li>red</li>}{" "}
+        {getday?.isAvailable ? <li className="text-green-600 text-4xl"/> : <li>red</li>}{" "}
       </div>
 
       <form onSubmit={setAvailability} className="space-y-4">

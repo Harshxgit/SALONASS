@@ -135,13 +135,13 @@ export async function updatestaffavailability({
       },
       update: {
         isAvailable: isAvailable,
-        startTime: startTime,
-        endTime: endTime,
+        startTime: startTime || new Date(),
+        endTime: endTime ||new Date(),
       },
       create: {
         isAvailable: isAvailable,
-        startTime: startTime,
-        endTime: endTime,
+        startTime: startTime || new Date(),
+        endTime: endTime || new Date(),
         day:day,
         date: datestr,
         staff: {
@@ -156,11 +156,14 @@ export async function updatestaffavailability({
 }
 
 export async function getTodayAvailabilty({datestr, staffId}:{datestr:Date , staffId : number}){
+  console.log("calling")
+  console.log(datestr)
+  console.log(staffId)
     const isAvailable = await prisma.staffAvailability.findFirst({
       where: {
         staffId: staffId,
-        date: datestr,
       },
     })
+    console.log(isAvailable)
     if(isAvailable) return {isAvailable : isAvailable.isAvailable}
 }
