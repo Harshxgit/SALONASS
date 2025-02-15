@@ -109,7 +109,7 @@ console.log(location)
           />
           <Button onClick={searchAddress}>Search</Button>
         </div>
-          <Button className="mt-1 w-full" onClick={getLocation}>Get Live Location</Button>
+          <Button className="mt-1 " onClick={getLocation}>Get Live Location</Button>
    
        </div>
 
@@ -117,11 +117,8 @@ console.log(location)
 
       {location && (
         <div>
-          <p className="mb-2">
-            Location:{" "}
-            {location.display_name || `${location.lat}, ${location.lon}`}
-          </p>
-          <div style={{ height: "400px", width: "100%" }}>
+         
+          <div style={{ height: "100px", width: "100%" }}>
             <MapContainer
               center={[location.lat, location.lon]}
               zoom={13}
@@ -132,6 +129,10 @@ console.log(location)
               <SetViewOnClick coords={[location.lat, location.lon]} />
             </MapContainer>
           </div>
+          <p className="mb-2">
+            Location:{" "}
+            {location.display_name || `${location.lat}, ${location.lon}`}
+          </p>
         </div>
       )}
     </div>

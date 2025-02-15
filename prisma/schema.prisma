@@ -46,8 +46,8 @@ model StaffAvailability {
   date        DateTime
   timeGap     Int?
   day         String
-  startTime   DateTime
-  endTime     DateTime
+  startTime   String
+  endTime     String
   isAvailable Boolean  @default(true)
   updatedAt   DateTime @updatedAt
   cratedAt    DateTime @default(now())

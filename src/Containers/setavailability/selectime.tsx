@@ -32,7 +32,7 @@ const daysOfWeek = [
   { key: 7, day: "Sunday" },
 ];
 export function TimeRangeSelector() {
-  const [startDate, setStartDate] = useState<Date>();
+  const [startDate, setStartDate] = useState<Date | null>(null);
   // const [endDate, setEndDate] = useState<Date | null>(null);
   const [startTime, setStartTime] = useState<string>("");
   const [endTime, setEndTime] = useState<string>("");
@@ -44,7 +44,7 @@ export function TimeRangeSelector() {
     setSelectedDays(day);
   };
   const [getday, setGetday] = useState<{ isAvailable: boolean } | null>(null);
-
+  console.log("date"+startDate)
   useEffect(() => {
     const fetchAvailability = async () => {
       const today = new Date();
@@ -63,8 +63,14 @@ export function TimeRangeSelector() {
     fetchAvailability();
   }, [session]);
   const handleStartDateSelect = (date: Date | undefined) => {
-    setStartDate(date);
-    setSelectedDays(date ? date.toISOString() : undefined);
+    if (date && !isNaN(date.getTime())) {
+      setStartDate(date);
+      setSelectedDays(date?.getDay()?.toString());
+    } else {
+      const today = new Date();
+      setStartDate(today);
+      setSelectedDays(date?.getDay()?.toString());
+    }
     };
 
   //commenting for selected date
@@ -83,13 +89,22 @@ export function TimeRangeSelector() {
  
     setLoading(true);
     if (startDate && selectedDays) {
+      const [hours, minutes] = startTime.split(":").map(Number);
+      const [endhours, endminutes] = endTime.split(":").map(Number);
+      
+      const startDateTime = new Date(startDate);
+      startDateTime.setHours(hours, minutes);
+      
+      const endDateTime = new Date(startDate);
+      endDateTime.setHours(endhours, endminutes);
+   
       await updatestaffavailability({
         datestr: startDate,
         staffId: Number(session?.user?._id),
         day: selectedDays,
         isAvailable: true,
-        startTime: new Date(startTime),
-        endTime: new Date(endTime),
+        startTime: startTime,
+        endTime: endTime
       });
     } else {
       console.error("Start date is undefined");
@@ -101,7 +116,7 @@ export function TimeRangeSelector() {
     <div>
       <div className="p-1 font-bold text-2xl flex  items-center gap-2">
         {session?.user?.name}{" "}
-        {getday?.isAvailable ? <li className="text-green-600 text-4xl"/> : <li>red</li>}{" "}
+        {getday?.isAvailable ? <li className="text-green-600 text-4xl"/> : <li className="text-red-600 text-4xl"/> }{" "}
       </div>
 
       <form onSubmit={setAvailability} className="space-y-4">
@@ -128,7 +143,7 @@ export function TimeRangeSelector() {
                   )}
                 >
                   <CalendarIcon className="mr-2 h-4 w-4 " />
-                  {startDate ? (
+                  {startDate instanceof Date && !isNaN(startDate.getTime()) ? (
                     format(startDate, "PPP")
                   ) : (
                     <span>Select date</span>
@@ -139,7 +154,7 @@ export function TimeRangeSelector() {
                 <Calendar
                   mode="single"
                   required={true}
-                  selected={startDate || undefined}
+                  selected={startDate && !isNaN(startDate.getTime()) ? startDate : undefined}
                   onSelect={handleStartDateSelect}
                   initialFocus
                   className="backdrop-blur-3xl"
