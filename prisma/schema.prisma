@@ -43,7 +43,7 @@ model Staff {
 
 model StaffAvailability {
   id          Int      @id @default(autoincrement())
-  date        DateTime
+  date        DateTime @unique
   timeGap     Int?
   day         String
   startTime   String

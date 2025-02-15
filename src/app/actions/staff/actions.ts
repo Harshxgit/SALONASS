@@ -210,11 +210,11 @@ export async function updatestaffavailability({
   startTime,
   endTime,
 }: updatestaffavailability) {
-  console.log(startTime);
-  console.log(endTime);
+  console.log(datestr);
   const isupdate = await prisma.staffAvailability.upsert({
     where: {
       id: staffId,
+      // date:datestr
     },
     update: {
       isAvailable: isAvailable,

@@ -88,18 +88,11 @@ export function TimeRangeSelector() {
     e.preventDefault();
  
     setLoading(true);
+    console.log("date"+startDate)
     if (startDate && selectedDays) {
-      const [hours, minutes] = startTime.split(":").map(Number);
-      const [endhours, endminutes] = endTime.split(":").map(Number);
-      
-      const startDateTime = new Date(startDate);
-      startDateTime.setHours(hours, minutes);
-      
-      const endDateTime = new Date(startDate);
-      endDateTime.setHours(endhours, endminutes);
-   
+      const date = new Date(startDate.setUTCHours(0, 0, 0, 0))   
       await updatestaffavailability({
-        datestr: startDate,
+        datestr: date,
         staffId: Number(session?.user?._id),
         day: selectedDays,
         isAvailable: true,

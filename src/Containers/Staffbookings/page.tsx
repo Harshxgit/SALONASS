@@ -1,10 +1,10 @@
 'use client'
-import { Suspense } from 'react'
-import useSWR from 'swr'
+import { Suspense, useEffect } from 'react'
+import useSWR, { mutate } from 'swr'
 import BookingsList from './components/BookingsList'
 import BookingsFilter from './components/BookingFilter'
 import { fetchBookings } from '@/app/actions/(admin)/packages/package'
-
+const socket = io('/staff')
 export default  function BookingsPage({
   searchParams,
 }: {
@@ -12,7 +12,12 @@ export default  function BookingsPage({
 }) {
   const status = typeof searchParams.status === 'string' ? searchParams.status : undefined
   const { data: bookings } = useSWR("/fetchbookings",fetchBookings)
-
+  useEffect(()=>{
+    //get booking live
+      socket.on('connection',(newbooking:any)=>{
+          mutate("/fetchbookings",[...(bookings || []),newbooking] , false)
+      })
+  })
   return (
     <div className="container mx-auto py-10">
       <h1 className="text-3xl font-bold mb-6">Bookings</h1>
