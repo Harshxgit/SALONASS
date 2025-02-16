@@ -14,32 +14,36 @@ import { useForm } from "react-hook-form";
 import { getAllStaff, getstafffavailablity } from "../actions/staff/actions";
 import UserProfile from "@/components/client-coponent/avatar/user-profile";
 import useSWR from "swr";
-const users = [
-  { name: "John Doe", profession: "Software Engineer", avatarUrl: "/placeholder.svg?height=100&width=100" },
-  { name: "Jane Smith", profession: "UX Designer", avatarUrl: "/placeholder.svg?height=100&width=100" },
-  { name: "Mike Johnson", profession: "Product Manager", avatarUrl: "/placeholder.svg?height=100&width=100" },
-  { name: "Emily Brown", profession: "Data Scientist", avatarUrl: "/placeholder.svg?height=100&width=100" },
-  { name: "Alex Lee", profession: "Marketing Specialist", avatarUrl: "/placeholder.svg?height=100&width=100" },
-]
+import ServiceTypeSelector from "@/components/client-coponent/booktype";
+import Getdate from "@/components/client-coponent/date";
+
 const BookingInterface = () => {
   const [quantity, setQuantity] = useState(1);
   const [avoid_calling, setAvoidCalling] = useState(false);
   const items = useServicecart((state) => state.items);
   const subtotal = useServicecart((state) => state.getSubtotal);
+  const [slots, setSlots] = useState<{ time: string; availabel: boolean }[]>(
+    []
+  );
   const session = useSession();
-  const {register:booking , watch : bookingwatch , handleSubmit ,setValue} = useForm() //react-form
+  const {
+    register: booking,
+    watch: bookingwatch,
+    handleSubmit,
+    setValue,
+    watch
+  } = useForm(); //react-form
+  const bookingType = watch("bookingType")
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const [isLocating, setIsLocating] = useState(false);
-  const staffs = useSWR('/staff', () => getAllStaff({ datestr: new Date() }))
+  const [selectedType, setSelectedType] = useState("")
+  const date = watch('date')
+  const staffs = useSWR(["/staff",date], () => getAllStaff({ datestr:date }));
+
   useEffect(() => {
-    const fetchData = async () => {
-        const slot = await getstafffavailablity({ staffid: 9, duration: "30", datestr: new Date() })
-        console.log(slot)
-    };
-    fetchData();
     socket.on("new_booking", (arg: any) => {
-      console.log(arg);
+
       toast.success(arg);
     });
     return () => {
@@ -47,8 +51,24 @@ const BookingInterface = () => {
     };
   }, []);
   //
-  const click = () => {
-    console.log("first");
+
+  async function getslot(staffid: number) {
+    const date = watch("date")
+
+    const slots = await getstafffavailablity({
+      staffid: staffid,
+      duration: "50",
+      datestr: date,
+    });
+   
+    if (slots) {
+      setSlots(slots);
+    } else {
+      setSlots([]);
+    }
+  }
+  const submitbooking = () => {
+ 
     socket.emit("booking", "hiii harshu");
   };
   return (
@@ -63,32 +83,74 @@ const BookingInterface = () => {
               </div>
             </CardContent>
           </Card>
+          <Card>
+            <CardContent className="p-2">
+              <ServiceTypeSelector  setValue={setValue}/>
+            </CardContent>
+          </Card>
+          {/* date */}
+          <Card>
+            <CardContent className="p-2">
+                <Getdate setValue={setValue}/>
+            </CardContent>
+          </Card>
 
           {/* Address Section */}
-          <Card>
+        { bookingType === "IN-HOME" && <Card>
             <CardContent className="p-4">
               <div className="space-y-3">
                 <div className="font-medium">Address</div>
                 <LocationMap setValue={setValue} />
               </div>
             </CardContent>
-          </Card>
-
+         </Card>
+}
           {/* All Staff Section */}
           <Card className="overflow-hidden">
             <CardContent className="p-4 max-w-s ">
-            <div className="flex flex-row overflow-auto ">
-                  {staffs.data?.staffs.map((staff: { name: string; }, index: Key | null | undefined) => (
-                    <UserProfile key={index} name={staff.name} profession={""}  />
-                  ))}
-                </div>
+              <div className="flex flex-row overflow-auto ">
+                {staffs.data?.staffs.map(
+                  (
+                    staff: {
+                      id: any;
+                      name: string;
+                    },
+                    index: Key | null | undefined
+                  ) => (
+                    <UserProfile
+                      key={index}
+                      name={staff.name}
+                      profession={""}
+                      getslots={getslot}
+                      id={staff.id}
+                      setValue={setValue}
+                    />
+                  )
+                )}
+              </div>
             </CardContent>
           </Card>
 
           {/* Staff slot section  */}
           <Card>
             <CardContent className="p-4">
-              <div className="text-gray-600">Payment Method</div>
+              <div className="overflow-x-auto scrollbar-hide">
+                <div className="flex p-4 space-x-4 w-max ">
+                  {slots.map((slot) => (
+                    <Button
+                      key={slot.time}
+                      variant={slot.availabel ? "default" : "outline"}
+                      onClick={()=>{
+                        setValue("time",slot.time)
+                        setSelectedType(slot.time)
+                      }}
+                      className={`${selectedType===slot.time ? "bg-primary text-primary-foreground" :"bg-background text-foreground"} border border-primary`}
+                    >
+                      {slot.time}
+                    </Button>
+                  ))}
+                </div>
+              </div>
             </CardContent>
           </Card>
         </div>
@@ -139,7 +201,7 @@ const BookingInterface = () => {
             />
             <label className="text-sm">Avoid calling before reaching the location</label>
           </div> */}
-          <Razorpay />
+          <Razorpay form={booking}/>
         </div>
       </div>
     </div>

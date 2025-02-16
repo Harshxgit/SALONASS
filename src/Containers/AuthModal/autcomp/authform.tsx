@@ -368,13 +368,13 @@ export function ModernAuthForm({ onAuthSuccess, type }: ModernAuthFormProps) {
           )}
         </p>
       </div>
-      {/* <Turnstile
+      <Turnstile
         className="my-4 mx-1"
         onSuccess={(token) => {
           setToken(token);
         }}
         siteKey="0x4AAAAAAAwsPtO1RkLb-vFz"
-      /> */}
+      />
     </div>
   );
 }

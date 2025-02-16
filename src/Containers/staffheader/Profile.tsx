@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import Link from "next/link";
 
@@ -11,6 +11,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import { Settings, LogOut, LayoutGrid } from "lucide-react";
+import { signOut } from "next-auth/react";
 
 export default function Profile() {
   return (
@@ -52,7 +53,10 @@ export default function Profile() {
                 type="submit"
                 className="w-full justify-start py-3.5 pl-3 pr-8 tracking-wide !cursor-pointer"
               >
-                <LogOut className="mr-3 size-5" /> Log Out
+                <LogOut className="mr-3 size-5" onClick={() =>{ signOut()
+                console.log("clicked")
+                }
+                } /> Log Out
               </button>
             </DropdownMenuItem>
           </form>

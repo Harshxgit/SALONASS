@@ -43,7 +43,7 @@ model Staff {
 
 model StaffAvailability {
   id          Int      @id @default(autoincrement())
-  date        DateTime @unique
+  date        DateTime 
   timeGap     Int?
   day         String
   startTime   String
@@ -53,6 +53,7 @@ model StaffAvailability {
   cratedAt    DateTime @default(now())
   staffId     Int
   staff       Staff    @relation(fields: [staffId], references: [id])
+  @@unique([staffId , date])
 }
 
 model Booking {
@@ -69,6 +70,7 @@ model Booking {
   endtime       DateTime
   bookedService BookedService[]
   status        bookingstatus
+  orderId       String
   createdAt     DateTime        @default(now())
 }
 
@@ -100,6 +102,8 @@ model Packages {
 }
 
 enum bookingstatus {
+  PENDING
+  CONFIRMED
   DONE
   ACCEPTED
   REJECTED

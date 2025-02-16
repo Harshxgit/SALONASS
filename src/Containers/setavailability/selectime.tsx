@@ -43,8 +43,8 @@ export function TimeRangeSelector() {
   const handleDayToggle = (day: string) => {
     setSelectedDays(day);
   };
+  console.log("seledday"+selectedDays)
   const [getday, setGetday] = useState<{ isAvailable: boolean } | null>(null);
-  console.log("date"+startDate)
   useEffect(() => {
     const fetchAvailability = async () => {
       const today = new Date();
@@ -65,6 +65,7 @@ export function TimeRangeSelector() {
   const handleStartDateSelect = (date: Date | undefined) => {
     if (date && !isNaN(date.getTime())) {
       setStartDate(date);
+      
       setSelectedDays(date?.getDay()?.toString());
     } else {
       const today = new Date();
@@ -89,10 +90,13 @@ export function TimeRangeSelector() {
  
     setLoading(true);
     console.log("date"+startDate)
+
     if (startDate && selectedDays) {
-      const date = new Date(startDate.setUTCHours(0, 0, 0, 0))   
+      const date = new Date(startDate)
+      date.setHours(12)
       await updatestaffavailability({
         datestr: date,
+
         staffId: Number(session?.user?._id),
         day: selectedDays,
         isAvailable: true,

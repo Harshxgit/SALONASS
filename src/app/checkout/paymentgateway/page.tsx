@@ -14,6 +14,9 @@ import Script from "next/script";
 import { Currency, LoaderCircle } from "lucide-react";
 import useAdminService from "@/app/store/adminservice";
 import useServicecart from "@/app/store/ServiceCart";
+import addBooking from "@/app/actions/booking/actions";
+import { useSession } from "next-auth/react";
+import { watch } from "fs";
 
 declare global {
   interface Window {
@@ -21,13 +24,15 @@ declare global {
   }
 }
 
-function Paymentpagecontent() {
+function Paymentpagecontent({form}:any) {
+  const { data: session } = useSession();
   const router = useRouter();
   const params = useSearchParams();
   const amount = params.get("amount");
   const [loading, setLoading] = useState(false);
-  const idRef = React.useRef<string | null>(null);
+    const idRef = React.useRef<string | null>(null);
   const reset = useServicecart((state) => state.reset);
+  const services = useServicecart((state)=>state.items)
   useEffect(() => {
     if (!amount) {
       router.replace("/cart");
@@ -62,7 +67,23 @@ function Paymentpagecontent() {
     e.preventDefault();
     setLoading(true);
     const orderId = idRef.current;
+    if (!orderId) {
+      throw new Error("Order ID is null");
+    }
     try {
+      const booking = addBooking({
+        userid: Number(session?.user?._id), // replace with actual user id
+        price: parseFloat(amount!),
+        address: form.watch("address"), // replace with actual address
+        bookingtype: form.watch("bookingType"), // replace with actual booking type
+        date: form.watch("date"), // replace with actual date
+        time: form.watch("time"), // replace with actual time
+        duration: form.watch("duration"), // replace with actual duration
+        staffid: form.watch("staffid"), // replace with actual staff id
+        services: services, // replace with actual services
+        orderId: orderId,
+        status: "PENDING" // replace with actual status
+      })
       const options = {
         key: process.env.RAZORPAY_KEY_ID,
         amount: parseFloat(amount!) * 100,
@@ -134,7 +155,7 @@ function Paymentpagecontent() {
   );
 }
 
-export default function Razorpay() {
+export default function Razorpay({form}:any) {
   return (
     <>
       <Script
@@ -142,7 +163,7 @@ export default function Razorpay() {
         src="https://checkout.razorpay.com/v1/checkout.js"
       />
       <Suspense fallback={<div>Loading payment page...</div>}>
-        <Paymentpagecontent />
+        <Paymentpagecontent form={form} />
       </Suspense>
     </>
   );

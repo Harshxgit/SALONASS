@@ -1,5 +1,6 @@
 "use server"
 import prisma from "@/db";
+import { bookingstatus } from "@prisma/client";
 interface getBooking {
   staffid?: number;
   userid : number;
@@ -16,6 +17,8 @@ interface Booking {
   time: Date;
   duration: number;
   staffid: number;
+  orderId : string;
+  status : string
 }
 
 interface updatebookingstatus {
@@ -33,7 +36,10 @@ export default async function addBooking({
   time,
   duration,
   staffid,
-  services
+  services,
+  orderId,
+  status
+
 }: Booking) {
   try {
     const isbooking = prisma.$transaction(async (tx) => {
@@ -50,7 +56,8 @@ export default async function addBooking({
           starttime: time,
           endtime: new Date(time.getTime() + duration * 60000), // Example end time 1 hour after start time
           staffId: staffid,
-          status: "ACCEPTED",
+          status: status as bookingstatus,
+          orderId : orderId,
           bookedService: {
             create: [
               {

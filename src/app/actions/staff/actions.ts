@@ -27,10 +27,11 @@ interface updatestaffavailability {
 //getAllStaff who is available
 export async function getAllStaff({ datestr }: { datestr: Date }) {
   const date = datestr.toISOString().split("T")[0];
-
+  console.log("date "+date)
   const startOfDay = new Date(`${date}T00:00:00.000Z`);
   const endOfDay = new Date(`${date}T23:59:59.999Z`);
-  console.log(datestr);
+  console.log(startOfDay)
+  console.log(endOfDay)
   const staffs = await prisma.staff.findMany({
     where: {
       StaffAvailability: {
@@ -48,12 +49,12 @@ export async function getAllStaff({ datestr }: { datestr: Date }) {
       number: true,
     },
   });
-  console.log(staffs);
+console.log(staffs)
   if (staffs) return { staffs: staffs };
 }
 //convert function
 const convertTo24HourFormat = (time12h:string) => {
-  console.log("reaching")
+
   const [time, modifier] = time12h.split(" ");
   let [hours, minutes] = time.split(":").map(Number);
 
@@ -73,14 +74,13 @@ export async function getstafffavailablity({
   duration,
   datestr,
 }: StaffAvailability) {
-  console.log(staffid, duration, datestr);
+
   const startOfDay = new Date(datestr);
   startOfDay.setUTCHours(0, 0, 0, 0);
 
   const endOfDay = new Date(datestr);
   endOfDay.setUTCHours(23, 59, 59, 999);
-  console.log(startOfDay);
-  console.log(endOfDay);
+
   const staff = await prisma.staff.findUnique({
     where: {
       id: staffid,
@@ -112,26 +112,30 @@ export async function getstafffavailablity({
     },
   });
 
-  console.log(staff);
+
   if (!staff || !staff.StaffAvailability) {
-    console.log("returning");
+
     return [];
   }
-  console.log("after returning");
+
   const date = new Date(datestr);
-  const dayofweek = date.getDay();
-  console.log(dayofweek)
+  const dayofweek = date.getDay()
+
   const { StaffAvailability, booking } = staff;
 
+
   const availability = StaffAvailability?.find(
-    (avail) => avail.day === "6"
+     (avail) =>{
+
+     return avail.day === dayofweek.toString()
+    }  
   );
-  console.log("availability" + availability);
+
   if (!availability) {
-    console.log("not availabel");
+
     return [];
   }
-  console.log("after avaialbel");
+
   if (availability) {
     const slots = await generateslots({
       staffid,
@@ -141,7 +145,7 @@ export async function getstafffavailablity({
       duration,
       datestr,
     });
-    console.log("slots" + slots);
+
     return slots;
   }
 }
@@ -170,17 +174,13 @@ async function generateslots({
   console.log(startTime)
   console.log(endTime)
  
-console.log(currenttime)
-console.log(endtimeDate)
-console.log(datestr)
   while (currenttime < endtimeDate) {
-    currenttime.toLocaleTimeString("en-US", {
+   const formatedate =  currenttime.toLocaleTimeString("en-US", {
       hour: "2-digit",
       minute: "2-digit",
       hour12: true,
     });
-
-    const endslot = new Date(
+     const endslot = new Date(
       currenttime.getTime() + parseInt(duration) * 60000
     );
     const isSlotAvailable = !booking.some((book) => {
@@ -193,7 +193,7 @@ console.log(datestr)
       );
     });
     slots.push({
-      time: currenttime,
+      time: formatedate,
       availabel: isSlotAvailable,
     });
     currenttime.setMinutes(currenttime.getMinutes() + 15);
@@ -213,8 +213,10 @@ export async function updatestaffavailability({
   console.log(datestr);
   const isupdate = await prisma.staffAvailability.upsert({
     where: {
-      id: staffId,
-      // date:datestr
+      staffId_date:{
+      staffId: staffId,
+      date:datestr
+      }
     },
     update: {
       isAvailable: isAvailable,

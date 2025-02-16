@@ -41,10 +41,10 @@ const initSocket = (server) => {
             duration: duration,
             staffid: staffid,
           });
-          const staffid = staffsocketid.get(staffid)
+          const staffId = staffsocketid.get(staffid)
           if (!isBook) toast.error("faild to book");
           adminNamespace.emit("newBooking", isBook);
-          staffNamespace.to(staffid).emit("newBooking",isBook)
+          staffNamespace.to(staffId).emit("newBooking",isBook)
         }
       );
 

@@ -1,12 +1,16 @@
+"use client"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 interface UserProfileProps {
   name: string
   profession: string
   avatarUrl?: string
+  getslots : any
+  id : any
+  setValue : any
 }
 
-export default function UserProfile({ name }: UserProfileProps) {
+export default function UserProfile({ name ,getslots,id,setValue}: UserProfileProps) {
   const initials = name
     .split(" ")
     .map((n) => n[0])
@@ -14,7 +18,12 @@ export default function UserProfile({ name }: UserProfileProps) {
     .toUpperCase()
 
   return (
-    <div className="flex flex-col items-center space-y-2 p-4 bg-background rounded-lg shadow-md w-40">
+    <div className="flex flex-col items-center space-y-2 p-4 bg-background rounded-lg shadow-md w-40 cursor-pointer" 
+    onClick={() => {
+      getslots(id);
+      setValue("staffid", id);
+    }}
+     >
       <Avatar className="h-20 w-20 border border-primary">
         {/* <AvatarImage src={avatarUrl} alt={name} /> */}
         <AvatarFallback>{initials}</AvatarFallback>
