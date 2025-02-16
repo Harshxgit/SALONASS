@@ -16,6 +16,17 @@ import UserProfile from "@/components/client-coponent/avatar/user-profile";
 import useSWR from "swr";
 import ServiceTypeSelector from "@/components/client-coponent/booktype";
 import Getdate from "@/components/client-coponent/date";
+import { UseFormSetValue } from "react-hook-form";
+export  interface FormValues {
+  time: string;
+  bookingType:string;
+  date:Date;
+  address :{}
+  duration : number
+  staffid:number
+
+  // other form fields...
+}
 
 const BookingInterface = () => {
   const [quantity, setQuantity] = useState(1);
@@ -31,19 +42,18 @@ const BookingInterface = () => {
     watch: bookingwatch,
     handleSubmit,
     setValue,
-    watch
-  } = useForm(); //react-form
-  const bookingType = watch("bookingType")
+    watch,
+  } = useForm<FormValues>(); //react-form
+  const bookingType = watch("bookingType");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const [isLocating, setIsLocating] = useState(false);
-  const [selectedType, setSelectedType] = useState("")
-  const date = watch('date')
-  const staffs = useSWR(["/staff",date], () => getAllStaff({ datestr:date }));
+  const [selectedType, setSelectedType] = useState("");
+  const date = watch("date");
+  const staffs = useSWR(["/staff", date], () => getAllStaff({ datestr: date }));
 
   useEffect(() => {
     socket.on("new_booking", (arg: any) => {
-
       toast.success(arg);
     });
     return () => {
@@ -53,14 +63,12 @@ const BookingInterface = () => {
   //
 
   async function getslot(staffid: number) {
-    const date = watch("date")
-
+    const date = watch("date");
     const slots = await getstafffavailablity({
       staffid: staffid,
       duration: "50",
       datestr: date,
     });
-   
     if (slots) {
       setSlots(slots);
     } else {
@@ -68,13 +76,12 @@ const BookingInterface = () => {
     }
   }
   const submitbooking = () => {
- 
     socket.emit("booking", "hiii harshu");
   };
   return (
-    <div className="max-w-3xl mx-auto p-4 space-y-4">
+    <div className="max-w-3xl mx-auto p-4 space-y-4 ">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-4">
+        <div className="space-y-4 border border-base-300">
           <Card>
             <CardContent className="p-2">
               <div className="flex items-center ">
@@ -85,26 +92,27 @@ const BookingInterface = () => {
           </Card>
           <Card>
             <CardContent className="p-2">
-              <ServiceTypeSelector  setValue={setValue}/>
+              <ServiceTypeSelector setValue={setValue} />
             </CardContent>
           </Card>
           {/* date */}
           <Card>
             <CardContent className="p-2">
-                <Getdate setValue={setValue}/>
+              <Getdate setValue={setValue} />
             </CardContent>
           </Card>
 
           {/* Address Section */}
-        { bookingType === "IN-HOME" && <Card>
-            <CardContent className="p-4">
-              <div className="space-y-3">
-                <div className="font-medium">Address</div>
-                <LocationMap setValue={setValue} />
-              </div>
-            </CardContent>
-         </Card>
-}
+          {bookingType === "IN-HOME" && (
+            <Card>
+              <CardContent className="p-4">
+                <div className="space-y-3">
+                  <div className="font-medium">Address</div>
+                  <LocationMap setValue={setValue} />
+                </div>
+              </CardContent>
+            </Card>
+          )}
           {/* All Staff Section */}
           <Card className="overflow-hidden">
             <CardContent className="p-4 max-w-s ">
@@ -140,11 +148,15 @@ const BookingInterface = () => {
                     <Button
                       key={slot.time}
                       variant={slot.availabel ? "default" : "outline"}
-                      onClick={()=>{
-                        setValue("time",slot.time)
-                        setSelectedType(slot.time)
+                      onClick={() => {
+                        setValue("time", slot.time);
+                        setSelectedType(slot.time);
                       }}
-                      className={`${selectedType===slot.time ? "bg-primary text-primary-foreground" :"bg-background text-foreground"} border border-primary`}
+                      className={`${
+                        selectedType === slot.time
+                          ? "bg-primary text-primary-foreground"
+                          : "bg-background text-foreground"
+                      } border border-primary`}
                     >
                       {slot.time}
                     </Button>
@@ -201,7 +213,7 @@ const BookingInterface = () => {
             />
             <label className="text-sm">Avoid calling before reaching the location</label>
           </div> */}
-          <Razorpay form={booking}/>
+          <Razorpay watch={watch} />
         </div>
       </div>
     </div>

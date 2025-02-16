@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { Suspense, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,22 +17,29 @@ import useServicecart from "@/app/store/ServiceCart";
 import addBooking from "@/app/actions/booking/actions";
 import { useSession } from "next-auth/react";
 import { watch } from "fs";
+import { UseFormWatch } from "react-hook-form";
+import { FormValues } from "../page";
 
+interface PaymentGatewayProps {
+  watch: UseFormWatch<FormValues>;
+}
 declare global {
   interface Window {
     Razorpay: any;
   }
 }
 
-function Paymentpagecontent({form}:any) {
+function Paymentpagecontent({ watch }: PaymentGatewayProps) {
   const { data: session } = useSession();
   const router = useRouter();
   const params = useSearchParams();
   const amount = params.get("amount");
   const [loading, setLoading] = useState(false);
-    const idRef = React.useRef<string | null>(null);
+  const idRef = React.useRef<string | null>(null);
   const reset = useServicecart((state) => state.reset);
-  const services = useServicecart((state)=>state.items)
+  const services = useServicecart((state) => state.items);
+  const time = watch("time");
+  console.log(time);
   useEffect(() => {
     if (!amount) {
       router.replace("/cart");
@@ -58,6 +65,7 @@ function Paymentpagecontent({form}:any) {
       const id = data.orderID;
       console.log(id);
       idRef.current = id;
+      console.log("order ID" + id);
       return;
     } catch (error) {
       console.error("There was a problem with your fetch operation:", error);
@@ -71,15 +79,15 @@ function Paymentpagecontent({form}:any) {
       throw new Error("Order ID is null");
     }
     try {
-      const booking = addBooking({
+      await addBooking({
         userid: Number(session?.user?._id), // replace with actual user id
         price: parseFloat(amount!),
-        address: form.watch("address"), // replace with actual address
-        bookingtype: form.watch("bookingType"), // replace with actual booking type
-        date: form.watch("date"), // replace with actual date
-        time: form.watch("time"), // replace with actual time
-        duration: form.watch("duration"), // replace with actual duration
-        staffid: form.watch("staffid"), // replace with actual staff id
+        address: watch("address"), // replace with actual address
+        bookingtype: watch("bookingType"), // replace with actual booking type
+        date:watch("date"), // replace with actual date
+        time: watch("time"), // replace with actual time
+        duration: watch("duration"), // replace with actual duration
+        staffid:watch("staffid"), // replace with actual staff id
         services: services, // replace with actual services
         orderId: orderId,
         status: "PENDING" // replace with actual status
@@ -155,7 +163,7 @@ function Paymentpagecontent({form}:any) {
   );
 }
 
-export default function Razorpay({form}:any) {
+export default function Razorpay({ watch }: PaymentGatewayProps) {
   return (
     <>
       <Script
@@ -163,7 +171,7 @@ export default function Razorpay({form}:any) {
         src="https://checkout.razorpay.com/v1/checkout.js"
       />
       <Suspense fallback={<div>Loading payment page...</div>}>
-        <Paymentpagecontent form={form} />
+        <Paymentpagecontent watch={watch} />
       </Suspense>
     </>
   );

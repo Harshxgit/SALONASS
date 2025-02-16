@@ -7,6 +7,7 @@ type Item = {
   price: number;
   image: string;
   quantity: number;
+  duration :number
 };
 
 type Servicecart = {
@@ -32,7 +33,7 @@ const useServicecart = create<Servicecart>()(
           return state;
         });
       },
-
+   
       increaseqty: (id: number) => {
         set((state: { items: Item[] }) => ({
           items: state.items.map((item) => {
@@ -65,6 +66,9 @@ const useServicecart = create<Servicecart>()(
             set(()=>({
               items:[]
             }))
+      },
+      getDuration: () => {
+        return get().items.reduce((acc, item) =>acc+item.duration * item.quantity,0 );
       }
     }),
     { name: "service store",

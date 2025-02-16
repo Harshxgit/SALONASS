@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import { useState } from "react";
 import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet";
@@ -18,19 +18,23 @@ L.Icon.Default.mergeOptions({
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/Input";
+import { UseFormSetValue } from "react-hook-form";
+import { FormValues } from "@/app/checkout/page";
 
 interface Location {
   lat: number;
   lon: number;
   display_name?: string;
 }
-
+interface ServiceTypeSelectorProps {
+  setValue : UseFormSetValue<FormValues>
+}
 function SetViewOnClick({ coords }: { coords: [number, number] }) {
   const map = useMap();
   map.setView(coords, map.getZoom());
   return null;
 }
-export default function LocationMap({ setValue }: { setValue: (field: string, value: any) => void }) {
+export default function LocationMap({ setValue }:ServiceTypeSelectorProps) {
   const [location, setLocation] = useState<Location | null>(null);
   const [address, setAddress] = useState("");
   const [error, setError] = useState<string | null>(null);

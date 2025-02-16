@@ -26,12 +26,10 @@ interface updatestaffavailability {
 
 //getAllStaff who is available
 export async function getAllStaff({ datestr }: { datestr: Date }) {
-  const date = datestr.toISOString().split("T")[0];
-  console.log("date "+date)
+  const dateObj = datestr ?? new Date();
+  const date = dateObj.toISOString().split("T")[0];
   const startOfDay = new Date(`${date}T00:00:00.000Z`);
   const endOfDay = new Date(`${date}T23:59:59.999Z`);
-  console.log(startOfDay)
-  console.log(endOfDay)
   const staffs = await prisma.staff.findMany({
     where: {
       StaffAvailability: {
@@ -49,11 +47,11 @@ export async function getAllStaff({ datestr }: { datestr: Date }) {
       number: true,
     },
   });
-console.log(staffs)
+
   if (staffs) return { staffs: staffs };
 }
 //convert function
-const convertTo24HourFormat = (time12h:string) => {
+export  default async function convertTo24HourFormat(time12h:string)  {
 
   const [time, modifier] = time12h.split(" ");
   let [hours, minutes] = time.split(":").map(Number);
@@ -159,10 +157,9 @@ async function generateslots({
   datestr,
 }: generateslots) {
   const slots = [];
-  console.log(starttime , endtime , booking , duration, datestr)
   // i m letting timegap logic here
-  const startTime =  convertTo24HourFormat(starttime) //convert into 24
-  const endTime = convertTo24HourFormat(endtime)    //convert into 24
+  const startTime =  await convertTo24HourFormat(starttime) //convert into 24
+  const endTime = await convertTo24HourFormat(endtime)    //convert into 24
   const basedate = new Date(datestr)                //create base date object
   let currenttime = new Date(basedate);
   const [startHour, startMinute] = startTime.split(":").map(Number);
@@ -171,9 +168,7 @@ async function generateslots({
  let endtimeDate = new Date(basedate);
  const [starTHour, starTMinute] = endTime.split(":").map(Number);
  endtimeDate.setUTCHours(starTHour, starTMinute, 0, 0);
-  console.log(startTime)
-  console.log(endTime)
- 
+  
   while (currenttime < endtimeDate) {
    const formatedate =  currenttime.toLocaleTimeString("en-US", {
       hour: "2-digit",
@@ -210,7 +205,6 @@ export async function updatestaffavailability({
   startTime,
   endTime,
 }: updatestaffavailability) {
-  console.log(datestr);
   const isupdate = await prisma.staffAvailability.upsert({
     where: {
       staffId_date:{

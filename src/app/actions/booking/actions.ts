@@ -1,6 +1,7 @@
 "use server"
 import prisma from "@/db";
 import { bookingstatus } from "@prisma/client";
+import  convertTo24HourFormat  from "../staff/actions";
 interface getBooking {
   staffid?: number;
   userid : number;
@@ -14,7 +15,7 @@ interface Booking {
   bookingtype: string;
   price: number;
   date: Date;
-  time: Date;
+  time: string;
   duration: number;
   staffid: number;
   orderId : string;
@@ -42,6 +43,16 @@ export default async function addBooking({
 
 }: Booking) {
   try {
+    
+    const hrs = await convertTo24HourFormat(time)
+    const[hours ,minute] = hrs.split(":").map(Number)
+    console.log(hours , minute)
+    const startTime = new Date(date)
+    startTime.setUTCHours(hours,minute ,0 ,0)
+    console.log(duration)
+    console.log(startTime.getTime()+duration)
+    const endtime = new Date(startTime.getTime() +  40 *60000)
+    console.log("endtime"+ endtime)
     const isbooking = prisma.$transaction(async (tx) => {
       await tx.booking.create({
         include: {
@@ -53,8 +64,8 @@ export default async function addBooking({
           address: address,
           price: price,
           date: date,
-          starttime: time,
-          endtime: new Date(time.getTime() + duration * 60000), // Example end time 1 hour after start time
+          starttime: startTime,
+          endtime: endtime, // Example end time 1 hour after start time
           staffId: staffid,
           status: status as bookingstatus,
           orderId : orderId,
@@ -72,6 +83,7 @@ export default async function addBooking({
         },
       });
     });
+
     if (!isbooking) return { error: "Booking not created" };
     return { success: true };
   } catch (error) {
