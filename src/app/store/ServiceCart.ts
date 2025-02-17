@@ -7,7 +7,7 @@ type Item = {
   price: number;
   image: string;
   quantity: number;
-  duration :number
+  duration? :number
 };
 
 type Servicecart = {
@@ -17,7 +17,8 @@ type Servicecart = {
   decreaseqty: (id: number) => void;
   removeService: (id: number) => void;
   getSubtotal: () => number;
-  reset :()=>void
+  reset :()=>void;
+  getDuration :()=>number
 };
 
 const useServicecart = create<Servicecart>()(
@@ -68,7 +69,7 @@ const useServicecart = create<Servicecart>()(
             }))
       },
       getDuration: () => {
-        return get().items.reduce((acc, item) =>acc+item.duration * item.quantity,0 );
+        return get().items.reduce((acc, item) =>acc+(item.duration ??0) * item.quantity,0 );
       }
     }),
     { name: "service store",

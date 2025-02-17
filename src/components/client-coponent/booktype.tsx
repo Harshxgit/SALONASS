@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { UseFormSetValue, FieldValues } from "react-hook-form"
-import { FormValues } from "@/app/checkout/page"
+import { FormValues } from '@/types/form';
 type ServiceType = "IN-SALON" | "IN-HOME"
 
 interface ServiceTypeSelectorProps {

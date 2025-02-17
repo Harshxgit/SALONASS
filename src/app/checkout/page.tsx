@@ -1,12 +1,14 @@
-"use client";
+"use client"
+import dynamic from "next/dynamic";
 import { Key, useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tag } from "lucide-react";
-import Razorpay from "./paymentgateway/page";
+const Razorpay = dynamic(() => import('@/components/paymentgateway/payment'), {
+  ssr: false,  // Disable SSR for this component
+});
 import io from "socket.io-client";
 import toast from "react-hot-toast";
-const socket = io("/user");
 import useServicecart from "../store/ServiceCart";
 import { useSession } from "next-auth/react";
 import LocationMap from "@/components/client-coponent/addressform";
@@ -17,17 +19,17 @@ import useSWR from "swr";
 import ServiceTypeSelector from "@/components/client-coponent/booktype";
 import Getdate from "@/components/client-coponent/date";
 import { UseFormSetValue } from "react-hook-form";
-export  interface FormValues {
-  time: string;
-  bookingType:string;
-  date:Date;
-  address :{}
-  duration : number
-  staffid:number
-
-  // other form fields...
+import { useWatch } from "react-hook-form";
+import { FormValues } from "@/types/form";
+import useSocket from "@/hooks/user-socket";
+interface Staff {
+  number: string;
+  name: string;
+  id: number;
 }
-
+interface StaffResponse {
+  staffs: Staff[];
+}
 const BookingInterface = () => {
   const [quantity, setQuantity] = useState(1);
   const [avoid_calling, setAvoidCalling] = useState(false);
@@ -42,26 +44,20 @@ const BookingInterface = () => {
     watch: bookingwatch,
     handleSubmit,
     setValue,
+    control ,
     watch,
   } = useForm<FormValues>(); //react-form
-  const bookingType = watch("bookingType");
+  const bookingType = useWatch({ control, name:"bookingType"});
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const [isLocating, setIsLocating] = useState(false);
   const [selectedType, setSelectedType] = useState("");
-  const date = watch("date");
-  const staffs = useSWR(["/staff", date], () => getAllStaff({ datestr: date }));
-
-  useEffect(() => {
-    socket.on("new_booking", (arg: any) => {
-      toast.success(arg);
-    });
-    return () => {
-      socket.off("new_booking");
-    };
-  }, []);
-  //
-
+  const date = useWatch({ control, name: "date" });
+  const staffs = useSWR<StaffResponse | undefined>(
+    date ? ["/staff", date] : null,
+    () => getAllStaff({ datestr: date })
+  );
+  const socket = useSocket();
   async function getslot(staffid: number) {
     const date = watch("date");
     const slots = await getstafffavailablity({
@@ -75,9 +71,6 @@ const BookingInterface = () => {
       setSlots([]);
     }
   }
-  const submitbooking = () => {
-    socket.emit("booking", "hiii harshu");
-  };
   return (
     <div className="max-w-3xl mx-auto p-4 space-y-4 ">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -213,7 +206,7 @@ const BookingInterface = () => {
             />
             <label className="text-sm">Avoid calling before reaching the location</label>
           </div> */}
-          <Razorpay watch={watch} />
+          <Razorpay watch={bookingwatch} control={control} />
         </div>
       </div>
     </div>

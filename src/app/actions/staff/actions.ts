@@ -23,9 +23,18 @@ interface updatestaffavailability {
   endTime: string;
   datestr: Date;
 }
+interface Staff {
+  number: string;
+  name: string;
+  id: number;
+}
 
+interface StaffResponse {
+  staffs: Staff[];
+}
 //getAllStaff who is available
-export async function getAllStaff({ datestr }: { datestr: Date }) {
+export async function getAllStaff({ datestr }: { datestr?: Date }): Promise<StaffResponse | undefined> {
+  if(!datestr) return undefined
   const dateObj = datestr ?? new Date();
   const date = dateObj.toISOString().split("T")[0];
   const startOfDay = new Date(`${date}T00:00:00.000Z`);

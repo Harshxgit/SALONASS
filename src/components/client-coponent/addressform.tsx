@@ -19,7 +19,7 @@ L.Icon.Default.mergeOptions({
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/Input";
 import { UseFormSetValue } from "react-hook-form";
-import { FormValues } from "@/app/checkout/page";
+import { FormValues } from "@/types/form";
 
 interface Location {
   lat: number;

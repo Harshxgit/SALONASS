@@ -4,7 +4,6 @@ import useSWR, { mutate } from 'swr'
 import BookingsList from './components/BookingsList'
 import BookingsFilter from './components/BookingFilter'
 import { fetchBookings } from '@/app/actions/(admin)/packages/package'
-const socket = io('/staff')
 export default  function BookingsPage({
   searchParams,
 }: {
@@ -13,6 +12,7 @@ export default  function BookingsPage({
   const status = typeof searchParams.status === 'string' ? searchParams.status : undefined
   const { data: bookings } = useSWR("/fetchbookings",fetchBookings)
   useEffect(()=>{
+    const socket = io('/staff')
     //get booking live
       socket.on('connection',(newbooking:any)=>{
           mutate("/fetchbookings",[...(bookings || []),newbooking] , false)
