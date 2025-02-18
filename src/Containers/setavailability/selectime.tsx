@@ -96,7 +96,6 @@ export function TimeRangeSelector() {
       date.setHours(12)
       await updatestaffavailability({
         datestr: date,
-
         staffId: Number(session?.user?._id),
         day: selectedDays,
         isAvailable: true,

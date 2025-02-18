@@ -133,13 +133,11 @@ export async function getstafffavailablity({
 
   const availability = StaffAvailability?.find(
      (avail) =>{
-
      return avail.day === dayofweek.toString()
     }  
   );
 
   if (!availability) {
-
     return [];
   }
 
@@ -168,24 +166,26 @@ async function generateslots({
   const slots = [];
   // i m letting timegap logic here
   const startTime =  await convertTo24HourFormat(starttime) //convert into 24
-  const endTime = await convertTo24HourFormat(endtime)    //convert into 24
+  const endTime = await convertTo24HourFormat(endtime)
+  //convert into 24
   const basedate = new Date(datestr)                //create base date object
   let currenttime = new Date(basedate);
   const [startHour, startMinute] = startTime.split(":").map(Number);
   currenttime.setUTCHours(startHour, startMinute, 0, 0);
 
- let endtimeDate = new Date(basedate);
- const [starTHour, starTMinute] = endTime.split(":").map(Number);
- endtimeDate.setUTCHours(starTHour, starTMinute, 0, 0);
-  
+  let endtimeDate = new Date(basedate);
+  const [starTHour, starTMinute] = endTime.split(":").map(Number);
+  endtimeDate.setUTCHours(starTHour, starTMinute, 0, 0);
+
   while (currenttime < endtimeDate) {
    const formatedate =  currenttime.toLocaleTimeString("en-US", {
       hour: "2-digit",
       minute: "2-digit",
       hour12: true,
+      timeZone: "UTC" 
     });
-     const endslot = new Date(
-      currenttime.getTime() + parseInt(duration) * 60000
+    const endslot = new Date(
+    currenttime.getTime() + parseInt(duration) * 60000
     );
     const isSlotAvailable = !booking.some((book) => {
       const bookstarttime = book.starttime;

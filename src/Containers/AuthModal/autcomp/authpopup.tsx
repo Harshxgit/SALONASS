@@ -13,7 +13,7 @@ export function AutoPopupAuth({type}: {type: string}) {
   }
 
   return (
-    <PopupDialog title="Welcome" description="Please sign in or create an account to continue" autoOpen={showAuth}>
+    <PopupDialog title="CLASS-ONE" description="UNISEX SALON" autoOpen={showAuth}>
       <ModernAuthForm onAuthSuccess={handleAuthSuccess} type={type} />
     </PopupDialog>
   )

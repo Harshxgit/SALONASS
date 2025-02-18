@@ -55,6 +55,7 @@ export default function CreateServiceForm() {
 
   const submitData = async (data: ServiceFormData) => {
     setLoading(true);
+    const to = toast.loading("creating")
     const service = await createService({
       servicename: data.name,
       price: Number(data.price),
@@ -88,11 +89,10 @@ export default function CreateServiceForm() {
         }
       }
     }
-    toast.success(`${data.name} has been successfully added.`);
+    toast.success(`${data.name} has been successfully added.`,{id:to});
     reset();
     setLoading(false);
   };
-
   return (
     <Card className="w-full max-w-2xl mx-auto">
       <CardHeader>

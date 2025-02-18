@@ -32,8 +32,7 @@ export default async function createService({
   type,
   description
 }: Servicee) {
-  console.log(servicename,price,duration,type,description)
-  const name = prisma.services.findUnique({
+    const name = prisma.services.findUnique({
     where: { servicename: servicename },
   });
   if (!name) return { error: "Service already exist" };

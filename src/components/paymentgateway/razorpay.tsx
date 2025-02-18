@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -28,6 +28,7 @@ const ClientPaymentContent = ({ watch, control }: PaymentGatewayProps) => {
   const amount = params.get("amount");
   const [loading, setLoading] = useState(false);
   const idRef = React.useRef<string | null>(null);
+
   const reset = useServicecart((state) => state.reset);
   const services = useServicecart((state) => state.items);
   const total = useServicecart((state) => state.getDuration);
@@ -80,14 +81,11 @@ const ClientPaymentContent = ({ watch, control }: PaymentGatewayProps) => {
 
       const data = await response.json();
       idRef.current = data.orderID;
-    } catch (error) {
-      console.error("There was a problem with your fetch operation:", error);
-    }
+    } catch (error) {}
   };
 
-  const initializeRazorpayPayment = (orderId: string) => {
+  const initializeRazorpayPayment = (orderId: string, bookingid : number) => {
     if (!scriptLoaded || typeof window === "undefined") {
-      console.error("Razorpay script not loaded");
       return null;
     }
 
@@ -105,6 +103,7 @@ const ClientPaymentContent = ({ watch, control }: PaymentGatewayProps) => {
             razorpayPaymentId: response.razorpay_payment_id,
             razorpayOrderId: response.razorpay_order_id,
             razorpaySignature: response.razorpay_signature,
+            bookingId :bookingid 
           };
 
           const result = await fetch("/api/razorpayverify", {
@@ -121,7 +120,6 @@ const ClientPaymentContent = ({ watch, control }: PaymentGatewayProps) => {
             alert(res.message);
           }
         } catch (error) {
-          console.error("Payment verification failed:", error);
           alert("Payment verification failed. Please contact support.");
         }
       },
@@ -141,6 +139,7 @@ const ClientPaymentContent = ({ watch, control }: PaymentGatewayProps) => {
     setLoading(true);
 
     const orderId = idRef.current;
+
     if (!orderId) {
       setLoading(false);
       throw new Error("Order ID is null");
@@ -148,7 +147,9 @@ const ClientPaymentContent = ({ watch, control }: PaymentGatewayProps) => {
 
     try {
       const duration = total();
-      await addBooking({
+
+      const bookingid = await addBooking({
+        username: session?.user.name as string,
         userid: Number(session?.user?._id),
         price: parseFloat(amount!),
         address: watch("address"),
@@ -161,12 +162,11 @@ const ClientPaymentContent = ({ watch, control }: PaymentGatewayProps) => {
         orderId: orderId,
         status: "PENDING",
       });
-
-      const options = initializeRazorpayPayment(orderId);
+     const bookingId = bookingid.bookingId ?? 0
+      const options = initializeRazorpayPayment(orderId,bookingId);
       if (options && window.Razorpay) {
         const rzp = new window.Razorpay(options);
         rzp.on("payment.failed", function (response: any) {
-          console.error("Payment failed:", response.error);
           alert(response.error.description);
           setLoading(false);
         });
@@ -176,7 +176,6 @@ const ClientPaymentContent = ({ watch, control }: PaymentGatewayProps) => {
         alert("Unable to initialize payment. Please try again.");
       }
     } catch (error) {
-      console.error("Error processing payment:", error);
       setLoading(false);
       alert("Error processing payment. Please try again.");
     }

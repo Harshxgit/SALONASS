@@ -65,10 +65,10 @@ export async function sendOTP(to: string,token:string) {
 
 export async function verifyOtp(number: string, userotp: string) {
   if (storedOTP[number] === userotp) {
-    console.log("true");
+   
     return true;
   } else {
-    console.log("false");
+    
     return false;
   }
 }

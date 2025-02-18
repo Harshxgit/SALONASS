@@ -1,6 +1,7 @@
 "use server"
 import { NextRequest , NextResponse } from "next/server";
 import crypto, { sign } from 'crypto'
+import { updatebookingstatus } from "@/app/actions/booking/actions";
 
 const generatedSignature =(orderCreationId : string , razorpayPaymentId : string)=>{
     const keySecret = process.env.RAZORPAY_KEY_SECRET
@@ -13,10 +14,11 @@ const generatedSignature =(orderCreationId : string , razorpayPaymentId : string
 }
 
 export async function POST(request:NextRequest){
-        const {orderCreationId , razorpayPaymentId , razorpaySignature}   = await request.json() 
+        const {orderCreationId , razorpayPaymentId , razorpaySignature,bookingId  }   = await request.json() 
         const signature = generatedSignature(orderCreationId , razorpayPaymentId)
             if(signature !==razorpaySignature){
             return NextResponse.json({message : 'payment verification faild',isOk:false},{status:400})
         }
+        await updatebookingstatus(bookingId)
         return NextResponse.json({message : 'payament verified successfully' , isOk:true },{status:200})
 }

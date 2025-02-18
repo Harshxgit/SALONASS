@@ -1,4 +1,6 @@
+"use client"
 import { useState,useEffect  } from "react";
+import io from "socket.io-client";
 import toast from "react-hot-toast";
 const useSocket = () => {
     const [socket, setSocket] = useState<any>(null);

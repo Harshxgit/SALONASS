@@ -4,14 +4,10 @@ import { Key, useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tag } from "lucide-react";
-const Razorpay = dynamic(() => import('@/components/paymentgateway/payment'), {
-  ssr: false,  // Disable SSR for this component
-});
-import io from "socket.io-client";
-import toast from "react-hot-toast";
+const Razorpay = dynamic(() => import('@/components/paymentgateway/payment'), { ssr: false });
+const LocationMap = dynamic(() => import("@/components/client-coponent/addressform"), { ssr: false });
 import useServicecart from "../store/ServiceCart";
 import { useSession } from "next-auth/react";
-import LocationMap from "@/components/client-coponent/addressform";
 import { useForm } from "react-hook-form";
 import { getAllStaff, getstafffavailablity } from "../actions/staff/actions";
 import UserProfile from "@/components/client-coponent/avatar/user-profile";
@@ -53,7 +49,7 @@ const BookingInterface = () => {
   const [isLocating, setIsLocating] = useState(false);
   const [selectedType, setSelectedType] = useState("");
   const date = useWatch({ control, name: "date" });
-  const staffs = useSWR<StaffResponse | undefined>(
+  const {data:staffs , isLoading  } = useSWR<StaffResponse | undefined>(
     date ? ["/staff", date] : null,
     () => getAllStaff({ datestr: date })
   );
@@ -110,7 +106,7 @@ const BookingInterface = () => {
           <Card className="overflow-hidden">
             <CardContent className="p-4 max-w-s ">
               <div className="flex flex-row overflow-auto ">
-                {staffs.data?.staffs.map(
+                { isLoading ? <span className="loading loading-dots loading-md"></span> : staffs?.staffs.map(
                   (
                     staff: {
                       id: any;

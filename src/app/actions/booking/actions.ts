@@ -2,13 +2,14 @@
 import prisma from "@/db";
 import { bookingstatus } from "@prisma/client";
 import  convertTo24HourFormat  from "../staff/actions";
+import { Booking } from "@prisma/client";
 interface getBooking {
   staffid?: number;
   userid : number;
   startdate?: Date;
   enddate?: Date;
 }
-interface Booking {
+interface Bookings {
   userid: number;
   services: { name: string; price: number; quantity: number }[];
   address: object;
@@ -19,7 +20,8 @@ interface Booking {
   duration: number;
   staffid: number;
   orderId : string;
-  status : string
+  status : string;
+  username : string
 }
 
 interface updatebookingstatus {
@@ -39,33 +41,34 @@ export default async function addBooking({
   staffid,
   services,
   orderId,
-  status
+  status,
+  username
 
-}: Booking) {
-  try {
+}: Bookings) {
+    try {
     
     const hrs = await convertTo24HourFormat(time)
     const[hours ,minute] = hrs.split(":").map(Number)
-    console.log(hours , minute)
     const startTime = new Date(date)
     startTime.setUTCHours(hours,minute ,0 ,0)
-    console.log(duration)
-    console.log(startTime.getTime()+duration)
     const endtime = new Date(startTime.getTime() +  40 *60000)
-    console.log("endtime"+ endtime)
-    const isbooking = prisma.$transaction(async (tx) => {
+    const STARTTIME = new Date(startTime.toISOString())
+    const ENDTIME = new Date(endtime.toISOString())
+    
+    const isbooking : Booking= await prisma.$transaction(async (tx) => {
       await tx.booking.create({
         include: {
           bookedService: true,
         },
         data: {
+          username : username,
           userId: userid,
           bookingType: bookingtype,
           address: address,
           price: price,
           date: date,
-          starttime: startTime,
-          endtime: endtime, // Example end time 1 hour after start time
+          starttime: STARTTIME,
+          endtime: ENDTIME, // Example end time 1 hour after start time
           staffId: staffid,
           status: status as bookingstatus,
           orderId : orderId,
@@ -82,10 +85,13 @@ export default async function addBooking({
           },
         },
       });
-    });
+      return isbooking
+    }, { timeout: 10000 }
 
+);
+   
     if (!isbooking) return { error: "Booking not created" };
-    return { success: true };
+    return { success: true , bookingId :isbooking.id };
   } catch (error) {
     return { error: "Booking failed" };
   }
@@ -100,7 +106,7 @@ export async function updatebookingstatus({
       id: bookingid,
     },
     data: {
-      status: status as any,
+      status: status as any || "CONFIRMED",
     },
   });
   if (!isbooking) return { error: "booking status not updated" };

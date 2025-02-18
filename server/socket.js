@@ -60,12 +60,10 @@ const initSocket = (server) => {
 
     //all staff logics are here
     staffNamespace.on("connection", (socket) => {
-      
-
+    
       socket.on("registerstaff", (staffId) => {
         staffsocketid.set(staffId, socket.id)
       });
-
 
       //remove from socket
       socket.on("disconnect",()=>{

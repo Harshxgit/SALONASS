@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useState } from "react";
 import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet";
@@ -27,19 +27,18 @@ interface Location {
   display_name?: string;
 }
 interface ServiceTypeSelectorProps {
-  setValue : UseFormSetValue<FormValues>
+  setValue: UseFormSetValue<FormValues>;
 }
 function SetViewOnClick({ coords }: { coords: [number, number] }) {
   const map = useMap();
   map.setView(coords, map.getZoom());
   return null;
 }
-export default function LocationMap({ setValue }:ServiceTypeSelectorProps) {
+export default function LocationMap({ setValue }: ServiceTypeSelectorProps) {
   const [location, setLocation] = useState<Location | null>(null);
   const [address, setAddress] = useState("");
   const [error, setError] = useState<string | null>(null);
- 
-console.log(location)
+
   const getLocation = () => {
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
@@ -56,20 +55,17 @@ console.log(location)
               lon: longitude,
               display_name: data.display_name.split(","),
             });
-            setValue("address",{
-              road   : location?.display_name?.[0],
-              area   : location?.display_name?.[1],
-              city   : location?.display_name?.[3],
-              state   : location?.display_name?.[4],
-              
-            })
+            setValue("address", {
+              road: location?.display_name?.[0],
+              area: location?.display_name?.[1],
+              city: location?.display_name?.[3],
+              state: location?.display_name?.[4],
+            });
           } catch (error) {
-            console.error("Error fetching address:", error);
             setError("Failed to fetch address");
           }
         },
         (error) => {
-          console.error("Error getting location:", error);
           setError("Failed to get location");
         }
       );
@@ -96,14 +92,13 @@ console.log(location)
         setError("Address not found");
       }
     } catch (error) {
-      console.error("Error searching address:", error);
       setError("Failed to search address");
     }
   };
 
   return (
     <div className="space-y-4">
-      <div >
+      <div>
         <div className="flex flex-row gap-1 justify-center">
           <Input
             type="text"
@@ -113,15 +108,15 @@ console.log(location)
           />
           <Button onClick={searchAddress}>Search</Button>
         </div>
-          <Button className="mt-1 " onClick={getLocation}>Get Live Location</Button>
-   
-       </div>
+        <Button className="mt-1 " onClick={getLocation}>
+          Get Live Location
+        </Button>
+      </div>
 
       {error && <p className="text-red-500">{error}</p>}
 
       {location && (
         <div>
-         
           <div style={{ height: "100px", width: "100%" }}>
             <MapContainer
               center={[location.lat, location.lon]}

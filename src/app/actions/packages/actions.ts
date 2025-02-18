@@ -33,13 +33,13 @@ export default async function createPackages({
   service,
   description,
 }: Package) {
-  console.log(packageName, price, service, description);
+
   const name = prisma.packages.findUnique({
     where: { name: packageName },
   });
   if (!name) return { error: "Package already exist" };
   try {
-    console.log("reaching here in service");
+   
 
     const ispackage = await prisma.packages.create({
       data: {
@@ -52,7 +52,6 @@ export default async function createPackages({
       },
     });
 
-    console.log("reaching here2");
     if (!service) return { error: "Service not created" };
     return { success: true, serviceid: ispackage.id };
   } catch (error) {

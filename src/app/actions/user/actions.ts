@@ -32,7 +32,7 @@ export async function setUser({ name, number, password, role }: {
   role : ROLE
 }
 ) {
-  console.log("entered")
+ 
   const hashpassword = await bcrypt.hash(password, 10);
   try {
     const usercreate = await prisma.user.create({
@@ -65,8 +65,7 @@ export async function setAdmin({name , password , number , isAdmin , role }:{
   const hashpassword = await bcrypt.hash(password, 10);
   
   try {
-    console.log(typeof( name) , typeof( number), typeof( password),typeof( role) , typeof( isAdmin))
-    console.log("inadmin")
+   
     const usercreate = await prisma.staff.create({
       data: {
         name: name,
@@ -76,7 +75,7 @@ export async function setAdmin({name , password , number , isAdmin , role }:{
         isAdmin: isAdmin
       }
     })
-    console.log(usercreate)
+
     if (usercreate) {
       // revalidatePath("/signup");
       return { sucess: true };

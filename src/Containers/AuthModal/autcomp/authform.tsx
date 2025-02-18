@@ -1,4 +1,4 @@
-"use client";
+"use client"
 import { useEffect } from "react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -49,18 +49,15 @@ interface ModernAuthFormProps {
 }
 
 export function ModernAuthForm({ onAuthSuccess, type }: ModernAuthFormProps) {
-  const [formType, setFormType] = useState<"signup" | "signin">("signup");
+  const [formType, setFormType] = useState<"signup" | "signin">("signin");
   const [signInMethod, setSignInMethod] = useState<"password" | "otp">(
     "password"
   );
-
   const [signUpStep, setSignUpStep] = useState(1);
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [token, setToken] = useState("");
   const { register, watch } = useForm();
-
   const [isotpverfied, setOtpverified] = useState(false);
-  console.log(type)
   const {
     register: registerSignIn,
     handleSubmit: handleSubmitSignIn,
@@ -74,6 +71,7 @@ export function ModernAuthForm({ onAuthSuccess, type }: ModernAuthFormProps) {
   const phoneNumber = signupWatch("phoneNumber");
   const otp = signupWatch("otp");
   const onSignIn = async (data: SignInData) => {
+    const Signuptoast = toast.loading("signing...")
     const response = await signIn("credentials", {
       mode: "signin",
       number: data.number,
@@ -83,15 +81,15 @@ export function ModernAuthForm({ onAuthSuccess, type }: ModernAuthFormProps) {
       otp: data.otp,
       redirect: false,
     });
-    console.log(response)
-    if (response) toast.success("signin-successfully");
+    
+    if (response) toast.success("signin-successfully",{id:Signuptoast});
 
     onAuthSuccess();
   };
 
   //Sign-up function
   const onSignUp = async (data: SignUpData) => {
-    console.log(data);
+   const Signuptoast = toast.loading("sign-up")
     const response = await signIn("credentials", {
       number: data.phoneNumber,
       name: data.name,
@@ -101,7 +99,8 @@ export function ModernAuthForm({ onAuthSuccess, type }: ModernAuthFormProps) {
       isAdmin: type === "ADMIN" ? true : false,
       redirect: false,
     });
-    if (response) toast.success("signup successfully");
+    if (!response)   toast.error("signup successfully",{id : Signuptoast});
+       toast.success("signup successfully",{id : Signuptoast});
     toast.error("signup failed");
     onAuthSuccess();
   };
@@ -109,7 +108,7 @@ export function ModernAuthForm({ onAuthSuccess, type }: ModernAuthFormProps) {
   const sendOtp = async (e: any) => {
     // Implement OTP sending logic here
     try {
-      console.log("number" + phoneNumber);
+      
       await sendOTP(phoneNumber, token);
       toast.success("OTP SENT");
       e.preventDefault();
@@ -141,6 +140,7 @@ export function ModernAuthForm({ onAuthSuccess, type }: ModernAuthFormProps) {
         <AnimatePresence mode="wait">
           {formType === "signup" ? ( // Sign Up Form
             <motion.div key="signup" {...fadeInOut}>
+              <h1 className="text-md font-bold ">SIGNUP-FORM</h1>
               <form onSubmit={handleSubmitSignUp(onSignUp)}>
                 {signUpStep === 1 && (
                   <>
@@ -255,6 +255,7 @@ export function ModernAuthForm({ onAuthSuccess, type }: ModernAuthFormProps) {
           ) : (
             //sign in form
             <motion.div key="signin" {...fadeInOut}>
+              <h1 className="text-md font-bold ">SIGNIN-FORM</h1>
               <form onSubmit={handleSubmitSignIn(onSignIn)}>
                 <div className="space-y-4">
                   <div className="relative">
@@ -332,7 +333,7 @@ export function ModernAuthForm({ onAuthSuccess, type }: ModernAuthFormProps) {
                 </div>
                 <Button
                   type="submit"
-                  className="w-full mt-6 bg-primary-content text-white"
+                  className="w-full mt-6 bg-primary-content text-white border-2 border-primary-content"
                 >
                   Sign In
                 </Button>
@@ -348,7 +349,7 @@ export function ModernAuthForm({ onAuthSuccess, type }: ModernAuthFormProps) {
               Already have an account?{" "}
               <Button
                 variant="link"
-                className="p-0 h-auto font-semibold text-white hover:text-primary "
+                className="p-0 h-auto font-semibold  hover:text-primary  border border-primary-content"
                 onClick={() => setFormType("signin")}
               >
                 Sign in
@@ -359,7 +360,7 @@ export function ModernAuthForm({ onAuthSuccess, type }: ModernAuthFormProps) {
               Don't have an account?{" "}
               <Button
                 variant="link"
-                className="p-0 h-auto font-semibold text-white hover:text-primary "
+                className="p-0 h-auto font-semibold text-white hover:text-primary border border-primary-content "
                 onClick={() => setFormType("signup")}
               >
                 Sign up
