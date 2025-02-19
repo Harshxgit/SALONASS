@@ -192,8 +192,8 @@ const ClientPaymentContent = ({ watch, control }: PaymentGatewayProps) => {
   };
 
   return (
-    <section>
-      <Card className="max-w-[25rem] space-y-4">
+    <section className=" h-full">
+      <Card className="md:max-w-[25rem] space-y-4">
         <CardHeader className="flex">
           <p className="text-sm text-muted-foreground underline underline-offset-4">
             Please read the terms and conditions.

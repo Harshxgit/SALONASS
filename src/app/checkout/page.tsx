@@ -202,7 +202,7 @@ const BookingInterface = () => {
             />
             <label className="text-sm">Avoid calling before reaching the location</label>
           </div> */}
-          <Razorpay watch={bookingwatch} control={control} />
+          <Razorpay watch={bookingwatch} control={control}  />
         </div>
       </div>
     </div>
