@@ -61,6 +61,7 @@ model Booking {
   userId        Int
   user          User            @relation(fields: [userId], references: [id])
   username      String
+  staffName     String
   staffId       Int?
   staff         Staff?          @relation(fields: [staffId], references: [id])
   bookingType   String

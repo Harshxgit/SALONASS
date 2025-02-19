@@ -22,6 +22,7 @@ export default function UserProfile({ name ,getslots,id,setValue}: UserProfilePr
     onClick={() => {
       getslots(id);
       setValue("staffid", id);
+      setValue("staffName",name)
     }}
      >
       <Avatar className="h-20 w-20 border border-primary">

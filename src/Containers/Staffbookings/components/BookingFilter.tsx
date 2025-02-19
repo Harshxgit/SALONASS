@@ -31,17 +31,26 @@ export default function BookingsFilter() {
         variant={
           searchParams.get("status") === "completed" ? "default" : "outline"
         }
-        onClick={() => setFilter("completed")}
+        onClick={() => setFilter("CONFIRMED")}
       >
-        Completed
+        CONFIRMED
+      </Button>
+      
+      <Button
+        variant={
+          searchParams.get("status") === "pending" ? "default" : "outline"
+        }
+        onClick={() => setFilter("ACCEPTED")}
+      >
+        ACCEPTED
       </Button>
       <Button
         variant={
           searchParams.get("status") === "pending" ? "default" : "outline"
         }
-        onClick={() => setFilter("pending")}
+        onClick={() => setFilter("DONE")}
       >
-        Pending
+        DONE
       </Button>
     </div>
   );

@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { Booking, Service } from '@/types/packages'
-import { fetchBookings } from '@/app/actions/(admin)/packages/package'
+
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -38,7 +38,7 @@ export default  function BookingsList({ initialBookings }: { initialBookings: Bo
 
   useEffect(() => {
     const status = searchParams.get('status')
-    fetchBookings(status || undefined).then(setBookings)
+    // fetchBookings(status || undefined).then(setBookings)
   }, [searchParams])
 
   return (
@@ -57,14 +57,14 @@ export default  function BookingsList({ initialBookings }: { initialBookings: Bo
         {bookings.map((booking) => (
           <TableRow key={booking.id}>
             <TableCell>{booking.username}</TableCell>
-            <TableCell>{booking.address}</TableCell>
-            <TableCell>{new Date(booking.time).toLocaleString()}</TableCell>
+            {/* <TableCell>{booking.address}</TableCell> */}
+            {/* <TableCell>{new Date(booking.time).toLocaleString()}</TableCell> */}
             <TableCell>
-              <Badge variant={booking.status === 'completed' ? 'default' : 'secondary'}>
+              {/* <Badge variant={booking.status === 'completed' ? 'default' : 'secondary'}>
                 {booking.status}
-              </Badge>
+              </Badge> */}
             </TableCell>
-            <TableCell>{booking.staffMember.name}</TableCell>
+            {/* <TableCell>{booking.staffMember.name}</TableCell> */}
             <TableCell>
               <Dialog>
                 <DialogTrigger asChild>
@@ -78,9 +78,9 @@ export default  function BookingsList({ initialBookings }: { initialBookings: Bo
                     </DialogDescription>
                   </DialogHeader>
                   <div className="mt-4">
-                    {[booking.service].map((service) => (
+                    {/* {[booking.service].map((service) => (
                       <ServiceCard key={service.id} service={service} />
-                    ))}
+                    ))} */}
                   </div>
                 </DialogContent>
               </Dialog>

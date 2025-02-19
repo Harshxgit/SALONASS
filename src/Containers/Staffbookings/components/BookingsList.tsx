@@ -2,7 +2,6 @@
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { Booking, Service } from '@/types/packages'
-import { fetchBookings } from '@/app/actions/(admin)/packages/package'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -15,7 +14,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-
 function ServiceCard({ service }: { service: Service }) {
   return (
     <Card className="mb-4">
@@ -31,7 +29,7 @@ function ServiceCard({ service }: { service: Service }) {
   )
 }
 
-export default  function BookingsList({ initialBookings }: { initialBookings: Booking[] }) {
+export default  function BookingsList({ initialBookings }: { initialBookings: Booking[]  }) {
   const [bookings, setBookings] = useState(initialBookings)
   const searchParams = useSearchParams()
 
@@ -52,18 +50,18 @@ export default  function BookingsList({ initialBookings }: { initialBookings: Bo
           <TableHead>Services</TableHead>
         </TableRow>
       </TableHeader>
-      {/* <TableBody>
+      <TableBody>
         {bookings.map((booking) => (
           <TableRow key={booking.id}>
             <TableCell>{booking.username}</TableCell>
-            <TableCell>{booking.address}</TableCell>
-            <TableCell>{new Date(booking.time).toLocaleString()}</TableCell>
+            {/* <TableCell>{booking?.address}</TableCell> */}
+            {/* <TableCell>{new Date(booking.time).toLocaleString()}</TableCell> */}
             <TableCell>
-              <Badge variant={booking.status === 'completed' ? 'default' : 'secondary'}>
+              <Badge variant={booking.status === 'CONFIRMED' ? 'default' : 'secondary'}>
                 {booking.status}
               </Badge>
             </TableCell>
-            <TableCell>{booking.staffMember.name}</TableCell>
+            {/* <TableCell>{booking.}</TableCell> */}
             <TableCell>
               <Dialog>
                 <DialogTrigger asChild>
@@ -77,16 +75,16 @@ export default  function BookingsList({ initialBookings }: { initialBookings: Bo
                     </DialogDescription>
                   </DialogHeader>
                   <div className="mt-4">
-                    {[booking.service].map((service) => (
-                      <ServiceCard key={service.id} service={service} />
-                    ))}
+                    {/* {[booking.bookedService].map((service) => (
+                      <ServiceCard key={service.id} service={service.services as unknown as Service} />
+                    ))} */}
                   </div>
                 </DialogContent>
               </Dialog>
             </TableCell>
           </TableRow>
         ))}
-      </TableBody> */}
+      </TableBody>
     </Table>
   )
 }

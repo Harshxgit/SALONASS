@@ -5,5 +5,6 @@ export interface FormValues {
     address :{}
     duration : number
     staffid:number
+    staffName : string
     // other form fields...
   }

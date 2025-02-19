@@ -120,7 +120,7 @@ export function ModernAuthForm({ onAuthSuccess, type }: ModernAuthFormProps) {
   };
   useEffect(() => {
     const verify = async () => {
-      if (otp.length === 6) {
+      if (otp) {
       const verify = await verifyOtp(phoneNumber, otp);
 
       if (verify) {

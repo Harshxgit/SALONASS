@@ -1,4 +1,4 @@
-"use client";
+"use client"
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -8,7 +8,8 @@ import addBooking from "@/app/actions/booking/actions";
 import { useSession } from "next-auth/react";
 import { UseFormWatch, useWatch, Control } from "react-hook-form";
 import { FormValues } from "@/types/form";
-
+import io from "socket.io-client";
+import toast from "react-hot-toast";
 interface PaymentGatewayProps {
   watch: UseFormWatch<FormValues>;
   control: Control<FormValues>;
@@ -40,7 +41,7 @@ const ClientPaymentContent = ({ watch, control }: PaymentGatewayProps) => {
       router.replace("/cart");
       return;
     }
-
+  
     const loadRazorpay = async () => {
       const script = document.createElement("script");
       script.src = "https://checkout.razorpay.com/v1/checkout.js";
@@ -61,6 +62,7 @@ const ClientPaymentContent = ({ watch, control }: PaymentGatewayProps) => {
         document.body.removeChild(script);
       }
     };
+  
   }, [amount, router]);
 
   const createrOrderId = async () => {
@@ -84,7 +86,7 @@ const ClientPaymentContent = ({ watch, control }: PaymentGatewayProps) => {
     } catch (error) {}
   };
 
-  const initializeRazorpayPayment = (orderId: string, bookingid : number) => {
+  const initializeRazorpayPayment = (orderId: string, bookingid: number) => {
     if (!scriptLoaded || typeof window === "undefined") {
       return null;
     }
@@ -103,7 +105,7 @@ const ClientPaymentContent = ({ watch, control }: PaymentGatewayProps) => {
             razorpayPaymentId: response.razorpay_payment_id,
             razorpayOrderId: response.razorpay_order_id,
             razorpaySignature: response.razorpay_signature,
-            bookingId :bookingid 
+            bookingId: bookingid,
           };
 
           const result = await fetch("/api/razorpayverify", {
@@ -137,18 +139,16 @@ const ClientPaymentContent = ({ watch, control }: PaymentGatewayProps) => {
   const processPayment = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-
+    const Socket = io("/staff")
     const orderId = idRef.current;
 
     if (!orderId) {
       setLoading(false);
       throw new Error("Order ID is null");
     }
-
     try {
       const duration = total();
-
-      const bookingid = await addBooking({
+      const booking = await addBooking({
         username: session?.user.name as string,
         userid: Number(session?.user?._id),
         price: parseFloat(amount!),
@@ -161,9 +161,19 @@ const ClientPaymentContent = ({ watch, control }: PaymentGatewayProps) => {
         services: services,
         orderId: orderId,
         status: "PENDING",
+        staffName : watch("staffName")
       });
-     const bookingId = bookingid.bookingId ?? 0
-      const options = initializeRazorpayPayment(orderId,bookingId);
+        console.log(booking)
+      //getting booking id
+      const bookingid = booking.booking?.id
+      const bookingId = bookingid
+    if(!bookingId) return toast.error("faild")
+      console.log("bookingId"+bookingId)
+      //data for emit 
+      const data= {staffid: session?.user?._id , booking: booking}
+
+      Socket.emit("sendBooking",data)
+      const options = initializeRazorpayPayment(orderId, bookingId);
       if (options && window.Razorpay) {
         const rzp = new window.Razorpay(options);
         rzp.on("payment.failed", function (response: any) {

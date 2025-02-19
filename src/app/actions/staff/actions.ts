@@ -92,7 +92,9 @@ export async function getstafffavailablity({
     where: {
       id: staffid,
     },
+   
     include: {
+      
       StaffAvailability: {
         where: {
           date: {
@@ -105,6 +107,7 @@ export async function getstafffavailablity({
           startTime: true,
           endTime: true,
           day: true,
+
         },
       },
       booking: {

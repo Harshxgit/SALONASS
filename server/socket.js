@@ -64,6 +64,12 @@ const initSocket = (server) => {
       socket.on("registerstaff", (staffId) => {
         staffsocketid.set(staffId, socket.id)
       });
+      
+      socket.on("sendBooking",(data)=>{
+        const socketID = staffsocketid.get(data.staffId)
+        socket.to(socketID).emit("getbooking",data.booking)
+        adminNamespace.emit("getbooking",data.booking)
+      })
 
       //remove from socket
       socket.on("disconnect",()=>{
