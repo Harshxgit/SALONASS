@@ -1,4 +1,3 @@
-"use client"
 import Availability from '@/Containers/setavailability/page'
 import React from 'react'
 
