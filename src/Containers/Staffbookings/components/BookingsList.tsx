@@ -75,9 +75,9 @@ export default  function BookingsList({ initialBookings }: { initialBookings: Bo
                     </DialogDescription>
                   </DialogHeader>
                   <div className="mt-4">
-                    {/* {[booking.bookedService].map((service) => (
-                      <ServiceCard key={service.id} service={service.services as unknown as Service} />
-                    ))} */}
+                    {booking.bookedService?.map((service) => (
+                      <ServiceCard key={service.id} service={service} />
+                    ))}
                   </div>
                 </DialogContent>
               </Dialog>
