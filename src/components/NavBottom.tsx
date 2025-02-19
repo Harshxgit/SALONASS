@@ -8,7 +8,10 @@ import { useSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
 import { useState } from "react";
 import { ModalContent, FramerModal } from "./client-coponent/serviceDrawer";
+import Link from "next/link";
+import useServicecart from "@/app/store/ServiceCart";
 export const NavBottom = () => {
+  const items = useServicecart((state) => state.items);
   const { data: session } = useSession();
   const [modalOpen, setModalOpen] = useState(false);
   const handleLogout = () => {
@@ -25,7 +28,9 @@ export const NavBottom = () => {
             type="button"
             className="inline-flex flex-col items-center justify-center px-5 rounded-s-full hover:bg-gray-50  group"
           >
-            <TiHome />
+            <Link href="/cart">
+              <TiHome />
+            </Link>
             <span className="sr-only">Home</span>
           </button>
           <div
@@ -36,13 +41,23 @@ export const NavBottom = () => {
             Home
             <div className="tooltip-arrow" data-popper-arrow></div>
           </div>
+          
+          {/* cart */}
           <button
             data-tooltip-target="tooltip-wallet"
             type="button"
             className="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group"
           >
-            <FaShoppingCart />
-            <span className="sr-only">Wallet</span>
+            <Link href="/cart">
+            <div className="relative">
+
+              <FaShoppingCart />
+              <span className="absolute -top-4 badge badge-sm indicator-item bg-primary-content h-6">
+                {items.length}
+              </span>
+              <span className="sr-only">Wallet</span>
+            </div>
+            </Link>
           </button>
           <div
             id="tooltip-wallet"
@@ -62,8 +77,6 @@ export const NavBottom = () => {
                 </div>
               </ModalContent>
             </FramerModal> */}
-
-          
           </div>
 
           <div
