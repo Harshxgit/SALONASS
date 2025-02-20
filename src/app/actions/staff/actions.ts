@@ -33,8 +33,12 @@ interface StaffResponse {
   staffs: Staff[];
 }
 //getAllStaff who is available
-export async function getAllStaff({ datestr }: { datestr?: Date }): Promise<StaffResponse | undefined> {
-  if(!datestr) return undefined
+export async function getAllStaff({
+  datestr,
+}: {
+  datestr?: Date;
+}): Promise<StaffResponse | undefined> {
+  if (!datestr) return undefined;
   const dateObj = datestr ?? new Date();
   const date = dateObj.toISOString().split("T")[0];
   const startOfDay = new Date(`${date}T00:00:00.000Z`);
@@ -60,8 +64,7 @@ export async function getAllStaff({ datestr }: { datestr?: Date }): Promise<Staf
   if (staffs) return { staffs: staffs };
 }
 //convert function
-export  default async function convertTo24HourFormat(time12h:string)  {
-
+export default async function convertTo24HourFormat(time12h: string) {
   const [time, modifier] = time12h.split(" ");
   let [hours, minutes] = time.split(":").map(Number);
 
@@ -72,8 +75,10 @@ export  default async function convertTo24HourFormat(time12h:string)  {
     hours = 0;
   }
 
-  return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:00`;
-};
+  return `${hours.toString().padStart(2, "0")}:${minutes
+    .toString()
+    .padStart(2, "0")}:00`;
+}
 
 //staff availalbility function
 export async function getstafffavailablity({
@@ -81,20 +86,18 @@ export async function getstafffavailablity({
   duration,
   datestr,
 }: StaffAvailability) {
-
   const startOfDay = new Date(datestr);
   startOfDay.setUTCHours(0, 0, 0, 0);
-
+console.log(startOfDay)
   const endOfDay = new Date(datestr);
   endOfDay.setUTCHours(23, 59, 59, 999);
-
+  console.log(endOfDay)
   const staff = await prisma.staff.findUnique({
     where: {
       id: staffid,
     },
-   
+
     include: {
-      
       StaffAvailability: {
         where: {
           date: {
@@ -107,7 +110,6 @@ export async function getstafffavailablity({
           startTime: true,
           endTime: true,
           day: true,
-
         },
       },
       booking: {
@@ -122,23 +124,18 @@ export async function getstafffavailablity({
     },
   });
 
-
   if (!staff || !staff.StaffAvailability) {
-
     return [];
   }
 
   const date = new Date(datestr);
-  const dayofweek = date.getDay()
+  const dayofweek = date.getDay();
 
   const { StaffAvailability, booking } = staff;
 
-
-  const availability = StaffAvailability?.find(
-     (avail) =>{
-     return avail.day === dayofweek.toString()
-    }  
-  );
+  const availability = StaffAvailability?.find((avail) => {
+    return avail.day === dayofweek.toString();
+  });
 
   if (!availability) {
     return [];
@@ -168,10 +165,10 @@ async function generateslots({
 }: generateslots) {
   const slots = [];
   // i m letting timegap logic here
-  const startTime =  await convertTo24HourFormat(starttime) //convert into 24
-  const endTime = await convertTo24HourFormat(endtime)
+  const startTime = await convertTo24HourFormat(starttime); //convert into 24
+  const endTime = await convertTo24HourFormat(endtime);
   //convert into 24
-  const basedate = new Date(datestr)                //create base date object
+  const basedate = new Date(datestr); //create base date object
   let currenttime = new Date(basedate);
   const [startHour, startMinute] = startTime.split(":").map(Number);
   currenttime.setUTCHours(startHour, startMinute, 0, 0);
@@ -181,14 +178,14 @@ async function generateslots({
   endtimeDate.setUTCHours(starTHour, starTMinute, 0, 0);
 
   while (currenttime < endtimeDate) {
-   const formatedate =  currenttime.toLocaleTimeString("en-US", {
+    const formatedate = currenttime.toLocaleTimeString("en-US", {
       hour: "2-digit",
       minute: "2-digit",
       hour12: true,
-      timeZone: "UTC" 
+      timeZone: "UTC",
     });
     const endslot = new Date(
-    currenttime.getTime() + parseInt(duration) * 60000
+      currenttime.getTime() + parseInt(duration) * 60000
     );
     const isSlotAvailable = !booking.some((book) => {
       const bookstarttime = book.starttime;
@@ -219,10 +216,10 @@ export async function updatestaffavailability({
 }: updatestaffavailability) {
   const isupdate = await prisma.staffAvailability.upsert({
     where: {
-      staffId_date:{
-      staffId: staffId,
-      date:datestr
-      }
+      staffId_date: {
+        staffId: staffId,
+        date: datestr,
+      },
     },
     update: {
       isAvailable: isAvailable,

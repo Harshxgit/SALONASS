@@ -43,7 +43,7 @@ export function TimeRangeSelector() {
   const handleDayToggle = (day: string) => {
     setSelectedDays(day);
   };
-  console.log("seledday"+selectedDays)
+  
   const [getday, setGetday] = useState<{ isAvailable: boolean } | null>(null);
   useEffect(() => {
     const fetchAvailability = async () => {
