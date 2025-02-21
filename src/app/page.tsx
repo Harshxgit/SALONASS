@@ -64,7 +64,7 @@ export default function Home() {
     return services?.reduce((acc: { [key: string]: catService }, item) => {
       if (!acc[item.type]) {
         acc[item.type] = {
-          items: item.type, // ✅ Assign string directly
+          items: item.type, 
           image:
             SERVICE_TYPES[item.type as keyof typeof SERVICE_TYPES]?.image ||
             "/default.png",
@@ -85,19 +85,7 @@ export default function Home() {
     }, {});
   }, [services]);
 
-  // const catService = useMemo(() => {
-  //   return services?.reduce((acc: { [key: string]: typeof catService }, item) => {
-  //     if (!acc[item.type]) {
-  //       acc[item.type] = {
-  //         item :[],
-  //         image: SERVICE_TYPES[item.type]?.image || '/default.png',
-  //       }
 
-  //     }
-  //     acc[item.type].push(item);
-  //     return acc;
-  //   }, {});
-  // }, [services]);
 
   const onshowfunc = (ref: any) => {
     ref.current?.scrollIntoView({ behavior: "smooth" });
