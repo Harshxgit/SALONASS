@@ -1,5 +1,6 @@
 FROM node:20.12.0-alpine3.19
-
+ARG CACHE_BUST=1
+RUN echo "Cache Bust: $CACHE_BUST"
 WORKDIR /usr/src/app
 
 # Copy package.json and package-lock.json to install dependencies
