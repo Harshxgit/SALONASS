@@ -8,7 +8,7 @@ COPY tsconfig.json ./
 
 
 # Install dependencies
-RUN npm install && npm cache clean --force
+RUN npm install 
 
 
 COPY server /usr/src/app/server

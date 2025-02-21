@@ -40,7 +40,7 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            sudo docker pull --no-cache harshuuu/salonsaas:latest
+            sudo docker pull harshuuu/salonsaas:latest
             sudo docker stop salonsaas || true
             sudo docker rm salonsaas || true
             sudo docker run \
