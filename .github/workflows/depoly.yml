@@ -10,7 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check Out Repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+
 
       - name: Prepare Dockerfile
         run: cp dockerfile ./Dockerfile
@@ -27,8 +28,8 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-
           tags: harshuuu/salonsaas:latest
+          no-cache: true
 
       - name: Verify Pushed Image
         run: docker pull harshuuu/salonsaas:latest
@@ -40,7 +41,7 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            sudo docker pull harshuuu/salonsaas:latest
+            sudo docker pull --no-cache harshuuu/salonsaas:latest
             sudo docker stop salonsaas || true
             sudo docker rm salonsaas || true
             sudo docker run \
