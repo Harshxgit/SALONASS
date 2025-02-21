@@ -12,7 +12,6 @@ jobs:
       - name: Check Out Repo
         uses: actions/checkout@v4
 
-
       - name: Prepare Dockerfile
         run: cp dockerfile ./Dockerfile
 
