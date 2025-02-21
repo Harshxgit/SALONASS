@@ -8,12 +8,12 @@ COPY tsconfig.json ./
 
 
 # Install dependencies
-RUN npm install
+RUN npm ci
 
 
 
-COPY prisma ./prisma
 COPY server /usr/src/app/server
+COPY prisma ./prisma
 COPY src ./src
 
 
@@ -21,7 +21,8 @@ COPY src ./src
 # Can you add a script to the global package.json that does this?
 COPY . .
 
-RUN  npx prisma generate
+RUN npx prisma generate --no-engine
+
 
 RUN npm run build
 
