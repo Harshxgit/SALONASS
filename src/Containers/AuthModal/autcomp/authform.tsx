@@ -81,8 +81,8 @@ export function ModernAuthForm({ onAuthSuccess, type }: ModernAuthFormProps) {
       otp: data.otp,
       redirect: false,
     });
-    
-    if (response) toast.success("signin-successfully",{id:Signuptoast});
+    if (!response)   toast.error("signup successfully",{id : Signuptoast});
+    toast.success("signin-successfully",{id:Signuptoast});
 
     onAuthSuccess();
   };
