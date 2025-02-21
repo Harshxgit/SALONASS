@@ -8,7 +8,7 @@ COPY tsconfig.json ./
 
 
 # Install dependencies
-RUN npm ci
+RUN npm install
 
 
 
@@ -21,7 +21,7 @@ COPY src ./src
 # Can you add a script to the global package.json that does this?
 COPY . .
 
-RUN npx prisma generate --no-engine
+RUN npx prisma generate 
 
 
 RUN npm run build
