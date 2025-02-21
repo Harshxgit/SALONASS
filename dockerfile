@@ -21,7 +21,6 @@ COPY src ./src
 # Can you add a script to the global package.json that does this?
 RUN  npx prisma generate
 
-
 COPY . .
 
 RUN npm run build
