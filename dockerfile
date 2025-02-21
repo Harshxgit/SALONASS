@@ -12,9 +12,9 @@ COPY tsconfig.json ./
 RUN npm install 
 
 
-COPY server /usr/src/app/server
-COPY prisma ./prisma
-COPY src ./src
+# COPY server /usr/src/app/server
+# COPY prisma ./prisma
+# COPY src ./src
 
 
 
