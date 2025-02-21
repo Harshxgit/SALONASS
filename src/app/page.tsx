@@ -19,17 +19,60 @@ import { useState } from "react";
 import { MdOutlineWindow } from "react-icons/md";
 import { Metadata } from "next";
 import { useSession } from "next-auth/react";
-
+import { Service } from "@/types/packages";
 export default function Home() {
-  
+  const { data: services, isLoading } = useSWR("/service", getServices);
+  interface catService {
+    items: string;
+    image: string;
+    label?: string;
+  }
+  const SERVICE_TYPES = {
+    type1: {
+      image: "/images/type1.png",
+      label: "Type 1 Services",
+    },
+    type2: {
+      image: "/images/type2.png",
+      label: "Type 2 Services",
+    },
+    type3: {
+      image: "/images/type3.png",
+      label: "Type 3 Services",
+    },
+    type4: {
+      image: "/images/type4.png",
+      label: "Type 4 Services",
+    },
+    type5: {
+      image: "/images/type5.png",
+      label: "Type 5 Services",
+    },
+  } as const;
 
   const [modalOpen, setModalOpen] = useState(false);
-  const { data: services, isLoading } = useSWR("/service", getServices);
   const { data: packages } = useSWR("/package", getServices);
-  const session = useSession()
+  const session = useSession();
+
   const categories = useMemo(() => {
     const catg = Array.from(new Set(services?.map((service) => service.type)));
     return [...catg, "packages"];
+  }, [services]);
+
+
+  const imageCategory = useMemo(() => {
+    return services?.reduce((acc: { [key: string]: catService }, item) => {
+      if (!acc[item.type]) {
+        acc[item.type] = {
+          items: item.type, // ✅ Assign string directly
+          image:
+            SERVICE_TYPES[item.type as keyof typeof SERVICE_TYPES]?.image ||
+            "/default.png",
+        };
+      }
+
+      return acc;
+    }, {});
   }, [services]);
 
   const catService = useMemo(() => {
@@ -41,6 +84,20 @@ export default function Home() {
       return acc;
     }, {});
   }, [services]);
+
+  // const catService = useMemo(() => {
+  //   return services?.reduce((acc: { [key: string]: typeof catService }, item) => {
+  //     if (!acc[item.type]) {
+  //       acc[item.type] = {
+  //         item :[],
+  //         image: SERVICE_TYPES[item.type]?.image || '/default.png',
+  //       }
+
+  //     }
+  //     acc[item.type].push(item);
+  //     return acc;
+  //   }, {});
+  // }, [services]);
 
   const onshowfunc = (ref: any) => {
     ref.current?.scrollIntoView({ behavior: "smooth" });
@@ -72,7 +129,7 @@ export default function Home() {
                 quality={100} className="object-cover p-4 " /> */}
           <Carousel />
         </div>
-                {/* dfs */}
+        {/* dfs */}
         <div className=" md:row-span-6 h-fit md:h-[110%]   md:max-w-[400px] mx-8 backdrop-blur-sm ">
           <Services
             category={categories}
@@ -117,16 +174,16 @@ export default function Home() {
 
           <FramerModal open={modalOpen} setOpen={setModalOpen}>
             <ModalContent>
-            <Services
-            category={categories}
-            onshowfunction={onshowfunc}
-            ref={ref}
-            isLoading={isLoading}
-            setModalOpen={setModalOpen}
-          />
+              <Services
+                category={categories}
+                onshowfunction={onshowfunc}
+                ref={ref}
+                isLoading={isLoading}
+                setModalOpen={setModalOpen}
+              />
             </ModalContent>
           </FramerModal>
-         
+
           <div className=" hidden md:block border border-base-300  md:h-[calc(110vh-100px)]  scrollbar-hide overflow-y-scroll overflow-x-hidden ">
             <ServiceShowcase />
           </div>

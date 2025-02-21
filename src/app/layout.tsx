@@ -1,4 +1,4 @@
-"use client";
+"use client"
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -9,6 +9,11 @@ import AUTHCOMP from "@/Containers/AuthModal/page";
 import { Toaster } from "react-hot-toast";
 import { NavBottom } from "@/components/NavBottom";
 import { MdOutlineWindow } from "react-icons/md";
+import {
+  FramerModal,
+  ModalContent,
+} from "@/components/client-coponent/serviceDrawer";
+import { useState } from "react";
 // import { useCheckAuth } from "./checkauth/checkauth";
 
 export default function RootLayout({
@@ -17,9 +22,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const pathname = usePathname();
-  function setModalOpen(arg0: boolean): void {
-    throw new Error("Function not implemented.");
-  }
+  const [modalOpen, setModalOpen] = useState(false);
 
   // const { showAuthModal } = useCheckAuth(["client"]);
 
@@ -32,27 +35,27 @@ export default function RootLayout({
             <Navbar />
           )}
           {children}
-
-          {!pathname.includes("/admin") && !pathname.includes("/staff")  && (
-            <><AUTHCOMP type="USER" />
-            
-             <div className="md:hidden fixed left-[43%]  bottom-10 z-50 ">
-            
-                      
-                     
-                    
-            <button
-              data-tooltip-target="tooltip-new"
-              type="button"
-              className=" inline-flex items-center justify-center w-14 h-14 font-medium bg-primary-content  rounded-full  focus:ring-4 focus:ring-blue-300 focus:outline-none  "
-              onClick={() => setModalOpen(true)}
-            >
-              <MdOutlineWindow className="text-2xl" />
-
-              <span className="sr-only">Services</span>
-            </button>
-            </div>
-            <NavBottom /></>
+          {!pathname.includes("/admin") && !pathname.includes("/staff") && (
+            <>
+              <AUTHCOMP type="USER" />
+              <FramerModal open={modalOpen} setOpen={setModalOpen}>
+              <ModalContent>
+                <div>
+                  services
+                </div>
+              </ModalContent>
+            </FramerModal>
+              <div className="md:hidden fixed left-[43%]  bottom-10 z-50 ">
+                <div
+                  data-tooltip-target="tooltip-new"
+                  className=" inline-flex items-center justify-center w-14 h-14 font-medium bg-primary-content  rounded-full focus:ring-4 focus:ring-blue-300 focus:outline-none"
+                  onClick={() => setModalOpen(true)}
+                >
+                  <MdOutlineWindow className="text-2xl" />
+                </div>
+              </div>
+              <NavBottom />
+            </>
           )}
         </body>
       </Providers>

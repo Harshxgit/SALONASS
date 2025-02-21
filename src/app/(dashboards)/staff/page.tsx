@@ -1,4 +1,4 @@
-"use client";
+"use client"
 import Dashboard from "@/Containers/dashboard";
 import React from "react";
 

@@ -69,23 +69,23 @@ const BookingInterface = () => {
   }
   return (
     <div className="max-w-3xl mx-auto p-4 space-y-4 ">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-4 border border-base-300">
-          <Card>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative">
+        <div className="space-y-4  ">
+          <Card className="border border-primary-content">
             <CardContent className="p-2">
               <div className="flex items-center ">
-                <span className="text-gray-600">Send booking details to</span>
-                <span>+91 {session.data?.user?.name}</span>
+                <span className="text-gray-600">Send booking details to </span>
+                <span className="text-primary">+91 {session.data?.user?.number}</span>
               </div>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border border-primary-content">
             <CardContent className="p-2">
               <ServiceTypeSelector setValue={setValue} />
             </CardContent>
           </Card>
           {/* date */}
-          <Card>
+          <Card className="border border-primary-content">
             <CardContent className="p-2">
               <Getdate setValue={setValue} />
             </CardContent>
@@ -93,17 +93,17 @@ const BookingInterface = () => {
 
           {/* Address Section */}
           {bookingType === "IN-HOME" && (
-            <Card>
+             <Card className="border border-primary-content">
               <CardContent className="p-4">
                 <div className="space-y-3">
                   <div className="font-medium">Address</div>
-                  <LocationMap setValue={setValue} />
+                  <LocationMap setValue={setValue} register={booking} />
                 </div>
               </CardContent>
             </Card>
           )}
           {/* All Staff Section */}
-          <Card className="overflow-hidden">
+          <Card className="overflow-hidden border border-primary-content">
             <CardContent className="p-4 max-w-s ">
               <div className="flex flex-row overflow-auto ">
                 { isLoading ? <span className="loading loading-dots loading-md"></span> : staffs?.staffs.map(
@@ -129,7 +129,7 @@ const BookingInterface = () => {
           </Card>
 
           {/* Staff slot section  */}
-          <Card>
+          <Card className="border border-primary-content">
             <CardContent className="p-4">
               <div className="overflow-x-auto scrollbar-hide">
                 <div className="flex p-4 space-x-4 w-max ">
@@ -157,8 +157,8 @@ const BookingInterface = () => {
         </div>
 
         {/* Right Column - Service Details */}
-        <div className="space-y-6">
-          <Card>
+        <div className="space-y-6 md:sticky top-16 h-fit">
+          <Card className="border border-primary-content">
             <CardContent className="p-4">
               {/* Service Title and Price */}
 

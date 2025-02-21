@@ -18,8 +18,10 @@ L.Icon.Default.mergeOptions({
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/Input";
-import { UseFormSetValue } from "react-hook-form";
+import { UseFormRegister, UseFormSetValue } from "react-hook-form";
 import { FormValues } from "@/types/form";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../ui/card";
+import { Label } from "@radix-ui/react-label";
 
 interface Location {
   lat: number;
@@ -28,17 +30,21 @@ interface Location {
 }
 interface ServiceTypeSelectorProps {
   setValue: UseFormSetValue<FormValues>;
+  register: UseFormRegister<FormValues>
 }
 function SetViewOnClick({ coords }: { coords: [number, number] }) {
   const map = useMap();
   map.setView(coords, map.getZoom());
   return null;
 }
-export default function LocationMap({ setValue }: ServiceTypeSelectorProps) {
+export default function LocationMap({ register,setValue }: ServiceTypeSelectorProps) {
   const [location, setLocation] = useState<Location | null>(null);
   const [address, setAddress] = useState("");
   const [error, setError] = useState<string | null>(null);
-
+  const [ byAdress, setByAdress] = useState(false)
+  const setAdddress =()=>{
+      setByAdress(true)
+  }
   const getLocation = () => {
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
@@ -56,10 +62,10 @@ export default function LocationMap({ setValue }: ServiceTypeSelectorProps) {
               display_name: data.display_name.split(","),
             });
             setValue("address", {
-              road: location?.display_name?.[0],
-              area: location?.display_name?.[1],
-              city: location?.display_name?.[3],
-              state: location?.display_name?.[4],
+              street: location?.display_name?.[0] ?? '',
+              area: location?.display_name?.[1] ?? '',
+              city: location?.display_name?.[3] ?? '',
+              state: location?.display_name?.[4] ?? ''
             });
           } catch (error) {
             setError("Failed to fetch address");
@@ -98,16 +104,10 @@ export default function LocationMap({ setValue }: ServiceTypeSelectorProps) {
 
   return (
     <div className="space-y-4">
-      <div>
-        <div className="flex flex-row gap-1 justify-center">
-          <Input
-            type="text"
-            placeholder="Search address"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-          />
-          <Button onClick={searchAddress}>Search</Button>
-        </div>
+      <div className=" flex gap-1">
+        <Button className="mt-1 " onClick={setAdddress}>
+          Enter Your Address
+        </Button>
         <Button className="mt-1 " onClick={getLocation}>
           Get Live Location
         </Button>
@@ -134,6 +134,32 @@ export default function LocationMap({ setValue }: ServiceTypeSelectorProps) {
           </p>
         </div>
       )}
+      {byAdress && <Card className="w-full max-w-3xl mx-auto border border-primary-content">
+      <CardHeader>
+        <CardTitle className="text-2xl font-bold text-center">Address Details</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <form className="flex flex-wrap gap-4">
+          <div className="flex-grow min-w-[200px] space-y-2">
+            <Label htmlFor="houseNumber">House Number</Label>
+            <Input {...register('address.houseNo')} id="houseNumber" placeholder="e.g. 123" />
+          </div>
+          <div className="flex-grow min-w-[200px] space-y-2">
+            <Label htmlFor="street">Street</Label>
+            <Input {...register('address.street')}id="street" placeholder="e.g. Main Street" />
+          </div>
+          <div className="flex-grow min-w-[200px] space-y-2">
+            <Label htmlFor="area">Area</Label>
+            <Input {...register('address.area')} id="area" placeholder="e.g. Downtown" />
+          </div>
+          <div className="flex-grow min-w-[200px] space-y-2">
+            <Label htmlFor="colony">Colony</Label>
+            <Input {...register('address.colony')} id="colony" placeholder="e.g. Green Park" />
+          </div>
+        </form>
+      </CardContent>
+      
+    </Card>}
     </div>
   );
 }

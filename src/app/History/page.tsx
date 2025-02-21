@@ -63,7 +63,7 @@ const BookingHistory = () => {
       <h1 className="text-2xl font-bold mb-4">Booking History</h1>
 
       <div className="flex gap-2 mb-4">
-        {['all', 'done', 'confirmed', 'cancelled'].map(status => (
+        {['all', 'done', 'confirmed',].map(status => (
           <Button
             key={status}
             variant={filter === status ? 'default' : 'outline'}
@@ -103,12 +103,12 @@ const BookingHistory = () => {
               </div>
             </div>
 
-            {booking.status === 'done' && (
+            {/* {booking.status === 'done' && (
               <Button variant="outline" className="mt-3 w-full">
                 Rebook Service
               </Button>
-            )}
-            {booking.status === 'confirmed' && (
+            )} */}
+            {/* {booking.status === 'confirmed' && (
               <div className="flex gap-2 mt-3">
                 <Button variant="outline" className="flex-1">
                   Modify
@@ -117,7 +117,7 @@ const BookingHistory = () => {
                   Cancel
                 </Button>
               </div>
-            )}
+            )} */}
           </CardContent>
         </Card>
       ))}

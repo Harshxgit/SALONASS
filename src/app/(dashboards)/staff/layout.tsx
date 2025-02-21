@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import Authmodal from "@/components/Authmodal";
 import Container from "@/components/ui/container";
