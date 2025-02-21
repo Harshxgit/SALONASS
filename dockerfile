@@ -11,13 +11,6 @@ COPY tsconfig.json ./
 RUN npm ci
 
 
-
-COPY server /usr/src/app/server
-COPY prisma ./prisma
-COPY src ./src
-
-
-
 # Can you add a script to the global package.json that does this?
 COPY . .
 
