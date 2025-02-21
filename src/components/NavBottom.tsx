@@ -82,7 +82,7 @@ export const NavBottom = () => {
             type="button"
             className={`inline-flex flex-col ${pathname==="/history"?"bg-primary-content ":"bg-none" } items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group`}
           >
-           <Link href="/history"> <FaHistory /></Link>
+           <Link href="/historyy"> <FaHistory /></Link>
             <span className="sr-only">Settings</span>
           </button>
           <div
