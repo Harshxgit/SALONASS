@@ -9,7 +9,7 @@ COPY tsconfig.json ./
 
 
 # Install dependencies
-RUN npm install 
+RUN npm ci
 
 
 # COPY server /usr/src/app/server
