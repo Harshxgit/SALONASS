@@ -34,7 +34,7 @@ const useServicecart = create<Servicecart>()(
           return state;
         });
       },
-   
+    
       increaseqty: (id: number) => {
         set((state: { items: Item[] }) => ({
           items: state.items.map((item) => {
