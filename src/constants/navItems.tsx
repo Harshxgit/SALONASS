@@ -63,7 +63,7 @@ export const SidenavItems = [
   },
   {
     title: "Availability",
-    url: "/staff/availabele",
+    url: "/staff/availabel",
     icon: <TbBriefcase />,
-  }
+  } 
 ];
