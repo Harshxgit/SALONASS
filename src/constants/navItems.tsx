@@ -49,7 +49,6 @@ export const navItems = [
   //   icon: <TbSettings />,
   // },
 ];
-
 export const SidenavItems = [
   {
     title: "Dashboard",
@@ -65,5 +64,5 @@ export const SidenavItems = [
     title: "Availability",
     url: "/staff/availabel",
     icon: <TbBriefcase />,
-  } 
+  },
 ];
